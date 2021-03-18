@@ -9,7 +9,9 @@ public class Player {
 
 	/**
 	 * This is main function to call the client.
-	 * ALL
+	 * ALLall
+	 * p
+	 * 
 	 * 
 	 * @param args
 	 * @throws Exception

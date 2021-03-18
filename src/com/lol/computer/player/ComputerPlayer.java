@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.lol.constant.Constants;
+import com.lol.helper.PlayerInformation;
 
 public class ComputerPlayer {
 
@@ -20,14 +21,14 @@ public class ComputerPlayer {
 
 	List<Integer> defaultLocVal;
 
-	Map<String, Map<String, Integer>> allPlayerTrrianMap;
+	Map<String, Map<PlayerInformation, Integer>> allPlayerTrrianMap;
 
 	Map<String, Integer> playerObj;
 
 	Set<String> allTerriansList;
 	Map<String, Integer> dirIntMap;
 	Map<Integer, Set<String>> directionIntegerMap;
-	Map <String, Map<String, Integer> > deducedPlayerTokenMap;
+	Map<String, Map<PlayerInformation, Integer>> deducedPlayerTokenMap;
 	
 	private static ComputerPlayer computerPlayer = null;
 
@@ -86,12 +87,12 @@ public class ComputerPlayer {
 		return arrayList;
 	}
 
-	public Map<String, Map<String, Integer>> getAllPlayerTrrianMap() {
+	public Map<String, Map<PlayerInformation, Integer>> getAllPlayerTrrianMap() {
 		return allPlayerTrrianMap;
 	}
 
-	public void setAllPlayerTrrianMap(Map<String, Map<String, Integer>> allPlayerTrrianMap) {
-		this.allPlayerTrrianMap = allPlayerTrrianMap;
+	public void setAllPlayerTrrianMap(Map<String, Map<PlayerInformation, Integer>> terrainList) {
+		this.allPlayerTrrianMap = terrainList;
 	}
 
 	public Map<String, Integer> getPlayerObj() {
@@ -194,11 +195,11 @@ public class ComputerPlayer {
 		this.playerObj = playerObj;
 	}
 
-	public Map<String, Map<String, Integer>> getDeducedPlayerTokenMap() {
+	public Map<String, Map<PlayerInformation, Integer>> getDeducedPlayerTokenMap() {
 		return deducedPlayerTokenMap;
 	}
 
-	public void setDeducedPlayerTokenMap(Map<String, Map<String, Integer>> deducedPlayerTokenMap) {
+	public void setDeducedPlayerTokenMap(Map<String, Map<PlayerInformation, Integer>> deducedPlayerTokenMap) {
 		this.deducedPlayerTokenMap = deducedPlayerTokenMap;
 	}
 

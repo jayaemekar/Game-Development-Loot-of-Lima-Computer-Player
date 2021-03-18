@@ -17,7 +17,7 @@ public class PlayerInformation {
 	private String playerName;
 	private Map<String, List<String>> personalTokenMap;
 	Map<String, Map<String, Boolean>> areaTokenMap;
-	List<String> playerNameList;
+	List<PlayerInformation> playerNameList;
 	Set<String> dieFaceList;
 	Set<String> terrianCharList;
 	Set<String> terrianLocationList;
@@ -25,10 +25,14 @@ public class PlayerInformation {
 	String fileWritePath;
 	boolean isGameOver = false;
 	
+	
 	private static PlayerInformation playerInformation = null;
 
 	private PlayerInformation(){
 		//private 
+	}
+	public PlayerInformation(String playerName) {
+		PlayerInformation.getInstance().setPlayerName(playerName);
 	}
 	public static PlayerInformation getInstance() {
 		if (playerInformation == null)
@@ -93,11 +97,11 @@ public class PlayerInformation {
 		this.areaTokenMap = areaTokenMap;
 	}
 
-	public List<String> getPlayerNameList() {
+	public List<PlayerInformation> getPlayerNameList() {
 		return playerNameList;
 	}
 
-	public void setPlayerNameList(List<String> playerNameList) {
+	public void setPlayerNameList(List<PlayerInformation> playerNameList) {
 		this.playerNameList = playerNameList;
 	}
 	

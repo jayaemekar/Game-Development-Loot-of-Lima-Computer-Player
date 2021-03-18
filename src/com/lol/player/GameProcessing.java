@@ -1,5 +1,6 @@
 package com.lol.player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 import com.lol.computer.player.ComputerPlayer;
+import com.lol.computer.player.ComputerPlayerIntialization;
 import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
 import com.lol.helper.Utility;
@@ -59,29 +61,13 @@ public class GameProcessing {
 	}
 
 	public static String checkIsTreasureLocFound() {
-		Set<String> allTerrianSet = ComputerPlayer.getInstance().getAllTerriansList();
-		Map<String, Map<String, Integer>> deducedPlayerTokenMap = new HashMap<>();
-		for (String terrianToken : allTerrianSet) {
-			Map<String, Integer> terrianMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrianToken);
-		//	System.out.println(terrianMap.values());
-			int sum = terrianMap.values().stream().reduce(0, Integer::sum);
-			//System.out.println(sum);
-			if (sum == 0) {
-				Set<String> treasureLocSet = ComputerPlayer.getInstance().getTreasureLoc();
-				treasureLocSet.add(terrianToken);
-				ComputerPlayer.getInstance().setTreasureLoc(treasureLocSet);
-			} else if (sum == -3) {
-				deducedPlayerTokenMap.put(terrianToken, terrianMap);
-			}
-
-		}
-		ComputerPlayer.getInstance().setDeducedPlayerTokenMap(deducedPlayerTokenMap);
+		updateDeducedPlayerTokenMap();
 		if (ComputerPlayer.getInstance().getTreasureLoc().size() == 2)
 			return "YES";
-		System.out.println("getDeducedPlayerTokenMap" +ComputerPlayer.getInstance().getDeducedPlayerTokenMap());
+		System.out.println("getDeducedPlayerTokenMap" + ComputerPlayer.getInstance().getDeducedPlayerTokenMap());
 		return "NO";
 	}
-	
+
 	public static void processAnswerMessage(List<String> messageDetailsList) {
 
 		// it should parse message
@@ -91,44 +77,62 @@ public class GameProcessing {
 		String playerName = messageDetailsList.get(4);
 		String Diretion1 = messageDetailsList.get(0);
 		String Diretion2 = messageDetailsList.get(1);
-		String noIfTokens = messageDetailsList.get(3);
-		String areaToken = messageDetailsList.get(2);
 
 		Integer dirNum1 = ComputerPlayer.getInstance().getDirIntMap().get(Diretion1.substring(0, 2));
 		Integer dirNum2 = ComputerPlayer.getInstance().getDirIntMap().get(Diretion2.substring(0, 2));
-		Set<String> terrianToken = new HashSet<>(); 
+		Set<String> terrianToken = new HashSet<>();
 		System.out.println(dirNum1);
 		System.out.println(dirNum2);
-		for (int i =dirNum1; i<=dirNum2;i++){
+		for (int i = dirNum1; i < dirNum2; i++) {
 			terrianToken.addAll(ComputerPlayer.getInstance().getDirectionIntegerMap().get(i));
 		}
+
+		System.out.println("terrianToken :" + terrianToken);
 		Set<String> deducedTerrianToken = ComputerPlayer.getInstance().getDeducedPlayerTokenMap().keySet();
-		
-		if(Integer.valueOf(noIfTokens) == deducedTerrianToken.size())
-			updatededucedTerrianMap(deducedTerrianToken,playerName,PlayerInformation.getInstance().getPlayerNameList());
-		System.out.println("terrianToken deducedTerrianToken :"+deducedTerrianToken);
-		System.out.println("getDeducedPlayerTokenMap" +ComputerPlayer.getInstance().getDeducedPlayerTokenMap());
+		System.out.println("deducedTerrianToken :" + deducedTerrianToken);
+		terrianToken.retainAll(deducedTerrianToken);
+		System.out.println("After terrianToken :" + terrianToken);
+		updatededucedTerrianMap(deducedTerrianToken, terrianToken, playerName,
+				PlayerInformation.getInstance().getPlayerNameList(), messageDetailsList);
+
 	}
 
+	private static void updatededucedTerrianMap(Set<String> deducedTerrianToken, Set<String> terrianToken,
+			String playerName, List<PlayerInformation> playerList, List<String> messageDetailsList) {
 
-	private static void updatededucedTerrianMap(Set<String> terrianTokenSet, String playerName,
-			List<String> PlayerList) {
-	
-		for (String player : PlayerList) {
-			// marking 1 for having the token
-			for (String terrianToken : terrianTokenSet) {
-				Map<String, Integer> deducedMap = ComputerPlayer.getInstance().getDeducedPlayerTokenMap()
-						.get(terrianToken);
-				if (!playerName.equals(player)) {
-					deducedMap.put(player, 0);
-				} else {
-					deducedMap.put(player, 1);
+		String noIfTokens = messageDetailsList.get(3);
+		String areaToken = messageDetailsList.get(2);
+		List<String> updatedTerrianList = new ArrayList<>();
+		if (Constants.BEACH_CHAR.equals(areaToken)) {
+			for (String beachTerrian : terrianToken) {
+				if (beachTerrian.contains(Constants.BEACH_CHAR)) {
+					updatedTerrianList.add(beachTerrian);
 				}
-				ComputerPlayer.getInstance().getAllPlayerTrrianMap().put(player, deducedMap);
-				ComputerPlayer.getInstance().getDeducedPlayerTokenMap().remove(terrianToken);
 			}
 		}
-		System.out.println("terrian map :getDeducedPlayerTokenMap :" + ComputerPlayer.getInstance().getDeducedPlayerTokenMap());
+
+		updateDeducedPlayerTokenMap();
+
+		ComputerPlayerIntialization.updatePersonalTokenMap(updatedTerrianList, playerName, playerList);
+
+	}
+
+	private static void updateDeducedPlayerTokenMap() {
+		Set<String> allTerrianSet = ComputerPlayer.getInstance().getAllTerriansList();
+		Map<String, Map<PlayerInformation, Integer>> deducedPlayerTokenMap = new HashMap<>();
+		for (String terrian : allTerrianSet) {
+			Map<PlayerInformation, Integer> terrianMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrian);
+			int sum = terrianMap.values().stream().reduce(0, Integer::sum);
+			if (sum == 0) {
+				Set<String> treasureLocSet = ComputerPlayer.getInstance().getTreasureLoc();
+				treasureLocSet.add(terrian);
+				ComputerPlayer.getInstance().setTreasureLoc(treasureLocSet);
+			} else if (sum != 1) {
+				deducedPlayerTokenMap.put(terrian, terrianMap);
+			}
+
+		}
+		ComputerPlayer.getInstance().setDeducedPlayerTokenMap(deducedPlayerTokenMap);
 	}
 
 	/**
@@ -320,7 +324,6 @@ public class GameProcessing {
 				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(0)) + " and "
 				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(1)) + "\n");
 
-		
 	}
 
 	/**
@@ -335,6 +338,7 @@ public class GameProcessing {
 	public boolean treasureGuess() {
 		StringBuilder message = new StringBuilder("07:");
 		Scanner sc = new Scanner(System.in);
+		Set<String> treasureLoc =  ComputerPlayer.getInstance().getTreasureLoc();
 		System.out.println("Please enter your first guess");
 		message.append(PlayerInformation.getInstance().getPlayerName()).append(Constants.COMMA);
 		String guessOne = sc.nextLine();
