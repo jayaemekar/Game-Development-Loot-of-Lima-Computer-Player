@@ -21,14 +21,14 @@ public class ComputerPlayer {
 
 	List<Integer> defaultLocVal;
 
-	Map<String, Map<PlayerInformation, Integer>> allPlayerTrrianMap;
+	Map<String, Map<String, Integer>> allPlayerTrrianMap;
 
 	Map<String, Integer> playerObj;
 
 	Set<String> allTerriansList;
 	Map<String, Integer> dirIntMap;
 	Map<Integer, Set<String>> directionIntegerMap;
-	Map<String, Map<PlayerInformation, Integer>> deducedPlayerTokenMap;
+	Map<String, Map<String, Integer>> deducedPlayerTokenMap;
 	
 	private static ComputerPlayer computerPlayer = null;
 
@@ -87,11 +87,11 @@ public class ComputerPlayer {
 		return arrayList;
 	}
 
-	public Map<String, Map<PlayerInformation, Integer>> getAllPlayerTrrianMap() {
+	public Map<String, Map<String, Integer>> getAllPlayerTrrianMap() {
 		return allPlayerTrrianMap;
 	}
 
-	public void setAllPlayerTrrianMap(Map<String, Map<PlayerInformation, Integer>> terrainList) {
+	public void setAllPlayerTrrianMap(Map<String, Map<String, Integer>> terrainList) {
 		this.allPlayerTrrianMap = terrainList;
 	}
 
@@ -195,11 +195,11 @@ public class ComputerPlayer {
 		this.playerObj = playerObj;
 	}
 
-	public Map<String, Map<PlayerInformation, Integer>> getDeducedPlayerTokenMap() {
+	public Map<String, Map<String, Integer>> getDeducedPlayerTokenMap() {
 		return deducedPlayerTokenMap;
 	}
 
-	public void setDeducedPlayerTokenMap(Map<String, Map<PlayerInformation, Integer>> deducedPlayerTokenMap) {
+	public void setDeducedPlayerTokenMap(Map<String, Map<String, Integer>> deducedPlayerTokenMap) {
 		this.deducedPlayerTokenMap = deducedPlayerTokenMap;
 	}
 

@@ -17,7 +17,7 @@ public class PlayerInformation {
 	private String playerName;
 	private Map<String, List<String>> personalTokenMap;
 	Map<String, Map<String, Boolean>> areaTokenMap;
-	List<PlayerInformation> playerNameList;
+	List<String> playerNameList;
 	Set<String> dieFaceList;
 	Set<String> terrianCharList;
 	Set<String> terrianLocationList;
@@ -28,12 +28,15 @@ public class PlayerInformation {
 	
 	private static PlayerInformation playerInformation = null;
 
-	private PlayerInformation(){
-		//private 
-	}
+
 	public PlayerInformation(String playerName) {
 		PlayerInformation.getInstance().setPlayerName(playerName);
 	}
+	
+	public PlayerInformation() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public static PlayerInformation getInstance() {
 		if (playerInformation == null)
 			playerInformation = new PlayerInformation();
@@ -97,12 +100,12 @@ public class PlayerInformation {
 		this.areaTokenMap = areaTokenMap;
 	}
 
-	public List<PlayerInformation> getPlayerNameList() {
+	public List<String> getPlayerNameList() {
 		return playerNameList;
 	}
 
-	public void setPlayerNameList(List<PlayerInformation> playerNameList) {
-		this.playerNameList = playerNameList;
+	public void setPlayerNameList(List<String> playerNameList2) {
+		this.playerNameList = playerNameList2;
 	}
 	
 	public Set<String> getDieFaceList() {
@@ -310,4 +313,5 @@ public class PlayerInformation {
 		}
 
 	}
+	
 }

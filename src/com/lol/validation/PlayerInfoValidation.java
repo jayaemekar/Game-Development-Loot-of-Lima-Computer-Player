@@ -39,6 +39,7 @@ public class PlayerInfoValidation {
 	public List<String> createPlayerArray(Integer numberOfPlayers) {
 		List<String> playerNameList = new ArrayList<>();
 		for (int i = 1; i <= numberOfPlayers; i++) {
+			
 			playerNameList.add(("P" + i).trim());
 		}
 		return playerNameList;

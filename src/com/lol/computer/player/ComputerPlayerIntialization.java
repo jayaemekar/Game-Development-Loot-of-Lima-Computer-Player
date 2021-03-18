@@ -37,12 +37,12 @@ public class ComputerPlayerIntialization {
 
 	public static void initTerrianTokenMap(Integer playerNumber) {
 		int noPlayer = PlayerInformation.getInstance().getNumberOfPlayers();
-		Map<PlayerInformation, Integer> playerList = new HashMap<>();
+		Map<String, Integer> playerList = new HashMap<>();
 		for (int no = 1; no <= noPlayer; no++) {
 			String playerName = "P" + String.valueOf(no);
 
 			PlayerInformation P = new PlayerInformation(playerName);
-			playerList.put(P, -1);
+			playerList.put(playerName, -1);
 		}
 		List<String> location = new ArrayList<String>();
 		location.add(Constants.NORTH_CHAR);
@@ -53,7 +53,7 @@ public class ComputerPlayerIntialization {
 		location.add(Constants.SOUTH_WEST_CHAR);
 		location.add(Constants.WEST_CHAR);
 		location.add(Constants.EAST_CHAR);
-		Map<String, Map<PlayerInformation, Integer>> terrainList = new HashMap<>();
+		Map<String, Map<String, Integer>> terrainList = new HashMap<>();
 		
 		location.stream().forEach(loc -> {
 
@@ -68,37 +68,38 @@ public class ComputerPlayerIntialization {
 	}
 
 	public static void updatePersonalTokenMap(List<String> messageDetailsList, String playerName,
-			List<PlayerInformation> PlayerList) {
+			List<String> PlayerList) {
 		
-	/*	messageDetailsList.stream().forEach(token -> {
-			//String terrianToken = String.valueOf(token.charAt(1));
-			ComputerPlayer.getInstance().getAllPlayerTrrianMap().entrySet().stream()
-					.filter(terrian -> terrian.getKey().equals(token)).map(Map.Entry::getValue)
-					.collect(Collectors.toList())
-					
-					.get(0).entrySet().stream().forEach(player-> {
-						System.out.println("player.getKey().getPlayerName()"+player.getKey().getInstance().getPlayerName());
-						if (!playerName.equals(player.getKey().getInstance().getPlayerName())) {
-							
-							player.setValue(0);
-						} else {
-							player.setValue(1);
-						}
-					}
-					);
-		});*/
+//		messageDetailsList.stream().forEach(token -> {
+//			//String terrianToken = String.valueOf(token.charAt(1));
+//			ComputerPlayer.getInstance().getAllPlayerTrrianMap().entrySet().stream()
+//					.filter(terrian -> terrian.getKey().equals(token)).map(Map.Entry::getValue)
+//					.collect(Collectors.toList())
+//					.get(0).entrySet().stream();
+////					forEach( player -> {
+////						
+////						System.out.println("player.getKey().getPlayerName()"+ player.getKey());
+//////						if (!playerName.equals(player.getKey().getInstance().getPlayerName())) {
+//////							
+//////							player.setValue(0);
+//////						} else {
+//////							player.setValue(1);
+//////						}
+////					}
+////					);
+//		});
 		
-		for (PlayerInformation player : PlayerList) {
+		for (String player : PlayerList) {
 			// marking 1 for having the token
 			for (String terrianToken : messageDetailsList) {
-				Map<PlayerInformation, Integer> terrianMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap()
+				Map<String, Integer> terrianMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap()
 						.get(terrianToken);
 				if (!playerName.equals(player)) {
 					terrianMap.put(player, 0);
 				} else {
 					terrianMap.put(player, 1);
 				}
-				ComputerPlayer.getInstance().getAllPlayerTrrianMap().put(player.getPlayerName(), terrianMap);
+				ComputerPlayer.getInstance().getAllPlayerTrrianMap().put(player, terrianMap);
 			}
 		}
 		System.out.println("terrian map" + ComputerPlayer.getInstance().getAllPlayerTrrianMap());

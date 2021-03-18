@@ -98,7 +98,7 @@ public class GameProcessing {
 	}
 
 	private static void updatededucedTerrianMap(Set<String> deducedTerrianToken, Set<String> terrianToken,
-			String playerName, List<PlayerInformation> playerList, List<String> messageDetailsList) {
+			String playerName, List<String> playerList, List<String> messageDetailsList) {
 
 		String noIfTokens = messageDetailsList.get(3);
 		String areaToken = messageDetailsList.get(2);
@@ -119,9 +119,9 @@ public class GameProcessing {
 
 	private static void updateDeducedPlayerTokenMap() {
 		Set<String> allTerrianSet = ComputerPlayer.getInstance().getAllTerriansList();
-		Map<String, Map<PlayerInformation, Integer>> deducedPlayerTokenMap = new HashMap<>();
+		Map<String, Map<String, Integer>> deducedPlayerTokenMap = new HashMap<>();
 		for (String terrian : allTerrianSet) {
-			Map<PlayerInformation, Integer> terrianMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrian);
+			Map<String, Integer> terrianMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrian);
 			int sum = terrianMap.values().stream().reduce(0, Integer::sum);
 			if (sum == 0) {
 				Set<String> treasureLocSet = ComputerPlayer.getInstance().getTreasureLoc();
