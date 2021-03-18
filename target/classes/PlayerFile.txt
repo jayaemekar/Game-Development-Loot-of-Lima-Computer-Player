@@ -1,4 +1,4 @@
-05:EEF,NEF,F,P2P1,P1.
+05:NEF,SWM,A,P2P1,P1.
 another line of stuff
 05:SEM,NWB,A,P3
 07:P1,1M,2M,
