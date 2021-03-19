@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 
 import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
@@ -44,19 +46,25 @@ public class ComputerPlayerIntialization {
 
 	public static void updatePersonalTokenMap(List<String> messageDetailsList, String playerName,
 			List<String> PlayerList) {
-		for (String player : PlayerList) {
-			// marking 1 for having the token
-			for (String terrianToken : messageDetailsList) {
-				Map<String, Integer> terrianMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap()
-						.get(terrianToken);
-				if (!playerName.equals(player)) {
-					terrianMap.put(player, 0);
-				} else {
-					terrianMap.put(player, 1);
-				}
-				ComputerPlayer.getInstance().getAllPlayerTrrianMap().put(player, terrianMap);
-			}
-		}
+		  	
+		messageDetailsList.stream().forEach(token -> {
+			
+			ComputerPlayer.getInstance().getAllPlayerTrrianMap().entrySet().stream().filter(terrianToken -> terrianToken.getKey().equals(token)).forEach(
+					terrianMap -> {
+						HashMap<String, Integer> map = new HashMap<>();
+
+							terrianMap.getValue().entrySet().stream().forEach(playerMap -> {
+										if(playerMap.getKey().equals(playerName)) {
+											map.put(playerMap.getKey(), 1);
+										}
+										else
+											map.put(playerMap.getKey(), 0);
+										
+								});
+							terrianMap.setValue(map);
+							}
+					);
+		});
 		System.out.println("terrian map" + ComputerPlayer.getInstance().getAllPlayerTrrianMap());
 	}
 
