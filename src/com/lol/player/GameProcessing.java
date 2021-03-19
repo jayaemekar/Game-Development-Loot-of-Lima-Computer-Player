@@ -114,26 +114,27 @@ public class GameProcessing {
 
 		updateDeducedPlayerTokenMap();
 
-		ComputerPlayerIntialization.updatePersonalTokenMap(updatedTerrianList, playerName, playerList);
+		ComputerPlayerIntialization.updatePersonalTokenMap(updatedTerrianList, playerName);
 
 	}
 
 	private static void updateDeducedPlayerTokenMap() {
-		Set<String> allTerrianSet = ComputerPlayer.getInstance().getAllTerriansList();
+		
 		Map<String, Map<String, Integer>> deducedPlayerTokenMap = new HashMap<>();
-		for (String terrian : allTerrianSet) {
-			Map<String, Integer> terrianMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrian);
-			int sum = terrianMap.values().stream().reduce(0, Integer::sum);
+		ComputerPlayer.getInstance().getAllTerriansList().forEach(terrian -> {
+			
+			int sum = ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrian).values().stream().reduce(0, Integer::sum);
 			if (sum == 0) {
 				Set<String> treasureLocSet = ComputerPlayer.getInstance().getTreasureLoc();
 				treasureLocSet.add(terrian);
 				ComputerPlayer.getInstance().setTreasureLoc(treasureLocSet);
 			} else if (sum != 1) {
-				deducedPlayerTokenMap.put(terrian, terrianMap);
+				deducedPlayerTokenMap.put(terrian, ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrian));
 			}
 
-		}
+		});
 		ComputerPlayer.getInstance().setDeducedPlayerTokenMap(deducedPlayerTokenMap);
+
 	}
 
 	/**

@@ -44,8 +44,7 @@ public class ComputerPlayerIntialization {
 		System.out.println("terrainList " + terrainList);
 	}
 
-	public static void updatePersonalTokenMap(List<String> messageDetailsList, String playerName,
-			List<String> PlayerList) {
+	public static void updatePersonalTokenMap(List<String> messageDetailsList, String playerName) {
 		  	
 		messageDetailsList.stream().forEach(token -> {
 			

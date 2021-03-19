@@ -67,8 +67,7 @@ public class GameIntialization {
 						isLeftOverToken, isSwapPlayerToken, PlayerInformation.getInstance().getAreaTokenMap()));
 		PlayerInformation.getInstance().printPersonalTokens(PlayerInformation.getInstance().getPersonalTokenMap());
 		
-		ComputerPlayerIntialization.updatePersonalTokenMap(messageDetailsList,PlayerInformation.getInstance().getPlayerName(),
-				PlayerInformation.getInstance().getPlayerNameList());
+		ComputerPlayerIntialization.updatePersonalTokenMap(messageDetailsList,PlayerInformation.getInstance().getPlayerName());
 		
 		//Asking for bonus player information
 	/*	String isBonusPlayerInformationAvailable = Constants.NO;
@@ -96,8 +95,7 @@ public class GameIntialization {
 				isSwapPlayerToken, PlayerInformation.getInstance().getAreaTokenMap());		
 		System.out.println(areaTokenMap.get(Constants.LEFT_OVER_TOKENS));
 		isLeftOverToken = false;
-		ComputerPlayerIntialization.updatePersonalTokenMap(messageDetailsList,PlayerInformation.getInstance().getPlayerName(),
-				PlayerInformation.getInstance().getPlayerNameList());
+		ComputerPlayerIntialization.updatePersonalTokenMap(messageDetailsList,PlayerInformation.getInstance().getPlayerName());
 	}
 
 	@SuppressWarnings({ "resource", "unused" })
