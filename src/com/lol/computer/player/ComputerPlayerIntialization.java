@@ -1,7 +1,6 @@
 package com.lol.computer.player;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,36 +11,13 @@ import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
 
 public class ComputerPlayerIntialization {
-	static int i =0;
-
-	public static void main(String[] args) {
-
-		initTerrianTokenMap(3);
-
-		List<String> messageDetailsList = new ArrayList<>();
-		messageDetailsList.add("1M");
-		messageDetailsList.add("2M");
-		messageDetailsList.add("2B");
-		messageDetailsList.add("3F");
-		messageDetailsList.add("8B");
-		String playerName = "P1";
-		List<String> PlayerList = new ArrayList<>();
-		PlayerList.add("P1");
-		PlayerList.add("P2");
-		PlayerList.add("P3");
-
-	//	updatePersonalTokenMap(messageDetailsList, playerName, PlayerList);
-		// checkIsTreasureLocFound() ;
-
-	}
+	static int i = 0;
 
 	public static void initTerrianTokenMap(Integer playerNumber) {
 		int noPlayer = PlayerInformation.getInstance().getNumberOfPlayers();
 		Map<String, Integer> playerList = new HashMap<>();
 		for (int no = 1; no <= noPlayer; no++) {
 			String playerName = "P" + String.valueOf(no);
-
-			PlayerInformation P = new PlayerInformation(playerName);
 			playerList.put(playerName, -1);
 		}
 		List<String> location = new ArrayList<String>();
@@ -54,41 +30,20 @@ public class ComputerPlayerIntialization {
 		location.add(Constants.WEST_CHAR);
 		location.add(Constants.EAST_CHAR);
 		Map<String, Map<String, Integer>> terrainList = new HashMap<>();
-		
-		location.stream().forEach(loc -> {
 
+		location.stream().forEach(loc -> {
 			i++;
-			terrainList.put(i+Constants.MOUNTAINS_CHAR, playerList);
-			terrainList.put(i+Constants.BEACH_CHAR, playerList);
-			terrainList.put(i+Constants.FOREST_CHAR, playerList);
+			terrainList.put(i + Constants.MOUNTAINS_CHAR, playerList);
+			terrainList.put(i + Constants.BEACH_CHAR, playerList);
+			terrainList.put(i + Constants.FOREST_CHAR, playerList);
 
 		});
 		ComputerPlayer.getInstance().setAllPlayerTrrianMap(terrainList);
-		System.out.println("terrainList "+terrainList);
+		System.out.println("terrainList " + terrainList);
 	}
 
 	public static void updatePersonalTokenMap(List<String> messageDetailsList, String playerName,
 			List<String> PlayerList) {
-		
-//		messageDetailsList.stream().forEach(token -> {
-//			//String terrianToken = String.valueOf(token.charAt(1));
-//			ComputerPlayer.getInstance().getAllPlayerTrrianMap().entrySet().stream()
-//					.filter(terrian -> terrian.getKey().equals(token)).map(Map.Entry::getValue)
-//					.collect(Collectors.toList())
-//					.get(0).entrySet().stream();
-////					forEach( player -> {
-////						
-////						System.out.println("player.getKey().getPlayerName()"+ player.getKey());
-//////						if (!playerName.equals(player.getKey().getInstance().getPlayerName())) {
-//////							
-//////							player.setValue(0);
-//////						} else {
-//////							player.setValue(1);
-//////						}
-////					}
-////					);
-//		});
-		
 		for (String player : PlayerList) {
 			// marking 1 for having the token
 			for (String terrianToken : messageDetailsList) {
@@ -105,7 +60,6 @@ public class ComputerPlayerIntialization {
 		System.out.println("terrian map" + ComputerPlayer.getInstance().getAllPlayerTrrianMap());
 	}
 
-	
 	public static void updateDirectionIntegerMap() {
 		Map<String, Integer> dirIntMap = new HashMap<>();
 		dirIntMap.put(Constants.NORTH_CHAR, 1);

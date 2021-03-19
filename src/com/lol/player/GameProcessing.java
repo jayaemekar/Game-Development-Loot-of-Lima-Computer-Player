@@ -62,7 +62,8 @@ public class GameProcessing {
 
 	public static String checkIsTreasureLocFound() {
 		updateDeducedPlayerTokenMap();
-		if (ComputerPlayer.getInstance().getTreasureLoc().size() == 2)
+		if (ComputerPlayer.getInstance().getTreasureLoc() != null
+				&& ComputerPlayer.getInstance().getTreasureLoc().size() == 2)
 			return "YES";
 		System.out.println("getDeducedPlayerTokenMap" + ComputerPlayer.getInstance().getDeducedPlayerTokenMap());
 		return "NO";
