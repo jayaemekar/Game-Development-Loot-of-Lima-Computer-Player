@@ -1,98 +1,48 @@
 package com.lol.computer.player;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.lol.constant.Constants;
-import com.lol.helper.PlayerInformation;
+class Node {
+	Map<String, Map<String, Integer>> terrainList;
+	String direction;
+	String number;
+	Node next;
+
+	public Node(Map<String, Map<String, Integer>> terrainList, String direction, String number) {
+		this.terrainList = terrainList;
+		this.direction = direction;
+		this.number = number;
+	}
+}
 
 public class ComputerPlayer {
+	private Node head = null;
+	private Node tail = null;
+	private Map<String, Boolean> playerTokenArray;
+	private Set<String> notTreasureLoc = new HashSet<>();;
+	private Set<String> treasureLoc = new HashSet<>();;
+	private Map<String, Map<String, Integer>> allPlayerTrrianMap;
+	private Map<String, Integer> dirIntMap;
+	private Map<Integer, Set<String>> directionIntegerMap;
+	private Map<String, Map<String, Integer>> deducedPlayerTokenMap;
+	private Set<String> deducedForestLoc = new HashSet<>();
+	private Set<String> deducedBeachLoc = new HashSet<>();
+	private Set<String> deducedMountainLoc = new HashSet<>();
+	private Node currentNode;
+	private Map<String, Integer> playerObj;
 
-	Map<String, Boolean> playerTokenArray;
-
-	Set<String> notTreasureLoc;
-
-	Set<String> canbeTreasureLoc;
-
-	Set<String> treasureLoc;
-
-	List<Integer> defaultLocVal;
-
-	Map<String, Map<String, Integer>> allPlayerTrrianMap;
-
-	Map<String, Integer> playerObj;
-
-	Set<String> allTerriansList;
-	Map<String, Integer> dirIntMap;
-	Map<Integer, Set<String>> directionIntegerMap;
-	Map<String, Map<String, Integer>> deducedPlayerTokenMap;
-	
 	private static ComputerPlayer computerPlayer = null;
 
 	private ComputerPlayer() {
-		// private
+		// private constructor
 	}
 
 	public static ComputerPlayer getInstance() {
 		if (computerPlayer == null)
 			computerPlayer = new ComputerPlayer();
-
 		return computerPlayer;
-	}
-
-	public Map<String, Boolean> getPlayerTokenArray() {
-		return playerTokenArray;
-	}
-
-	public void setPlayerTokenArray(Map<String, Boolean> playerTokenArray) {
-		this.playerTokenArray = playerTokenArray;
-	}
-
-	public Set<String> getNotTreasureLoc() {
-		return notTreasureLoc;
-	}
-
-	public void setNotTreasureLoc(Set<String> notTreasureLoc) {
-		this.notTreasureLoc = notTreasureLoc;
-	}
-
-	public Set<String> getCanbeTreasureLoc() {
-		return canbeTreasureLoc;
-	}
-
-	public void setCanbeTreasureLoc(Set<String> canbeTreasureLoc) {
-		this.canbeTreasureLoc = canbeTreasureLoc;
-	}
-
-	public Set<String> getTreasureLoc() {
-		return treasureLoc;
-	}
-
-	public void setTreasureLoc(Set<String> treasureLoc) {
-		this.treasureLoc = treasureLoc;
-	}
-
-	public List<Integer> getDefaultLocVal() {
-		return defaultLocVal;
-	}
-
-	public ArrayList<Integer> setDefaultLocVal(ArrayList<Integer> arrayList, Integer playerNumber) {
-
-		for (int i = 0; i < playerNumber; i++)
-			arrayList.add(-1);
-		this.defaultLocVal = arrayList;
-		return arrayList;
-	}
-
-	public Map<String, Map<String, Integer>> getAllPlayerTrrianMap() {
-		return allPlayerTrrianMap;
-	}
-
-	public void setAllPlayerTrrianMap(Map<String, Map<String, Integer>> terrainList) {
-		this.allPlayerTrrianMap = terrainList;
 	}
 
 	public Map<String, Integer> getPlayerObj() {
@@ -105,62 +55,36 @@ public class ComputerPlayer {
 		this.playerObj = playerObj;
 		return playerObj;
 	}
-
-	public Set<String> getAllTerriansList() {
-		Set<String> allTerrianList = new HashSet<>();
-		allTerrianList.add(Constants.MOUNTAIN_1);
-		allTerrianList.add(Constants.MOUNTAIN_2);
-		allTerrianList.add(Constants.MOUNTAIN_3);
-		allTerrianList.add(Constants.MOUNTAIN_4);
-		allTerrianList.add(Constants.MOUNTAIN_5);
-		allTerrianList.add(Constants.MOUNTAIN_6);
-		allTerrianList.add(Constants.MOUNTAIN_7);
-		allTerrianList.add(Constants.MOUNTAIN_8);
-		allTerrianList.add(Constants.BEACH_1);
-		allTerrianList.add(Constants.BEACH_2);
-		allTerrianList.add(Constants.BEACH_3);
-		allTerrianList.add(Constants.BEACH_4);
-		allTerrianList.add(Constants.BEACH_5);
-		allTerrianList.add(Constants.BEACH_6);
-		allTerrianList.add(Constants.BEACH_7);
-		allTerrianList.add(Constants.BEACH_8);
-		allTerrianList.add(Constants.FOREST_1);
-		allTerrianList.add(Constants.FOREST_2);
-		allTerrianList.add(Constants.FOREST_3);
-		allTerrianList.add(Constants.FOREST_4);
-		allTerrianList.add(Constants.FOREST_5);
-		allTerrianList.add(Constants.FOREST_6);
-		allTerrianList.add(Constants.FOREST_7);
-		allTerrianList.add(Constants.FOREST_8);
-		return allTerrianList;
+	public Map<String, Boolean> getPlayerTokenArray() {
+		return playerTokenArray;
 	}
 
-	public void setAllTerriansList(Set<String> allTerrianList) {
-		allTerrianList.add(Constants.MOUNTAIN_1);
-		allTerrianList.add(Constants.MOUNTAIN_2);
-		allTerrianList.add(Constants.MOUNTAIN_3);
-		allTerrianList.add(Constants.MOUNTAIN_4);
-		allTerrianList.add(Constants.MOUNTAIN_5);
-		allTerrianList.add(Constants.MOUNTAIN_6);
-		allTerrianList.add(Constants.MOUNTAIN_7);
-		allTerrianList.add(Constants.MOUNTAIN_8);
-		allTerrianList.add(Constants.BEACH_1);
-		allTerrianList.add(Constants.BEACH_2);
-		allTerrianList.add(Constants.BEACH_3);
-		allTerrianList.add(Constants.BEACH_4);
-		allTerrianList.add(Constants.BEACH_5);
-		allTerrianList.add(Constants.BEACH_6);
-		allTerrianList.add(Constants.BEACH_7);
-		allTerrianList.add(Constants.BEACH_8);
-		allTerrianList.add(Constants.FOREST_1);
-		allTerrianList.add(Constants.FOREST_2);
-		allTerrianList.add(Constants.FOREST_3);
-		allTerrianList.add(Constants.FOREST_4);
-		allTerrianList.add(Constants.FOREST_5);
-		allTerrianList.add(Constants.FOREST_6);
-		allTerrianList.add(Constants.FOREST_7);
-		allTerrianList.add(Constants.FOREST_8);
-		this.allTerriansList = allTerrianList;
+	public void setPlayerTokenArray(Map<String, Boolean> playerTokenArray) {
+		this.playerTokenArray = playerTokenArray;
+	}
+
+	public Set<String> getNotTreasureLoc() {
+		return notTreasureLoc;
+	}
+
+	public Set<String> setNotTreasureLoc(Set<String> notTreasureLoc) {
+		return this.notTreasureLoc = notTreasureLoc;
+	}
+
+	public Set<String> getTreasureLoc() {
+		return treasureLoc;
+	}
+
+	public Set<String> setTreasureLoc(Set<String> treasureLoc) {
+		return this.treasureLoc = treasureLoc;
+	}
+
+	public Map<String, Map<String, Integer>> getAllPlayerTrrianMap() {
+		return allPlayerTrrianMap;
+	}
+
+	public void setAllPlayerTrrianMap(Map<String, Map<String, Integer>> terrainList) {
+		this.allPlayerTrrianMap = terrainList;
 	}
 
 	public Map<String, Integer> getDirIntMap() {
@@ -187,14 +111,6 @@ public class ComputerPlayer {
 		ComputerPlayer.computerPlayer = computerPlayer;
 	}
 
-	public void setDefaultLocVal(List<Integer> defaultLocVal) {
-		this.defaultLocVal = defaultLocVal;
-	}
-
-	public void setPlayerObj(Map<String, Integer> playerObj) {
-		this.playerObj = playerObj;
-	}
-
 	public Map<String, Map<String, Integer>> getDeducedPlayerTokenMap() {
 		return deducedPlayerTokenMap;
 	}
@@ -203,5 +119,86 @@ public class ComputerPlayer {
 		this.deducedPlayerTokenMap = deducedPlayerTokenMap;
 	}
 
+	public Set<String> getDeducedForestLoc() {
+		return deducedForestLoc;
+	}
 
+	public void setDeducedForestLoc(Set<String> deducedForestLoc) {
+		this.deducedForestLoc = deducedForestLoc;
+	}
+
+	public Set<String> getDeducedBeachLoc() {
+		return deducedBeachLoc;
+	}
+
+	public void setDeducedBeachLoc(Set<String> deducedBeachLoc) {
+		this.deducedBeachLoc = deducedBeachLoc;
+	}
+
+	public Set<String> getDeducedMountainLoc() {
+		return deducedMountainLoc;
+	}
+
+	public void setDeducedMountainLoc(Set<String> deducedMountainLoc) {
+		this.deducedMountainLoc = deducedMountainLoc;
+	}
+
+	public Node getHead() {
+		return head;
+	}
+
+	public void setHead(Node head) {
+		this.head = head;
+	}
+
+	public Node getTail() {
+		return tail;
+	}
+
+	public void setTail(Node tail) {
+		this.tail = tail;
+	}
+
+	public Node getCurrentNode() {
+		return currentNode;
+	}
+
+	public void setCurrentNode(Node currentNode) {
+		this.currentNode = currentNode;
+	}
+
+	// This function will add the new node at the end of the list.
+	public void add(Map<String, Map<String, Integer>> terrainList, String direction, int number) {
+		// Create new node
+		Node newNode = new Node(terrainList, direction, String.valueOf(number));
+		// Checks if the list is empty.
+		if (head == null) {
+			head = newNode;
+			tail = newNode;
+			newNode.next = head;
+		} else {
+			tail.next = newNode;
+			tail = newNode;
+			tail.next = head;
+		}
+	}
+
+	public void display() {
+		Node current = head;
+		if (head == null) {
+			System.out.println("List is empty");
+		} else {
+			System.out.println("Nodes of the circular linked list: ");
+			do {
+
+				System.out.print(" " + current.terrainList);
+				System.out.print(" " + current.direction);
+				System.out.print(" " + current.number);
+
+				System.out.print("\n");
+				current = current.next;
+			} while (current != head);
+			System.out.println();
+		}
+	}
 }

@@ -24,21 +24,21 @@ public class Player {
 		
 		System.out.println("________________ LOOT OF LIMA!! Let's Begin the Game !_________________ ");
 		System.out.println("________________ Instructions to Play Game_____________________________ ");
-		System.out.println("1. All inputs should be given in CAPS letter");
-		System.out.println("2. Players are named as P1,P2,P3 etc.");
+		System.out.println("________________ 1. All inputs should be given in CAPS letter__________ ");
+		System.out.println("________________ 2. Players are named as P1,P2,P3 etc._________________ ");
 		System.out.println("________________ Game Ready !! ________________________________________ ");
 				
 		System.out.println("\nEnter Your Player Name (in the format P1,P2,P3 etc.) : ");
 		String playerNumber = sc.nextLine();
 		
-		String fileWritePath = "/tmp/" + teamName +"from"+ playerNumber;
-		String fileReadPath = "/tmp/" + teamName +"to"+ playerNumber;
+		String fileWritePath = "/tmp/" + teamName +"from"+ playerNumber; // Write File path
+		String fileReadPath  = "/tmp/" + teamName +"to"  + playerNumber; // Read File path
 		
-		fileReadPath = "/Users/monikagadage/git/LOLPlayer-ComputerPlayer/src/ServerFile.txt";
-		fileWritePath = "/Users/monikagadage/git/LOLPlayer-ComputerPlayer/src/PlayerFile.txt";
+		//fileReadPath = "F:/LootOfLima/LOLPlayer-ComputerPlayer/src/ServerFile.txt";
+		//fileWritePath = "F:/LootOfLima/LOLPlayer-ComputerPlayer/src/PlayerFile.txt";
 		PlayerInformation.getInstance().setFileReadPath(fileReadPath);
 		PlayerInformation.getInstance().setFileWritePath(fileWritePath);
-		PlayerInformation.getInstance().setGameOver(false);
-		Utility.readFile(PlayerInformation.getInstance().getFileReadPath(), PlayerInformation.getInstance().isGameOver());
+		PlayerInformation.getInstance().setGameOver(false); // Game over flag to set
+		Utility.readFile(PlayerInformation.getInstance().getFileReadPath(), PlayerInformation.getInstance().isGameOver()); //
 	}
 }

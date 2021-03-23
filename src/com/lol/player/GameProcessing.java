@@ -1,16 +1,12 @@
 package com.lol.player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
 import com.lol.computer.player.ComputerPlayer;
-import com.lol.computer.player.ComputerPlayerIntialization;
+import com.lol.computer.player.ComputerPlayerDeductionLogic;
 import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
 import com.lol.helper.Utility;
@@ -25,7 +21,7 @@ public class GameProcessing {
 	/**
 	 * This method is to parse the dice information and start the Game play
 	 * 04:P1,SEM,NWB,SWF
-	 * 
+	 * This Dice Rolled message P1-Dice rolled for Player,
 	 * @param messageNumber
 	 * @param messageDetailsList
 	 */
@@ -39,10 +35,10 @@ public class GameProcessing {
 		}
 		roundNumber++;
 
-		System.out.println("_______________________Player " + playerName + "'s turn______________________");
+		System.out.println("_______________________Player " + playerName + "'s turn____________________________");
 		String istreasureLocFound = Constants.NO;
 		if (!treasureGuessSent) {
-			istreasureLocFound = checkIsTreasureLocFound();
+			istreasureLocFound = ComputerPlayerDeductionLogic.checkIsTreasureLocFound();
 			System.out.println("\nGuess the Treasure Locations???(YES/NO)???  :: " + istreasureLocFound);
 
 		}
@@ -60,88 +56,9 @@ public class GameProcessing {
 		}
 	}
 
-	public static String checkIsTreasureLocFound() {
-		updateDeducedPlayerTokenMap();
-		if (ComputerPlayer.getInstance().getTreasureLoc() != null
-				&& ComputerPlayer.getInstance().getTreasureLoc().size() == 2)
-			return "YES";
-		System.out.println("getDeducedPlayerTokenMap" + ComputerPlayer.getInstance().getDeducedPlayerTokenMap());
-		return "NO";
-	}
-
-	public static void processAnswerMessage(List<String> messageDetailsList) {
-
-		// it should parse message
-		// travese through list and identify the tokens to be marked
-		// and mark the tokens
-		System.out.println(messageDetailsList);
-		String playerName = messageDetailsList.get(4);
-		String Diretion1 = messageDetailsList.get(0);
-		String Diretion2 = messageDetailsList.get(1);
-
-		Integer dirNum1 = ComputerPlayer.getInstance().getDirIntMap().get(Diretion1.substring(0, 2));
-		Integer dirNum2 = ComputerPlayer.getInstance().getDirIntMap().get(Diretion2.substring(0, 2));
-		Set<String> terrianToken = new HashSet<>();
-		System.out.println(dirNum1);
-		System.out.println(dirNum2);
-		for (int i = dirNum1; i < dirNum2; i++) {
-			terrianToken.addAll(ComputerPlayer.getInstance().getDirectionIntegerMap().get(i));
-		}
-
-		System.out.println("terrianToken :" + terrianToken);
-		Set<String> deducedTerrianToken = ComputerPlayer.getInstance().getDeducedPlayerTokenMap().keySet();
-		System.out.println("deducedTerrianToken :" + deducedTerrianToken);
-		terrianToken.retainAll(deducedTerrianToken);
-		System.out.println("After terrianToken :" + terrianToken);
-		updatededucedTerrianMap(deducedTerrianToken, terrianToken, playerName,
-				PlayerInformation.getInstance().getPlayerNameList(), messageDetailsList);
-
-	}
-
-	private static void updatededucedTerrianMap(Set<String> deducedTerrianToken, Set<String> terrianToken,
-			String playerName, List<String> playerList, List<String> messageDetailsList) {
-
-		String noIfTokens = messageDetailsList.get(3);
-		String areaToken = messageDetailsList.get(2);
-		List<String> updatedTerrianList = new ArrayList<>();
-		if (Constants.BEACH_CHAR.equals(areaToken)) {
-			for (String beachTerrian : terrianToken) {
-				if (beachTerrian.contains(Constants.BEACH_CHAR)) {
-					updatedTerrianList.add(beachTerrian);
-				}
-			}
-		}
-
-		updateDeducedPlayerTokenMap();
-
-		ComputerPlayerIntialization.updatePersonalTokenMap(updatedTerrianList, playerName);
-
-	}
-
-	private static void updateDeducedPlayerTokenMap() {
-		
-		Map<String, Map<String, Integer>> deducedPlayerTokenMap = new HashMap<>();
-		ComputerPlayer.getInstance().getAllTerriansList().forEach(terrian -> {
-			
-			int sum = ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrian).values().stream().reduce(0, Integer::sum);
-			if (sum == 0) {
-				Set<String> treasureLocSet = ComputerPlayer.getInstance().getTreasureLoc();
-				treasureLocSet.add(terrian);
-				ComputerPlayer.getInstance().setTreasureLoc(treasureLocSet);
-			} else if (sum != 1) {
-				deducedPlayerTokenMap.put(terrian, ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrian));
-			}
-
-		});
-		ComputerPlayer.getInstance().setDeducedPlayerTokenMap(deducedPlayerTokenMap);
-
-	}
-
 	/**
 	 * This method is to build the question form human user input
 	 * 05:NNF,NEF,A,P3
-	 * 
-	 * @param messageDetailsList
 	 * 
 	 * @param messageDetailsList
 	 */
@@ -318,7 +235,7 @@ public class GameProcessing {
 	 * @param messageDetailsList
 	 */
 	public void getAnswerInformation(String messageNumber, List<String> messageDetailsList) {
-		processAnswerMessage(messageDetailsList);
+		ComputerPlayerDeductionLogic.processAnswerMessage(messageDetailsList);
 		System.out.println("Message [" + messageNumber + "] Player " + messageDetailsList.get(4) + " has "
 				+ messageDetailsList.get(3) + " "
 				+ PlayerInformation.getInstance().getTerrianTokenInformation(messageDetailsList.get(2))
@@ -331,20 +248,19 @@ public class GameProcessing {
 	/**
 	 * This method is to send the treasure Guess message to the server
 	 * 07:P1,3F,6M
-	 * 
 	 * @param messageNumber
 	 * @param messageDetailsList
 	 * @return
 	 */
-	@SuppressWarnings("resource")
+
 	public boolean treasureGuess() {
 		StringBuilder message = new StringBuilder("07:");
-		Scanner sc = new Scanner(System.in);
-		Set<String> treasureLoc =  ComputerPlayer.getInstance().getTreasureLoc();
-		System.out.println("Please enter your first guess");
+		Set<String> treasureLoc = ComputerPlayer.getInstance().getTreasureLoc();
+		String[] treasureLocArr = treasureLoc.toArray(new String[treasureLoc.size()]);
+		
 		message.append(PlayerInformation.getInstance().getPlayerName()).append(Constants.COMMA);
-		String guessOne = sc.nextLine();
-
+		String guessOne = treasureLocArr[0];
+		System.out.println("First guess identified as :: " +guessOne);
 		if (PlayerInfoValidation.getInstance().validateTerrianLocation(guessOne)) {
 			message.append(guessOne).append(Constants.COMMA);
 		} else {
@@ -352,9 +268,9 @@ public class GameProcessing {
 			treasureGuess();
 			return false;
 		}
-
-		System.out.println("Please enter your second guess");
-		String guessTwo = sc.nextLine();
+		
+		String guessTwo = treasureLocArr[1];
+		System.out.println("Second guess identified as :: "+guessTwo);
 		if (PlayerInfoValidation.getInstance().validateTerrianLocation(guessTwo)) {
 			message.append(guessTwo);
 		} else {
@@ -365,7 +281,7 @@ public class GameProcessing {
 
 		Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), message.toString());
 		Utility.parseMessage(message.toString());
-		System.out.println("\n ======***====== Your guess sent to server ======***====== \n");
+		System.out.println("\n ====== ====== ====== ====== Your guess sent to server ====== ====== ====== ======\n");
 		return true;
 	}
 
@@ -377,7 +293,6 @@ public class GameProcessing {
 	/**
 	 * This method is used to parse the winner player and token information
 	 * 08:player1,wintoken1,wintoken2 eg.08:P1,3F,6M
-	 * 
 	 * @param messageNumber
 	 * @param messageDetailsList
 	 */
@@ -385,7 +300,7 @@ public class GameProcessing {
 		System.out.println("\nMessage [" + messageNumber + "] Player " + messageDetailsList.get(0)
 				+ " guessed the correct treasure locations\n");
 		if (messageDetailsList.get(0).equals(PlayerInformation.getInstance().getPlayerName())) {
-			System.out.println("\n\n======***====== YOU ARE THE WINNER !!======***======");
+			System.out.println("\n\n====== ====== ====== ====== YOU ARE THE WINNER !!====== ====== ====== ======");
 		} else {
 
 			System.out.println(
@@ -398,7 +313,6 @@ public class GameProcessing {
 
 	/**
 	 * treasure guess was incorrect and disqualify 09:P2
-	 * 
 	 * @param messageNumber
 	 * @param messageDetailsList
 	 * @return
