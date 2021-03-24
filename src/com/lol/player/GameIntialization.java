@@ -41,8 +41,7 @@ public class GameIntialization {
 		PlayerInformation.getInstance().setDieFaceList(dieFaceList);
 		PlayerInformation.getInstance().setTerrianCharList(terrianCharList);
 		PlayerInformation.getInstance().setTerrianLocationList(terrianLocationList);
-		ComputerPlayerIntialization.initTerrianTokenMap(PlayerInformation.getInstance().getPlayerNameList().size());
-		ComputerPlayerIntialization.updateDirectionIntegerMap();
+		ComputerPlayerIntialization.initTerrainTokenMap(PlayerInformation.getInstance().getPlayerNameList().size());
 	}
 
 	/**

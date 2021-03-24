@@ -65,7 +65,7 @@ public class GameProcessing {
 
 	private void createQuestion(List<String> messageDetailsList) {
 		System.out.println("Select Two Die Faces...... ");
-		StringBuilder message = new StringBuilder();
+		StringBuilder message = new StringBuilder(); //NN W,WW W,WW E
 		message.append("05:");
 
 		System.out.println("Enter DIE Face 1 :" + messageDetailsList);

@@ -24,15 +24,12 @@ public class ComputerPlayer {
 	private Set<String> notTreasureLoc = new HashSet<>();;
 	private Set<String> treasureLoc = new HashSet<>();;
 	private Map<String, Map<String, Integer>> allPlayerTrrianMap;
-	private Map<String, Integer> dirIntMap;
-	private Map<Integer, Set<String>> directionIntegerMap;
 	private Map<String, Map<String, Integer>> deducedPlayerTokenMap;
 	private Set<String> deducedForestLoc = new HashSet<>();
 	private Set<String> deducedBeachLoc = new HashSet<>();
 	private Set<String> deducedMountainLoc = new HashSet<>();
 	private Node currentNode;
 	private Map<String, Integer> playerObj;
-
 	private static ComputerPlayer computerPlayer = null;
 
 	private ComputerPlayer() {
@@ -87,21 +84,7 @@ public class ComputerPlayer {
 		this.allPlayerTrrianMap = terrainList;
 	}
 
-	public Map<String, Integer> getDirIntMap() {
-		return dirIntMap;
-	}
 
-	public void setDirIntMap(Map<String, Integer> dirIntMap) {
-		this.dirIntMap = dirIntMap;
-	}
-
-	public Map<Integer, Set<String>> getDirectionIntegerMap() {
-		return directionIntegerMap;
-	}
-
-	public void setDirectionIntegerMap(Map<Integer, Set<String>> directionIntegerMap) {
-		this.directionIntegerMap = directionIntegerMap;
-	}
 
 	public static ComputerPlayer getComputerPlayer() {
 		return computerPlayer;
@@ -200,5 +183,18 @@ public class ComputerPlayer {
 			} while (current != head);
 			System.out.println();
 		}
+	}
+	
+	public Node createNode(String direction) {
+		Node current = head;
+		Node directionNode = null;
+		do {
+			if (current.direction.equals(direction)){
+				directionNode = current;
+				break;				
+			}
+			current = current.next;
+		} while (current != head);
+		return directionNode;
 	}
 }

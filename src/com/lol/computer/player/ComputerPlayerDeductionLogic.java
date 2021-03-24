@@ -20,61 +20,56 @@ public class ComputerPlayerDeductionLogic {
 	 */
 	public static void processAnswerMessage(List<String> messageDetailsList) {
 		String playerName = messageDetailsList.get(4);
-		String Diretion1 = messageDetailsList.get(0);
-		String Diretion2 = messageDetailsList.get(1);
-		Integer dirNum1 = ComputerPlayer.getInstance().getDirIntMap().get(Diretion1.substring(0, 2));
-		Integer dirNum2 = ComputerPlayer.getInstance().getDirIntMap().get(Diretion2.substring(0, 2));
-		// get all the terrain tokens present between the two selected direction
-		Set<String> terrianToken = getTokenBetweenDirection(dirNum1, dirNum2);
-		// remove already identified non treasure location from terrain token
-		// Map present between the two selected direction as deduced map
-		Set<String> deducedTerrainToken = updateDeducedPlayerTokenMap(dirNum1, dirNum2, terrianToken).keySet();
-		// Get intersection of terrainToken and deducedTerrainToken
-		terrianToken.retainAll(deducedTerrainToken);
-		System.out.println("Terrain needs to be processed : " + terrianToken);
+		String Diretion1 = messageDetailsList.get(0).substring(0,2); 
+		String Diretion2 = messageDetailsList.get(1).substring(0,2);
 
+		Set<String> terrainToken = getTokenBetweenDirectionUsingList(ComputerPlayer.getInstance().createNode(Diretion1),
+				ComputerPlayer.getInstance().createNode(Diretion2));
+		// remove already identified non treasure location from terrain token Map present between the two selected direction as deduced map
+		Set<String> deducedterrainToken = updateDeducedPlayerTokenMap(terrainToken).keySet();
+		// Get intersection of terrainToken and deducedterrainToken
+		System.out.println("terrain needs to be processed for deduction : " + terrainToken);
 		// deduce terrain locations map based on answer given by player
-		if (terrianToken != null && !terrianToken.isEmpty()) {
-			updateDeducedTerrainMap(deducedTerrainToken, terrianToken, playerName,
+		if (terrainToken != null && !terrainToken.isEmpty()) {
+			updateDeducedterrainMap(deducedterrainToken, terrainToken, playerName,
 					PlayerInformation.getInstance().getPlayerNameList(), messageDetailsList);
 
 		}
 		// after answer processing check is treasure location found or not
 		checkIsTreasureLocFound();
 	}
-
+	
 	/**
-	 * This method is used to find out the the terrain location between two
-	 * direction
-	 * 
-	 * @param dirNum1
-	 * @param dirNum2
+	 * This method is used to find out the the terrain location between two direction
+	 * @param direction1
+	 * @param direction2
 	 * @return
 	 */
-	private static Set<String> getTokenBetweenDirection(Integer dirNum1, Integer dirNum2) {
+	private static Set<String> getTokenBetweenDirectionUsingList(Node direction1, Node direction2) {
 		Set<String> terrainToken = new HashSet<>();
-		if (dirNum1 > dirNum2) {
-			for (int i = dirNum1; i <= 8; i++)
-				terrainToken.addAll(ComputerPlayer.getInstance().getDirectionIntegerMap().get(i));
-			for (int i = 1; i < dirNum2; i++)
-				terrainToken.addAll(ComputerPlayer.getInstance().getDirectionIntegerMap().get(i));
+		if (direction1.direction.equals(direction2.direction)) {
+			return ComputerPlayer.getInstance().getAllPlayerTrrianMap().keySet();
 		} else {
-			for (int i = dirNum1; i < dirNum2; i++)
-				terrainToken.addAll(ComputerPlayer.getInstance().getDirectionIntegerMap().get(i));
+			while (direction1 != direction2) {
+				direction1.terrainList.entrySet().stream().forEach(terrain -> {
+					terrainToken.add(terrain.getKey());
+				});
+				direction1 = direction1.next;
+			}
 		}
-		return terrainToken;
+		return terrainToken; 
 	}
 
 	/**
 	 * This method is used to update the map with the deduced terrains
 	 * 
-	 * @param deducedTerrainToken
+	 * @param deducedterrainToken
 	 * @param terrainToken
 	 * @param playerName
 	 * @param playerList
 	 * @param messageDetailsList
 	 */
-	public static void updateDeducedTerrainMap(Set<String> deducedTerrainToken, Set<String> terrainToken,
+	public static void updateDeducedterrainMap(Set<String> deducedterrainToken, Set<String> terrainToken,
 			String playerName, List<String> playerList, List<String> messageDetailsList) {
 		String noIfTokens = messageDetailsList.get(3);
 		String areaToken = messageDetailsList.get(2);
@@ -88,16 +83,16 @@ public class ComputerPlayerDeductionLogic {
 
 			if (Constants.BEACH_CHAR.equals(areaToken)) {
 				Set<String> deducedBeachLoc = ComputerPlayer.getInstance().getDeducedBeachLoc();
-				updateZeroTerrainTokenInformation(deducedBeachLoc, playerName, terrainToken);
+				updateZeroterrainTokenInformation(deducedBeachLoc, playerName, terrainToken);
 			} else if (Constants.FOREST_CHAR.equals(areaToken)) {
 				Set<String> deducedForestLoc = ComputerPlayer.getInstance().getDeducedForestLoc();
-				updateZeroTerrainTokenInformation(deducedForestLoc, playerName, terrainToken);
+				updateZeroterrainTokenInformation(deducedForestLoc, playerName, terrainToken);
 			} else if (Constants.MOUNTAINS_CHAR.equals(areaToken)) {
 				Set<String> deducedMountainLoc = ComputerPlayer.getInstance().getDeducedMountainLoc();
-				updateZeroTerrainTokenInformation(deducedMountainLoc, playerName, terrainToken);
+				updateZeroterrainTokenInformation(deducedMountainLoc, playerName, terrainToken);
 			} else {
 				Set<String> deducedAllTokenLoc = ComputerPlayer.getInstance().getDeducedPlayerTokenMap().keySet();
-				updateZeroTerrainTokenInformation(deducedAllTokenLoc, playerName, terrainToken);
+				updateZeroterrainTokenInformation(deducedAllTokenLoc, playerName, terrainToken);
 			}
 		} else {
 
@@ -108,6 +103,7 @@ public class ComputerPlayerDeductionLogic {
 			 * player who answered question as
 			 */
 			if (Constants.BEACH_CHAR.equals(areaToken) && Integer.valueOf(noIfTokens) == terrainToken.size()) {
+				
 				ComputerPlayerIntialization.updatePersonalTokenMap(terrainToken.stream().collect(Collectors.toList()),
 						playerName, PlayerInformation.getInstance().getPlayerNameList());
 			} else if (Constants.MOUNTAINS_CHAR.equals(areaToken)
@@ -129,13 +125,13 @@ public class ComputerPlayerDeductionLogic {
 	/**
 	 * Mark remaining tokens of playing player as zero
 	 */
-	private static void updateZeroTerrainTokenInformation(Set<String> deducedTerrainLoc, String playerName,
+	private static void updateZeroterrainTokenInformation(Set<String> deducedterrainLoc, String playerName,
 			Set<String> terrainToken) {
-		List<String> updatedTerrainList = new ArrayList<>();
+		List<String> updatedterrainList = new ArrayList<>();
 		for (String terrain : terrainToken) {
-			if (deducedTerrainLoc.contains(terrain)) {
-				updatedTerrainList.add(terrain);
-				updateTerrainMapForNotTreasureLoc(updatedTerrainList, playerName);
+			if (deducedterrainLoc.contains(terrain)) {
+				updatedterrainList.add(terrain);
+				updateterrainMapForNotTreasureLoc(updatedterrainList, playerName);
 			}
 		}
 	}
@@ -143,13 +139,10 @@ public class ComputerPlayerDeductionLogic {
 	/**
 	 * create and update deduced player token map depending upon given direction
 	 * 
-	 * @param dirNum1
-	 * @param dirNum2
 	 * @param terrainDirectionMap
 	 * @return
 	 */
-	public static Map<String, Map<String, Integer>> updateDeducedPlayerTokenMap(Integer dirNum1, Integer dirNum2,
-			Set<String> terrainDirectionMap) {
+	public static Map<String, Map<String, Integer>> updateDeducedPlayerTokenMap(Set<String> terrainDirectionMap) {
 
 		Map<String, Map<String, Integer>> deducedPlayerTokenMap = new HashMap<>();
 		for (String terrain : terrainDirectionMap) {
@@ -209,11 +202,11 @@ public class ComputerPlayerDeductionLogic {
 	/**
 	 * This function used to update terrain map for not treasure location
 	 * 
-	 * @param updatedTerrainList
+	 * @param updatedterrainList
 	 * @param playerName
 	 */
-	public static void updateTerrainMapForNotTreasureLoc(List<String> updatedTerrainList, String playerName) {
-		for (String terrainToken : updatedTerrainList) {
+	public static void updateterrainMapForNotTreasureLoc(List<String> updatedterrainList, String playerName) {
+		for (String terrainToken : updatedterrainList) {
 			Map<String, Integer> terrainMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrainToken);
 			terrainMap.put(playerName, 0);
 			ComputerPlayer.getInstance().getAllPlayerTrrianMap().put(terrainToken, terrainMap);

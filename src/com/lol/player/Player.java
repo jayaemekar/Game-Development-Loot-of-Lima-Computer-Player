@@ -8,11 +8,7 @@ import com.lol.helper.Utility;
 public class Player {
 
 	/**
-	 * This is main function to call the client.
-	 * ALLall
-	 * p
-	 * 
-	 * 
+	 * This is main function to start the Player/Computer client.
 	 * @param args
 	 * @throws Exception
 	 */
@@ -24,8 +20,8 @@ public class Player {
 		
 		System.out.println("________________ LOOT OF LIMA!! Let's Begin the Game !_________________ ");
 		System.out.println("________________ Instructions to Play Game_____________________________ ");
-		System.out.println("________________ 1. All inputs should be given in CAPS letter__________ ");
-		System.out.println("________________ 2. Players are named as P1,P2,P3 etc._________________ ");
+		System.out.println("1. All inputs should be given in CAPS letter");
+		System.out.println("2. Players are named as P1,P2,P3 etc.");
 		System.out.println("________________ Game Ready !! ________________________________________ ");
 				
 		System.out.println("\nEnter Your Player Name (in the format P1,P2,P3 etc.) : ");
