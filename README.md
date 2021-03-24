@@ -8,14 +8,6 @@ This client will communicate using File IO pipes in Linux operating system
 ```
 find src -type f -name "*.java" -print | xargs javac
 ```
-### You would need to create a pipes in /tmp
-\[Optional\] To create pipes run where P1 is player 1,P2 is player 2, and so on. (only if you want to play as independent client)
-
-```
-cd /tmp
-mkfifo fromP1
-mkfifo toP1
-```
 
 ### To run the program go inside the src directory and run
 ```
