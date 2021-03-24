@@ -1,4 +1,4 @@
-# Loot of Lima player client
+# Loot of Lima Computer Player Client
 A java application designed to act as a client to Loot of lima game server.
 This client will communicate using File IO pipes in Linux operating system
 
