@@ -49,7 +49,10 @@ public class GameProcessing {
 			System.out.println(
 					"Message [" + messageNumber + "] Player " + playerName + " rolled the dices " + messageDetailsList);
 			if (PlayerInformation.getInstance().getPlayerName().equals(playerName) && !treasureGuessSent) {
-				createQuestion(messageDetailsList);
+				
+				//createQuestion(messageDetailsList);
+				
+				QuestionDeductionLogic.createQuestion(messageDetailsList, playerName);
 			} else if (treasureGuessSent) {
 				System.out.println("Ignoring rolled the dices... Treasure guess sent already..!! waiting for reply...");
 			}
