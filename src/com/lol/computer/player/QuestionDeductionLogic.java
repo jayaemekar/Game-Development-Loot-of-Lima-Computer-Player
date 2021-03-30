@@ -12,14 +12,16 @@ import java.util.Map;
 import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
 import com.lol.helper.Utility;
+import com.lol.player.GameProcessing;
 
 public class QuestionDeductionLogic {
 
 	private static int terrainCount = 24;
 	private static String Message = "";
 
-
 	/**
+	 * This method is used to introduce the question deduction logic in computer
+	 * player
 	 * 
 	 * @param messageDetailsList
 	 * @return
@@ -38,25 +40,27 @@ public class QuestionDeductionLogic {
 		questionProxy(dieFaceTwo, dieFaceThree, list);
 		questionProxy(dieFaceThree, dieFaceTwo, list);
 		questionProxy(dieFaceThree, dieFaceOne, list);
-		sortByValue(list);
 
-		for (Map.Entry<String, Integer> en : list.entrySet()) {
-			if (en.getValue() != 0) {
-				Message = en.getKey();
-				if (Message != null && !Message.isEmpty()) {
-					System.out.println("Selected  Die Face  One :" + Message.substring(3,6));
-					System.out.println("Selected  Die Face  Two :" + Message.substring(7,10));
-					System.out.println("Selected  Area  Terrain  :" + Message.substring(11,12));
-					System.out.println("Selected  Player :" + Message.substring(13,15));
-					break;
+		if (!list.isEmpty()) {
+			sortByValue(list);
+			for (Map.Entry<String, Integer> en : list.entrySet()) {
+				if (en.getValue() != 0) {
+					Message = en.getKey();
+					if (Message != null && !Message.isEmpty()) {
+						System.out.println("Selected  Die Face  One :" + Message.substring(3, 6));
+						System.out.println("Selected  Die Face  Two :" + Message.substring(7, 10));
+						System.out.println("Selected  Area  Terrain  :" + Message.substring(11, 12));
+						System.out.println("Selected  Player :" + Message.substring(13, 15));
+						Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), Message);
+						Utility.parseMessage(Message);
+						break;
+					}
 				}
-			} else {
-				Message = en.getKey();
 			}
+		} else {
+			GameProcessing gameProcessing = new GameProcessing();
+			gameProcessing.createQuestion(messageDetailsList);
 		}
-
-		Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), Message);
-		Utility.parseMessage(Message);
 		return Message;
 	}
 
@@ -72,13 +76,13 @@ public class QuestionDeductionLogic {
 			String terrainType, HashMap<String, Integer> list) {
 		Node current = ComputerPlayer.getInstance().getHead();
 		HashMap<String, HashMap<String, Integer>> terrainCountMap = new HashMap<>();
-		//P1: B:2,M:3,F;4
+		// P1: B:2,M:3,F;4
 		do {
 
 			current.terrainList.entrySet().stream().forEach(terrianMap -> {
-				//B1: {P1:1,P2:0,P3:-1},F1,M1
+
 				terrianMap.getValue().entrySet().stream().forEach(playerMap -> {
-					//P1:1,P2:0,P3:-1
+
 					if (!playerMap.getKey().equals(PlayerInformation.getInstance().getPlayerName())
 							&& playerMap.getValue() == -1) {
 
@@ -114,13 +118,14 @@ public class QuestionDeductionLogic {
 			player.getValue().entrySet().stream().forEach(terrain -> {
 				if (terrain.getValue() <= terrainCount && terrainTypes.contains(terrain.getKey())) {
 
-					Message = "05:" + dieFaceOne + "," + dieFaceTwo + "," + terrainType + "," + player.getKey();;
+					Message = "05:" + dieFaceOne + "," + dieFaceTwo + "," + terrainType + "," + player.getKey();
+
 					terrainCount = terrain.getValue();
+					list.put(Message, terrainCount);
 				}
 			});
 		});
-		if (terrainCount != 24)
-			list.put(Message, terrainCount);
+
 		return terrainCountMap;
 
 	}
@@ -150,7 +155,7 @@ public class QuestionDeductionLogic {
 				&& (Constants.WILD_CHAR.equals(headTerrian) || Constants.WILD_CHAR.equals(tailTerrian))) {
 			String terrainType = !Constants.WILD_CHAR.equals(headTerrian) ? headTerrian : tailTerrian;
 			generateQuestionMap(dieFaceOne, dieFaceTwo, terrainType, list);
-			generateQuestionMap(dieFaceOne, dieFaceTwo,Constants.ALL_CHAR, list);
+			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, list);
 		}
 	}
 
