@@ -48,7 +48,6 @@ public class ComputerPlayerIntialization {
 		});
 		ComputerPlayer.getInstance().setTreasureLoc(new HashSet<>());
 		ComputerPlayer.getInstance().setAllPlayerTrrianMap(terrainMap);
-		ComputerPlayer.getInstance().display();
 	}
 
 	/**
