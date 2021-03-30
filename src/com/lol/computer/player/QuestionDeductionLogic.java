@@ -43,12 +43,13 @@ public class QuestionDeductionLogic {
 		for (Map.Entry<String, Integer> en : list.entrySet()) {
 			if (en.getValue() != 0) {
 				Message = en.getKey();
-
-				System.out.println("Selected  Die Face  One :" + Message.substring(3,6));
-				System.out.println("Selected  Die Face  Two :" + Message.substring(7,10));
-				System.out.println("Selected  Area  Terrain  :" + Message.substring(11,12));
-				System.out.println("Selected  Player :" + Message.substring(13,15));
-				break;
+				if (Message != null && !Message.isEmpty()) {
+					System.out.println("Selected  Die Face  One :" + Message.substring(3,6));
+					System.out.println("Selected  Die Face  Two :" + Message.substring(7,10));
+					System.out.println("Selected  Area  Terrain  :" + Message.substring(11,12));
+					System.out.println("Selected  Player :" + Message.substring(13,15));
+					break;
+				}
 			} else {
 				Message = en.getKey();
 			}
@@ -118,7 +119,8 @@ public class QuestionDeductionLogic {
 				}
 			});
 		});
-		list.put(Message, terrainCount);
+		if (terrainCount != 24)
+			list.put(Message, terrainCount);
 		return terrainCountMap;
 
 	}
