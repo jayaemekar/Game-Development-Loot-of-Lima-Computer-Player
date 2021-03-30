@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.lol.computer.player.ComputerPlayer;
 import com.lol.computer.player.ComputerPlayerDeductionLogic;
+import com.lol.computer.player.QuestionDeductionLogic;
 import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
 import com.lol.helper.Utility;
@@ -52,7 +53,7 @@ public class GameProcessing {
 				
 				//createQuestion(messageDetailsList);
 				
-				QuestionDeductionLogic.createQuestion(messageDetailsList, playerName);
+				QuestionDeductionLogic.createQuestion(messageDetailsList);
 			} else if (treasureGuessSent) {
 				System.out.println("Ignoring rolled the dices... Treasure guess sent already..!! waiting for reply...");
 			}
