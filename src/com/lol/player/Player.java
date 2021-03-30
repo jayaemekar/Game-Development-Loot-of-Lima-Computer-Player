@@ -30,8 +30,8 @@ public class Player {
 		String fileWritePath = "/tmp/" + teamName +"from"+ playerNumber; // Write File path
 		String fileReadPath  = "/tmp/" + teamName +"to"  + playerNumber; // Read File path
 		
-		//fileReadPath = "F:/LootOfLima/LOLPlayer-ComputerPlayer/src/ServerFile.txt";
-		//fileWritePath = "F:/LootOfLima/LOLPlayer-ComputerPlayer/src/PlayerFile.txt";
+		fileReadPath = "C:\\Code-workshop\\630\\LOLPlayer-ComputerPlayer\\src\\ServerFile.txt";
+		fileWritePath = "C:\\Code-workshop\\630\\LOLPlayer-ComputerPlayer\\src\\PlayerFile.txt";
 		PlayerInformation.getInstance().setFileReadPath(fileReadPath);
 		PlayerInformation.getInstance().setFileWritePath(fileWritePath);
 		PlayerInformation.getInstance().setGameOver(false); // Game over flag to set
