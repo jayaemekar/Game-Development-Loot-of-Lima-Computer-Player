@@ -67,7 +67,7 @@ public class GameProcessing {
 	 * @param messageDetailsList
 	 */
 
-	private void createQuestion(List<String> messageDetailsList) {
+	public void createQuestion(List<String> messageDetailsList) {
 		System.out.println("Select Two Die Faces...... ");
 		StringBuilder message = new StringBuilder(); //NN W,WW W,WW E
 		message.append("05:");
