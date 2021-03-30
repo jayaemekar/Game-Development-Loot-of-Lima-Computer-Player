@@ -125,7 +125,7 @@ public class QuestionDeductionLogic {
 				}
 			});
 		});
-
+		terrainCount = 24;
 		return terrainCountMap;
 
 	}
