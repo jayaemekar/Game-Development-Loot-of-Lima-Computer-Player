@@ -1,14 +1,12 @@
 package com.lol.computer.player;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
@@ -25,7 +23,7 @@ public class QuestionDeductionLogic {
 	 */
 	public static void createQuestion(List<String> messageDetailsList) {
 
-		Map<String, Integer> messageMap = new HashMap<String, Integer>();
+		SortedMap<Integer, String> messageMap = new TreeMap<Integer, String>();
 
 		String dieFaceOne = messageDetailsList.get(0);
 		String dieFaceTwo = messageDetailsList.get(1);
@@ -39,25 +37,21 @@ public class QuestionDeductionLogic {
 		questionProxy(dieFaceThree, dieFaceOne, messageMap);
 
 		if (!messageMap.isEmpty()) {
-			sortByValue(messageMap);
-			for (Map.Entry<String, Integer> en : messageMap.entrySet()) {
-				if (en.getValue() != 0) {
-					String message = en.getKey();
-					if (message != null && !message.isEmpty()) {
-						System.out.println("Selected  Die Face  One :" + message.substring(3, 6));
-						System.out.println("Selected  Die Face  Two :" + message.substring(7, 10));
-						System.out.println("Selected  Area  Terrain  :" + message.substring(11, 12));
-						System.out.println("Selected  Player :" + message.substring(13, 15));
-						Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), message);
-						Utility.parseMessage(message);
-						break;
-					}
+			for (Entry<Integer, String> en : messageMap.entrySet()) {
+				String message = en.getValue();
+				if (message != null && !message.isEmpty()) {
+					System.out.println("Selected  Die Face  One :" + message.substring(3, 6));
+					System.out.println("Selected  Die Face  Two :" + message.substring(7, 10));
+					System.out.println("Selected  Area  Terrain  :" + message.substring(11, 12));
+					System.out.println("Selected  Player :" + message.substring(13, 15));
+					Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), message);
+					Utility.parseMessage(message);
+					break;
 				}
 			}
 		} else {
 			createQuestionRandomly(messageDetailsList);
 		}
-
 	}
 
 	/**
@@ -69,7 +63,7 @@ public class QuestionDeductionLogic {
 	 * @return
 	 */
 	public static HashMap<String, HashMap<String, Integer>> generateQuestionMap(String dieFaceOne, String dieFaceTwo,
-			String terrainType, Map<String, Integer> messageMap) {
+			String terrainType, SortedMap<Integer, String> messageMap) {
 		Node current = ComputerPlayer.getInstance().getHead();
 		HashMap<String, HashMap<String, Integer>> terrainCountMap = new HashMap<>();
 		do {
@@ -101,7 +95,7 @@ public class QuestionDeductionLogic {
 		} while (current != ComputerPlayer.getInstance().getTail());
 
 		HashSet<String> terrainTypes = new HashSet<String>();
-		if (Constants.ALL_CHAR.equals(terrainType)) {
+		if (!Constants.ALL_CHAR.equals(terrainType)) {
 			terrainTypes.add("M");
 			terrainTypes.add("F");
 			terrainTypes.add("B");
@@ -115,9 +109,8 @@ public class QuestionDeductionLogic {
 				if (terrain.getValue() <= terrainCount && terrainTypes.contains(terrain.getKey())) {
 
 					String message = "05:" + dieFaceOne + "," + dieFaceTwo + "," + terrainType + "," + player.getKey();
-
-					terrainCount = terrain.getValue();
-					messageMap.put(message, terrainCount);
+					
+					messageMap.put(terrain.getValue(), message);
 				}
 			});
 		});
@@ -132,7 +125,7 @@ public class QuestionDeductionLogic {
 	 * @param dieFaceTwo
 	 * @param messageMap
 	 */
-	public static void questionProxy(String dieFaceOne, String dieFaceTwo, Map<String, Integer> messageMap) {
+	public static void questionProxy(String dieFaceOne, String dieFaceTwo, SortedMap<Integer, String> messageMap) {
 
 		String directionOne = String.valueOf(dieFaceOne.charAt(0)) + String.valueOf(dieFaceOne.charAt(1));
 		String directionTwo = String.valueOf(dieFaceTwo.charAt(0)) + String.valueOf(dieFaceTwo.charAt(1));
@@ -151,32 +144,9 @@ public class QuestionDeductionLogic {
 				&& (Constants.WILD_CHAR.equals(headTerrian) || Constants.WILD_CHAR.equals(tailTerrian))) {
 			String terrainType = !Constants.WILD_CHAR.equals(headTerrian) ? headTerrian : tailTerrian;
 			generateQuestionMap(dieFaceOne, dieFaceTwo, terrainType, messageMap);
-			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap);
+			if (messageMap.isEmpty())
+				generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap);
 		}
-	}
-
-	/**
-	 * 
-	 * @param messageMap
-	 * @return
-	 */
-	private static HashMap<String, Integer> sortByValue(Map<String, Integer> messageMap) {
-		// Create a list from elements of HashMap
-		List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(messageMap.entrySet());
-
-		// Sort the list
-		Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
-			public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-				return (o1.getValue()).compareTo(o2.getValue());
-			}
-		});
-
-		// put data from sorted list to hashmap
-		HashMap<String, Integer> temp = new LinkedHashMap<String, Integer>();
-		for (Map.Entry<String, Integer> aa : list) {
-			temp.put(aa.getKey(), aa.getValue());
-		}
-		return temp;
 	}
 
 	/**
