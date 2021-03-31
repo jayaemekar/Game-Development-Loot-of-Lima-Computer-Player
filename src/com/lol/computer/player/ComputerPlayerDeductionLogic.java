@@ -158,10 +158,10 @@ public class ComputerPlayerDeductionLogic {
 		 if(Constants.ALL_CHAR.equals(areaToken)) {
 			 System.out.println("Test pointb 1");
 			 ComputerPlayerInitialization.updateAllPersonalTokenMap(messageDetailsList);
-			
+			 ComputerPlayerInitialization.checkTentativeTerrain(diretion1);
 		 }
 			 
-		 ComputerPlayerInitialization.checkTentativeTerrain(diretion1);
+		 
 			 
 		
 
@@ -187,7 +187,8 @@ public class ComputerPlayerDeductionLogic {
 
 			}
 		} 
-			
+		
+		
 		
 	}
 
@@ -224,6 +225,10 @@ public class ComputerPlayerDeductionLogic {
 				ComputerPlayer.getInstance().setTreasureLoc(treasureLocSet);
 			} else if (sum == -3 || sum == -2 || sum == -1) {
 				deducedPlayerTokenMap.put(terrain, terrainMap);
+			} else if(sum == 1){
+				Set<String> treasureNotLocSet = ComputerPlayer.getInstance().getNotTreasureLoc();
+				treasureNotLocSet.add(terrain);
+				ComputerPlayer.getInstance().setNotTreasureLoc(treasureNotLocSet);
 			}
 
 		}
@@ -256,6 +261,8 @@ public class ComputerPlayerDeductionLogic {
 	 * @return
 	 */
 	public static String checkIsTreasureLocFound() {
+		System.out.println("No Treasure location count ::  "+ComputerPlayer.getInstance().getNotTreasureLoc().size() );
+		System.out.println("Treasure Location ::  "+ComputerPlayer.getInstance().getTreasureLoc() );
 		if (ComputerPlayer.getInstance().getTreasureLoc() != null
 				&& ComputerPlayer.getInstance().getTreasureLoc().size() == 2)
 			return Constants.YES;
