@@ -28,13 +28,12 @@ public class ComputerPlayerDeductionLogic {
 		// remove already identified non treasure location from terrain token
 		// Map present between the two selected direction as deduced map
 		Set<String> deducedterrainToken = updateDeducedPlayerTokenMap(terrainToken).keySet();
-		// Get intersection of terrainToken and deducedterrainToken
-		System.out.println("terrain needs to be processed for deduction : " + terrainToken);
+		
 		// deduce terrain locations map based on answer given by player
 		if (terrainToken != null && !terrainToken.isEmpty()) {
+			System.out.println("terrain needs to be processed for deduction : " + deducedterrainToken);
 			updateDeducedterrainMap(deducedterrainToken, terrainToken, playerName,
 					PlayerInformation.getInstance().getPlayerNameList(), messageDetailsList);
-
 		}
 		// after answer processing check is treasure location found or not
 		checkIsTreasureLocFound();
