@@ -3,7 +3,6 @@ package com.lol.player;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
 
 import com.lol.computer.player.ComputerPlayerIntialization;
@@ -11,7 +10,7 @@ import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
 import com.lol.validation.PlayerInfoValidation;
 
-public class GameIntialization {
+public class GameInitialization {
 
 	private boolean isLeftOverToken = false;
 	private boolean isSwapPlayerToken = false;
@@ -68,19 +67,6 @@ public class GameIntialization {
 		ComputerPlayerIntialization.setAllLocationAsZeroToPlayer(PlayerInformation.getInstance().getPlayerName());
 		ComputerPlayerIntialization.updatePersonalTokenMap(messageDetailsList,
 				PlayerInformation.getInstance().getPlayerName(), PlayerInformation.getInstance().getPlayerNameList());
-
-		// Asking for bonus player information
-		/*
-		 * String isBonusPlayerInformationAvailable = Constants.NO;
-		 * 
-		 * System.out.
-		 * println("\nLet's Give Bonus Player Information???(YES/NO)???");
-		 * Scanner sc = new Scanner(System.in);
-		 * isBonusPlayerInformationAvailable = sc.nextLine(); if
-		 * (Constants.YES.equalsIgnoreCase(isBonusPlayerInformationAvailable))
-		 * createBonusPlayerInformation(messageDetailsList);
-		 */
-
 	}
 
 	/**
@@ -101,34 +87,6 @@ public class GameIntialization {
 		isLeftOverToken = false;
 		ComputerPlayerIntialization.updatePersonalTokenMap(messageDetailsList,
 				PlayerInformation.getInstance().getPlayerName(), PlayerInformation.getInstance().getPlayerNameList());
-	}
-
-	@SuppressWarnings({ "resource", "unused" })
-	private void createBonusPlayerInformation(List<String> messageDetailsList) {
-		// 10:P1,P2,2M
-		StringBuilder message = new StringBuilder();
-		message.append("10:").append(PlayerInformation.getInstance().getPlayerName()).append(Constants.COMMA);
-		System.out.println("Enter Player number whom you share the bonus information :");
-		Scanner sc = new Scanner(System.in);
-		String playerSharingInformation = sc.nextLine();
-
-		if (PlayerInfoValidation.getInstance().validatePlayerName(playerSharingInformation)
-				&& !playerSharingInformation.equalsIgnoreCase(PlayerInformation.getInstance().getPlayerName())) {
-			message.append(playerSharingInformation).append(Constants.COMMA);
-		} else {
-			System.out.println(" ====== Invalid Player! Create Bonus Information Again! ====== \n");
-			createBonusPlayerInformation(messageDetailsList);
-			return;
-		}
-		System.out.println("Enter Terrian token which you want to share:");
-		String sharingToken = sc.nextLine();
-		if (messageDetailsList.contains(sharingToken)) {
-			message.append(sharingToken);
-		} else {
-			System.out.println(" ====== Invalid Terrian Token! Create Bonus Information Again! ====== \n");
-			createBonusPlayerInformation(messageDetailsList);
-			return;
-		}
 	}
 
 	/**
