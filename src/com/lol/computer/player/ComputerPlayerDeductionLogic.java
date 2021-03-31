@@ -20,12 +20,13 @@ public class ComputerPlayerDeductionLogic {
 	 */
 	public static void processAnswerMessage(List<String> messageDetailsList) {
 		String playerName = messageDetailsList.get(4);
-		String Diretion1 = messageDetailsList.get(0).substring(0,2); 
-		String Diretion2 = messageDetailsList.get(1).substring(0,2);
+		String Diretion1 = messageDetailsList.get(0).substring(0, 2);
+		String Diretion2 = messageDetailsList.get(1).substring(0, 2);
 
 		Set<String> terrainToken = getTokenBetweenDirectionUsingList(ComputerPlayer.getInstance().createNode(Diretion1),
 				ComputerPlayer.getInstance().createNode(Diretion2));
-		// remove already identified non treasure location from terrain token Map present between the two selected direction as deduced map
+		// remove already identified non treasure location from terrain token
+		// Map present between the two selected direction as deduced map
 		Set<String> deducedterrainToken = updateDeducedPlayerTokenMap(terrainToken).keySet();
 		// Get intersection of terrainToken and deducedterrainToken
 		System.out.println("terrain needs to be processed for deduction : " + terrainToken);
@@ -38,9 +39,11 @@ public class ComputerPlayerDeductionLogic {
 		// after answer processing check is treasure location found or not
 		checkIsTreasureLocFound();
 	}
-	
+
 	/**
-	 * This method is used to find out the the terrain location between two direction
+	 * This method is used to find out the the terrain location between two
+	 * direction
+	 * 
 	 * @param direction1
 	 * @param direction2
 	 * @return
@@ -57,7 +60,7 @@ public class ComputerPlayerDeductionLogic {
 				direction1 = direction1.next;
 			}
 		}
-		return terrainToken; 
+		return terrainToken;
 	}
 
 	/**
@@ -73,14 +76,8 @@ public class ComputerPlayerDeductionLogic {
 			String playerName, List<String> playerList, List<String> messageDetailsList) {
 		String noIfTokens = messageDetailsList.get(3);
 		String areaToken = messageDetailsList.get(2);
-		/*
-		 * Case 1: Update deduce map when we receive player has zero terrain in
-		 * given direction 06:NNF,NEF,F,0,P3,P2 06:NNF,NEF,M,0,P3,P2
-		 * 06:NNF,NEF,B,0,P3,P2 06:NNF,NEF,A,0,P3,P2 Marking the location in
-		 * deduced map for the player who answered question as
-		 */
-		if (Integer.valueOf(noIfTokens) == 0) {
 
+		if (Integer.valueOf(noIfTokens) == 0) {
 			if (Constants.BEACH_CHAR.equals(areaToken)) {
 				Set<String> deducedBeachLoc = ComputerPlayer.getInstance().getDeducedBeachLoc();
 				updateZeroterrainTokenInformation(deducedBeachLoc, playerName, terrainToken);
@@ -94,36 +91,16 @@ public class ComputerPlayerDeductionLogic {
 				Set<String> deducedAllTokenLoc = ComputerPlayer.getInstance().getDeducedPlayerTokenMap().keySet();
 				updateZeroterrainTokenInformation(deducedAllTokenLoc, playerName, terrainToken);
 			}
-		} else {
-
-			/*
-			 * Case 2: Update deduce map when we receive player has zero terrain
-			 * in given direction 06:NNF,NEF,F,1,P3,P2 06:NNF,NEF,M,2,P3,P2
-			 * 06:NNF,NEF,3,0,P3,P2 Marking the location in deduced map for the
-			 * player who answered question as
-			 */
-			if (Constants.BEACH_CHAR.equals(areaToken) && Integer.valueOf(noIfTokens) == terrainToken.size()) {
-				
-				ComputerPlayerIntialization.updatePersonalTokenMap(terrainToken.stream().collect(Collectors.toList()),
-						playerName, PlayerInformation.getInstance().getPlayerNameList());
-			} else if (Constants.MOUNTAINS_CHAR.equals(areaToken)
-					&& Integer.valueOf(noIfTokens) == terrainToken.size()) {
-				ComputerPlayerIntialization.updatePersonalTokenMap(terrainToken.stream().collect(Collectors.toList()),
-						playerName, PlayerInformation.getInstance().getPlayerNameList());
-
-			} else if (Constants.FOREST_CHAR.equals(areaToken) && Integer.valueOf(noIfTokens) == terrainToken.size()) {
-				ComputerPlayerIntialization.updatePersonalTokenMap(terrainToken.stream().collect(Collectors.toList()),
-						playerName, PlayerInformation.getInstance().getPlayerNameList());
-
-			} else if (Constants.ALL_CHAR.equals(areaToken) && Integer.valueOf(noIfTokens) == terrainToken.size()) {
-				// Need to identify the logic for this type of message.
-			}
+		} else if (Integer.valueOf(noIfTokens) == terrainToken.size()) {
+			ComputerPlayerIntialization.updatePersonalTokenMap(terrainToken.stream().collect(Collectors.toList()),
+					playerName, PlayerInformation.getInstance().getPlayerNameList());
 		}
 
 	}
 
 	/**
-	 * Mark remaining tokens of playing player as zero
+	 * Mark remaining tokens of playing player as zero.
+	 * 
 	 */
 	private static void updateZeroterrainTokenInformation(Set<String> deducedterrainLoc, String playerName,
 			Set<String> terrainToken) {
@@ -197,6 +174,7 @@ public class ComputerPlayerDeductionLogic {
 			return Constants.YES;
 		}
 		return Constants.NO;
+
 	}
 
 	/**
