@@ -95,7 +95,7 @@ public class ComputerPlayerDeductionLogic {
 				System.out.println("terrain needs to be processed for all terrain deduction : " + deducedAllTokenLoc);
 				updateZeroterrainTokenInformation(deducedAllTokenLoc, playerName, terrainToken);
 			}
-		} else if (Integer.valueOf(noIfTokens) == terrainToken.size()) {
+		} else  {
 
 			if (Constants.BEACH_CHAR.equals(areaToken) && Integer.valueOf(noIfTokens) == deducedBeachLoc.size()) {
 				System.out.println("terrain needs to be processed for beach terrain deduction : " + deducedBeachLoc);
