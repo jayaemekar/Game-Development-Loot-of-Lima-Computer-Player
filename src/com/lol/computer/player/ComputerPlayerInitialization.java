@@ -243,6 +243,7 @@ public class ComputerPlayerInitialization {
 
 						if (value.get(2).equals(Integer.toString(countTen))) {
 							updateTerrainTokenMap(tenTerrain, player.getKey());
+
 						}
 
 						if ((countTen) > Integer.parseInt(value.get(2))) {
@@ -271,10 +272,9 @@ public class ComputerPlayerInitialization {
 				if (terrainMap != null) {
 					if (!player.equals(player1))
 						terrainMap.put(player1, 0);
-					else {
+					else 
 						terrainMap.put(player1, 1);
-						ComputerPlayer.getInstance().getNotTreasureLoc().add(terrainToken);
-					}
+					
 					ComputerPlayer.getInstance().getAllPlayerTrrianMap().put(terrainToken, terrainMap);
 				}
 			}
