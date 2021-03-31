@@ -1,6 +1,7 @@
 package com.lol.computer.player;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,6 +32,8 @@ public class ComputerPlayer {
 	private Node currentNode;
 	private Map<String, Integer> playerObj;
 	private static ComputerPlayer computerPlayer = null;
+	private Map<String, List<List<String>>> allTentativeToken;
+
 
 	private ComputerPlayer() {
 		// private constructor
@@ -164,6 +167,18 @@ public class ComputerPlayer {
 			tail = newNode;
 			tail.next = head;
 		}
+	}
+
+	public Map<String, List<List<String>>> getAllTentativeToken() {
+		return allTentativeToken;
+	}
+
+	public void setAllTentativeToken(Map<String, List<List<String>>> allTentativeToken) {
+		this.allTentativeToken = allTentativeToken;
+	}
+
+	public void setPlayerObj(Map<String, Integer> playerObj) {
+		this.playerObj = playerObj;
 	}
 
 	public void display() {

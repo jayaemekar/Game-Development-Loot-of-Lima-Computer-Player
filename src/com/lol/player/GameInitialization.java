@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.lol.computer.player.ComputerPlayerIntialization;
+import com.lol.computer.player.ComputerPlayerInitialization;
 import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
 import com.lol.validation.PlayerInfoValidation;
@@ -40,7 +40,7 @@ public class GameInitialization {
 		PlayerInformation.getInstance().setDieFaceList(dieFaceList);
 		PlayerInformation.getInstance().setTerrianCharList(terrianCharList);
 		PlayerInformation.getInstance().setTerrianLocationList(terrianLocationList);
-		ComputerPlayerIntialization.initTerrainTokenMap(PlayerInformation.getInstance().getPlayerNameList().size());
+		ComputerPlayerInitialization.initTerrainTokenMap(PlayerInformation.getInstance().getPlayerNameList().size());
 	}
 
 	/**
@@ -64,8 +64,8 @@ public class GameInitialization {
 		PlayerInformation.getInstance().printPersonalTokens(PlayerInformation.getInstance().getPersonalTokenMap());
 
 		// For your player number set all locations to zero
-		ComputerPlayerIntialization.setAllLocationAsZeroToPlayer(PlayerInformation.getInstance().getPlayerName());
-		ComputerPlayerIntialization.updatePersonalTokenMap(messageDetailsList,
+		ComputerPlayerInitialization.setAllLocationAsZeroToPlayer(PlayerInformation.getInstance().getPlayerName());
+		ComputerPlayerInitialization.updatePersonalTokenMap(messageDetailsList,
 				PlayerInformation.getInstance().getPlayerName(), PlayerInformation.getInstance().getPlayerNameList());
 	}
 
@@ -85,7 +85,7 @@ public class GameInitialization {
 				PlayerInformation.getInstance().getAreaTokenMap());
 		System.out.println(areaTokenMap.get(Constants.LEFT_OVER_TOKENS));
 		isLeftOverToken = false;
-		ComputerPlayerIntialization.updatePersonalTokenMap(messageDetailsList,
+		ComputerPlayerInitialization.updatePersonalTokenMap(messageDetailsList,
 				PlayerInformation.getInstance().getPlayerName(), PlayerInformation.getInstance().getPlayerNameList());
 	}
 
@@ -138,7 +138,7 @@ public class GameInitialization {
 					PlayerInformation.getInstance().getAreaTokenMap());
 			System.out.println(areaTokenMap.get(Constants.SWAP_PLAYER_TOKENS));
 			isSwapPlayerToken = false;
-			ComputerPlayerIntialization.updatePersonalTokenMap(messageDetailsList, messageDetailsList.get(0),
+			ComputerPlayerInitialization.updatePersonalTokenMap(messageDetailsList, messageDetailsList.get(0),
 					PlayerInformation.getInstance().getPlayerNameList());
 		}
 
