@@ -16,17 +16,13 @@ import com.lol.player.GameProcessing;
 
 public class QuestionDeductionLogic {
 
-	private static int terrainCount = 24;
-	private static String Message = "";
-
 	/**
 	 * This method is used to introduce the question deduction logic in computer
 	 * player
 	 * 
 	 * @param messageDetailsList
-	 * @return
 	 */
-	public static String createQuestion(List<String> messageDetailsList) {
+	public static void createQuestion(List<String> messageDetailsList) {
 
 		HashMap<String, Integer> list = new HashMap<String, Integer>();
 
@@ -45,7 +41,7 @@ public class QuestionDeductionLogic {
 			sortByValue(list);
 			for (Map.Entry<String, Integer> en : list.entrySet()) {
 				if (en.getValue() != 0) {
-					Message = en.getKey();
+					String Message = en.getKey();
 					if (Message != null && !Message.isEmpty()) {
 						System.out.println("Selected  Die Face  One :" + Message.substring(3, 6));
 						System.out.println("Selected  Die Face  Two :" + Message.substring(7, 10));
@@ -61,7 +57,7 @@ public class QuestionDeductionLogic {
 			GameProcessing gameProcessing = new GameProcessing();
 			gameProcessing.createQuestion(messageDetailsList);
 		}
-		return Message;
+
 	}
 
 	/**
@@ -76,7 +72,6 @@ public class QuestionDeductionLogic {
 			String terrainType, HashMap<String, Integer> list) {
 		Node current = ComputerPlayer.getInstance().getHead();
 		HashMap<String, HashMap<String, Integer>> terrainCountMap = new HashMap<>();
-		// P1: B:2,M:3,F;4
 		do {
 
 			current.terrainList.entrySet().stream().forEach(terrianMap -> {
@@ -116,16 +111,17 @@ public class QuestionDeductionLogic {
 
 		terrainCountMap.entrySet().forEach(player -> {
 			player.getValue().entrySet().stream().forEach(terrain -> {
+				Integer terrainCount = 24;
 				if (terrain.getValue() <= terrainCount && terrainTypes.contains(terrain.getKey())) {
 
-					Message = "05:" + dieFaceOne + "," + dieFaceTwo + "," + terrainType + "," + player.getKey();
+					String message = "05:" + dieFaceOne + "," + dieFaceTwo + "," + terrainType + "," + player.getKey();
 
 					terrainCount = terrain.getValue();
-					list.put(Message, terrainCount);
+					list.put(message, terrainCount);
 				}
 			});
 		});
-		terrainCount = 24;
+
 		return terrainCountMap;
 
 	}
