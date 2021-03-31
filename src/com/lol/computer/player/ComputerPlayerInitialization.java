@@ -204,7 +204,7 @@ public class ComputerPlayerInitialization {
 	
 	
 	
-	public static void checkTentativeTerrain( String direction1 , String direction2 )  {
+	public static void checkTentativeTerrain( String direction1  )  {
 		
 		Set<String > tenTerrain = new HashSet<>();
 		ComputerPlayer.getInstance().getAllTentativeToken().entrySet().stream().forEach(player -> {
