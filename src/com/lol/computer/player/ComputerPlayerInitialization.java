@@ -13,7 +13,7 @@ import com.lol.helper.PlayerInformation;
 /*
  * This class is used to initialize the computer player
  */
-public class ComputerPlayerIntialization {
+public class ComputerPlayerInitialization {
 	private static Integer count = 1;
 	private static Integer countTen = 0;
 
