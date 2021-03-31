@@ -15,12 +15,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.lol.constant.Constants;
-import com.lol.player.GameIntialization;
+import com.lol.player.GameInitialization;
 import com.lol.player.GameProcessing;
 
 public class Utility {
 
-	public static GameIntialization gameIntialization = new GameIntialization();
+	public static GameInitialization gameIntialization = new GameInitialization();
 	public static GameProcessing gameProcessing = new GameProcessing();
 
 	/**
