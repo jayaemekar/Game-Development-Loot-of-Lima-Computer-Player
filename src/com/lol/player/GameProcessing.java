@@ -68,22 +68,6 @@ public class GameProcessing {
 
 	}
 
-	/**
-	 * this method is to get the answer information 06:NNF,NEF,F,2,P3,P1
-	 * 
-	 * @param messageNumber
-	 * @param messageDetailsList
-	 */
-	public void getAnswerInformation(String messageNumber, List<String> messageDetailsList) {
-		ComputerPlayerDeductionLogic.processAnswerMessage(messageDetailsList);
-		System.out.println("Message [" + messageNumber + "] Player " + messageDetailsList.get(4) + " has "
-				+ messageDetailsList.get(3) + " "
-				+ PlayerInformation.getInstance().getTerrianTokenInformation(messageDetailsList.get(2))
-				+ " terrain between "
-				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(0)) + " and "
-				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(1)) + "\n");
-
-	}
 
 	/**
 	 * This method is to send the treasure Guess message to the server

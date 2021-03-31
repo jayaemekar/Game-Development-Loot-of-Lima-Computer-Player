@@ -14,11 +14,31 @@ import com.lol.helper.PlayerInformation;
 public class ComputerPlayerDeductionLogic {
 
 	/**
+	 * this method is to get the answer information 06:NNF,NEF,F,2,P3,P1
+	 * 
+	 * @param messageNumber
+	 * @param messageDetailsList
+	 */
+	public static void getAnswerInformation(String messageNumber, List<String> messageDetailsList) {
+		checkIsTreasureLocFound();
+		System.out.println("Message [" + messageNumber + "] Player " + messageDetailsList.get(4) + " has "
+				+ messageDetailsList.get(3) + " "
+				+ PlayerInformation.getInstance().getTerrianTokenInformation(messageDetailsList.get(2))
+				+ " terrain between "
+				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(0)) + " and "
+				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(1)) + "\n");
+		if (!PlayerInformation.getInstance().getPlayerName().equals(messageDetailsList.get(4)))
+			ComputerPlayerDeductionLogic.processAnswerMessage(messageDetailsList);
+
+	}
+
+	/**
 	 * This method used to process the answer message for deduction
 	 * 
 	 * @param messageDetailsList
 	 */
 	public static void processAnswerMessage(List<String> messageDetailsList) {
+
 		String playerName = messageDetailsList.get(4);
 		String Diretion1 = messageDetailsList.get(0).substring(0, 2);
 		String Diretion2 = messageDetailsList.get(1).substring(0, 2);
@@ -73,14 +93,28 @@ public class ComputerPlayerDeductionLogic {
 	 */
 	public static void updateDeducedterrainMap(Set<String> deducedterrainToken, Set<String> terrainToken,
 			String playerName, List<String> playerList, List<String> messageDetailsList) {
-		String noIfTokens = messageDetailsList.get(3);
+		Integer noIfTokens = Integer.valueOf(messageDetailsList.get(3));
 		String areaToken = messageDetailsList.get(2);
 
 		Set<String> deducedBeachLoc = ComputerPlayer.getInstance().getDeducedBeachLoc();
 		Set<String> deducedForestLoc = ComputerPlayer.getInstance().getDeducedForestLoc();
 		Set<String> deducedMountainLoc = ComputerPlayer.getInstance().getDeducedMountainLoc();
 		Set<String> deducedAllTokenLoc = ComputerPlayer.getInstance().getDeducedPlayerTokenMap().keySet();
-		if (Integer.valueOf(noIfTokens) == 0) {
+
+		Set<String> totBeachLoc = new HashSet<>();
+		Set<String> totForestLoc = new HashSet<>();
+		Set<String> totMountainLoc = new HashSet<>();
+
+		for (String terrain : terrainToken) {
+			if (terrain.contains(Constants.BEACH_CHAR))
+				totBeachLoc.add(terrain);
+			else if (terrain.contains(Constants.FOREST_CHAR))
+				totForestLoc.add(terrain);
+			else if (terrain.contains(Constants.MOUNTAINS_CHAR))
+				totMountainLoc.add(terrain);
+		}
+
+		if (noIfTokens == 0) {
 			if (Constants.BEACH_CHAR.equals(areaToken)) {
 				System.out.println("terrain needs to be processed for beach terrain deduction : " + deducedBeachLoc);
 				updateZeroterrainTokenInformation(deducedBeachLoc, playerName, terrainToken);
@@ -95,35 +129,28 @@ public class ComputerPlayerDeductionLogic {
 				System.out.println("terrain needs to be processed for all terrain deduction : " + deducedAllTokenLoc);
 				updateZeroterrainTokenInformation(deducedAllTokenLoc, playerName, terrainToken);
 			}
-		} else  {
-
-			if (Constants.BEACH_CHAR.equals(areaToken) && Integer.valueOf(noIfTokens) == deducedBeachLoc.size()) {
+		} else {
+			if (Constants.BEACH_CHAR.equals(areaToken) && noIfTokens == totBeachLoc.size()) {
 				System.out.println("terrain needs to be processed for beach terrain deduction : " + deducedBeachLoc);
 				ComputerPlayerIntialization.updatePersonalTokenMap(
 						deducedBeachLoc.stream().collect(Collectors.toList()), playerName,
 						PlayerInformation.getInstance().getPlayerNameList());
-				
-			} else if (Constants.FOREST_CHAR.equals(areaToken)
-					&& Integer.valueOf(noIfTokens) == deducedForestLoc.size()) {
+
+			} else if (Constants.FOREST_CHAR.equals(areaToken) && noIfTokens == totForestLoc.size()) {
 				System.out.println("terrain needs to be processed for forest terrain deduction : " + deducedForestLoc);
 				ComputerPlayerIntialization.updatePersonalTokenMap(
 						deducedForestLoc.stream().collect(Collectors.toList()), playerName,
 						PlayerInformation.getInstance().getPlayerNameList());
-				
-			} else if (Constants.MOUNTAINS_CHAR.equals(areaToken)
-					&& Integer.valueOf(noIfTokens) == deducedMountainLoc.size()) {
+
+			} else if (Constants.MOUNTAINS_CHAR.equals(areaToken) && noIfTokens == totMountainLoc.size()) {
 				System.out.println(
 						"terrain needs to be processed for mountain terrain deduction : " + deducedMountainLoc);
 				ComputerPlayerIntialization.updatePersonalTokenMap(
 						deducedMountainLoc.stream().collect(Collectors.toList()), playerName,
 						PlayerInformation.getInstance().getPlayerNameList());
 
-			} else if (Constants.ALL_CHAR.equals(areaToken) && Integer.valueOf(noIfTokens) == deducedAllTokenLoc.size()) {
-				// Need to identify the logic for this type of message.
-				System.out.println("terrain needs to be processed for all terrain deduction : " + deducedAllTokenLoc);
-			//	ComputerPlayerIntialization.updatePersonalTokenMap(deducedAllTokenLoc.stream().collect(Collectors.toList()),
-			//			playerName, PlayerInformation.getInstance().getPlayerNameList());
 			}
+
 		}
 
 	}
@@ -196,7 +223,7 @@ public class ComputerPlayerDeductionLogic {
 		if (ComputerPlayer.getInstance().getTreasureLoc() != null
 				&& ComputerPlayer.getInstance().getTreasureLoc().size() == 2)
 			return Constants.YES;
-		else if (ComputerPlayer.getInstance().getNotTreasureLoc() != null
+	    if (ComputerPlayer.getInstance().getNotTreasureLoc() != null
 				&& ComputerPlayer.getInstance().getNotTreasureLoc().size() == 22) {
 			Set<String> allLocation = ComputerPlayer.getInstance().getAllPlayerTrrianMap().keySet();
 			allLocation.removeAll(ComputerPlayer.getInstance().getNotTreasureLoc());
@@ -220,4 +247,6 @@ public class ComputerPlayerDeductionLogic {
 			ComputerPlayer.getInstance().getAllPlayerTrrianMap().put(terrainToken, terrainMap);
 		}
 	}
+
+	
 }

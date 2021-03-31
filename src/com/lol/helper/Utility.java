@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.lol.computer.player.ComputerPlayerDeductionLogic;
 import com.lol.constant.Constants;
 import com.lol.player.GameInitialization;
 import com.lol.player.GameProcessing;
@@ -99,7 +100,7 @@ public class Utility {
 		else if (Constants.MESSAAGE_05.equals(messageNumber))
 			gameProcessing.getQuestionInformation(messageNumber, messageDetailsList);
 		else if (Constants.MESSAAGE_06.equals(messageNumber))
-			gameProcessing.getAnswerInformation(messageNumber, messageDetailsList);
+			ComputerPlayerDeductionLogic.getAnswerInformation(messageNumber, messageDetailsList);
 		else if (Constants.MESSAAGE_07.equals(messageNumber))
 			gameProcessing.getTreasureGuessInformation(messageNumber, messageDetailsList);
 		else if (Constants.MESSAAGE_08.equals(messageNumber)) {

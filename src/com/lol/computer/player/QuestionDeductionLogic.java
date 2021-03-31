@@ -109,7 +109,7 @@ public class QuestionDeductionLogic {
 				if (terrain.getValue() <= terrainCount && terrainTypes.contains(terrain.getKey())) {
 
 					String message = "05:" + dieFaceOne + "," + dieFaceTwo + "," + terrainType + "," + player.getKey();
-					
+
 					messageMap.put(terrain.getValue(), message);
 				}
 			});
@@ -144,8 +144,7 @@ public class QuestionDeductionLogic {
 				&& (Constants.WILD_CHAR.equals(headTerrian) || Constants.WILD_CHAR.equals(tailTerrian))) {
 			String terrainType = !Constants.WILD_CHAR.equals(headTerrian) ? headTerrian : tailTerrian;
 			generateQuestionMap(dieFaceOne, dieFaceTwo, terrainType, messageMap);
-			if (messageMap.isEmpty())
-				generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap);
+			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap);
 		}
 	}
 
