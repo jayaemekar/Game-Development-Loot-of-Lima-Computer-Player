@@ -36,17 +36,20 @@ public class QuestionDeductionLogic {
 		questionProxy(dieFaceThree, dieFaceTwo, messageMap);
 		questionProxy(dieFaceThree, dieFaceOne, messageMap);
 
+		System.out.println("messageMap ::" + messageMap);
 		if (!messageMap.isEmpty()) {
 			for (Entry<Integer, String> en : messageMap.entrySet()) {
-				String message = en.getValue();
-				if (message != null && !message.isEmpty()) {
-					System.out.println("Selected  Die Face  One :" + message.substring(3, 6));
-					System.out.println("Selected  Die Face  Two :" + message.substring(7, 10));
-					System.out.println("Selected  Area  Terrain  :" + message.substring(11, 12));
-					System.out.println("Selected  Player :" + message.substring(13, 15));
-					Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), message);
-					Utility.parseMessage(message);
-					break;
+				if (en.getKey() != 0) {
+					String message = en.getValue();
+					if (message != null && !message.isEmpty()) {
+						System.out.println("Selected  Die Face  One :" + message.substring(3, 6));
+						System.out.println("Selected  Die Face  Two :" + message.substring(7, 10));
+						System.out.println("Selected  Area  Terrain  :" + message.substring(11, 12));
+						System.out.println("Selected  Player :" + message.substring(13, 15));
+						Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), message);
+						Utility.parseMessage(message);
+						break;
+					}
 				}
 			}
 		} else {
@@ -81,11 +84,10 @@ public class QuestionDeductionLogic {
 						if (!terrainCountMap.get(playerMap.getKey()).containsKey(terrianMap.getKey().substring(1, 2)))
 							terrainCountMap.get(playerMap.getKey()).put(terrianMap.getKey().substring(1, 2), 0);
 
-						int count = 0;
-						count = terrainCountMap.get(playerMap.getKey()).get(terrianMap.getKey().substring(1, 2));
+						int count = terrainCountMap.get(playerMap.getKey()).get(terrianMap.getKey().substring(1, 2));
 						count = count + 1;
-
 						terrainCountMap.get(playerMap.getKey()).replace(terrianMap.getKey().substring(1, 2), count);
+						
 					}
 				});
 			});

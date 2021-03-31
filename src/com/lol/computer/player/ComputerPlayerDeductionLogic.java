@@ -106,12 +106,15 @@ public class ComputerPlayerDeductionLogic {
 		Set<String> totMountainLoc = new HashSet<>();
 
 		for (String terrain : terrainToken) {
-			if (terrain.contains(Constants.BEACH_CHAR))
-				totBeachLoc.add(terrain);
-			else if (terrain.contains(Constants.FOREST_CHAR))
-				totForestLoc.add(terrain);
-			else if (terrain.contains(Constants.MOUNTAINS_CHAR))
-				totMountainLoc.add(terrain);
+			if (ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrain)
+					.get(PlayerInformation.getInstance().getPlayerName()) != 1) {
+				if (terrain.contains(Constants.BEACH_CHAR))
+					totBeachLoc.add(terrain);
+				else if (terrain.contains(Constants.FOREST_CHAR))
+					totForestLoc.add(terrain);
+				else if (terrain.contains(Constants.MOUNTAINS_CHAR))
+					totMountainLoc.add(terrain);
+			}
 		}
 
 		if (noIfTokens == 0) {
@@ -130,29 +133,36 @@ public class ComputerPlayerDeductionLogic {
 				updateZeroterrainTokenInformation(deducedAllTokenLoc, playerName, terrainToken);
 			}
 		} else {
-			if (Constants.BEACH_CHAR.equals(areaToken) && noIfTokens == totBeachLoc.size()) {
-				System.out.println("terrain needs to be processed for beach terrain deduction : " + deducedBeachLoc);
-				ComputerPlayerIntialization.updatePersonalTokenMap(
-						deducedBeachLoc.stream().collect(Collectors.toList()), playerName,
-						PlayerInformation.getInstance().getPlayerNameList());
+			if (Constants.BEACH_CHAR.equals(areaToken)) {
+				updateTerrainMapForNonZeroInformation(noIfTokens, totBeachLoc, deducedBeachLoc, playerName);
+			} else if (Constants.FOREST_CHAR.equals(areaToken)) {
+				updateTerrainMapForNonZeroInformation(noIfTokens, totForestLoc, deducedForestLoc, playerName);
+			} else if (Constants.MOUNTAINS_CHAR.equals(areaToken)) {
+				updateTerrainMapForNonZeroInformation(noIfTokens, totMountainLoc, deducedMountainLoc, playerName);
+			}
+		}
+	}
 
-			} else if (Constants.FOREST_CHAR.equals(areaToken) && noIfTokens == totForestLoc.size()) {
-				System.out.println("terrain needs to be processed for forest terrain deduction : " + deducedForestLoc);
-				ComputerPlayerIntialization.updatePersonalTokenMap(
-						deducedForestLoc.stream().collect(Collectors.toList()), playerName,
-						PlayerInformation.getInstance().getPlayerNameList());
+	private static void updateTerrainMapForNonZeroInformation(Integer noIfTokens, Set<String> totalLoc,
+			Set<String> deducedLoc, String playerName) {
+		if (noIfTokens == totalLoc.size()) {
+			System.out.println("terrain needs to be processed for beach terrain deduction : " + deducedLoc);
+			ComputerPlayerIntialization.updatePersonalTokenMap(deducedLoc.stream().collect(Collectors.toList()),
+					playerName, PlayerInformation.getInstance().getPlayerNameList());
+		} else if (noIfTokens < totalLoc.size()) {
 
-			} else if (Constants.MOUNTAINS_CHAR.equals(areaToken) && noIfTokens == totMountainLoc.size()) {
-				System.out.println(
-						"terrain needs to be processed for mountain terrain deduction : " + deducedMountainLoc);
-				ComputerPlayerIntialization.updatePersonalTokenMap(
-						deducedMountainLoc.stream().collect(Collectors.toList()), playerName,
-						PlayerInformation.getInstance().getPlayerNameList());
+			for (String terrain : totalLoc) {
+				if (ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrain).get(playerName) == 0) {
+
+					totalLoc.remove(ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrain));
+				}
+			}
+			if (noIfTokens == totalLoc.size()) {
+				ComputerPlayerIntialization.updatePersonalTokenMap(totalLoc.stream().collect(Collectors.toList()),
+						playerName, PlayerInformation.getInstance().getPlayerNameList());
 
 			}
-
 		}
-
 	}
 
 	/**
@@ -223,7 +233,7 @@ public class ComputerPlayerDeductionLogic {
 		if (ComputerPlayer.getInstance().getTreasureLoc() != null
 				&& ComputerPlayer.getInstance().getTreasureLoc().size() == 2)
 			return Constants.YES;
-	    if (ComputerPlayer.getInstance().getNotTreasureLoc() != null
+		if (ComputerPlayer.getInstance().getNotTreasureLoc() != null
 				&& ComputerPlayer.getInstance().getNotTreasureLoc().size() == 22) {
 			Set<String> allLocation = ComputerPlayer.getInstance().getAllPlayerTrrianMap().keySet();
 			allLocation.removeAll(ComputerPlayer.getInstance().getNotTreasureLoc());
@@ -248,5 +258,4 @@ public class ComputerPlayerDeductionLogic {
 		}
 	}
 
-	
 }
