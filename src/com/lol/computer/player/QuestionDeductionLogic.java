@@ -36,7 +36,6 @@ public class QuestionDeductionLogic {
 		questionProxy(dieFaceThree, dieFaceTwo, messageMap);
 		questionProxy(dieFaceThree, dieFaceOne, messageMap);
 
-		System.out.println("messageMap ::" + messageMap);
 		if (!messageMap.isEmpty()) {
 			for (Entry<Integer, String> en : messageMap.entrySet()) {
 				if (en.getKey() != 0) {
