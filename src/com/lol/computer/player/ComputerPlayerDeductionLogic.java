@@ -32,14 +32,14 @@ public class ComputerPlayerDeductionLogic {
 		System.out.println(
 				"Number of non Treasure location count ::  " + ComputerPlayer.getInstance().getNotTreasureLoc().size());
 		System.out.println("Treasure Location identified  ::  " + ComputerPlayer.getInstance().getTreasureLoc());
-		checkIsTreasureLocFound();
+		String locFound = checkIsTreasureLocFound();
 		System.out.println("Message [" + messageNumber + "] Player " + messageDetailsList.get(4) + " has "
 				+ messageDetailsList.get(3) + " "
 				+ PlayerInformation.getInstance().getTerrianTokenInformation(messageDetailsList.get(2))
 				+ " terrain between "
 				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(0)) + " and "
 				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(1)) + "\n");
-		if (!PlayerInformation.getInstance().getPlayerName().equals(messageDetailsList.get(4)))
+		if (!PlayerInformation.getInstance().getPlayerName().equals(messageDetailsList.get(4)) && !Constants.YES.equals(locFound))
 			ComputerPlayerDeductionLogic.processAnswerMessage(messageDetailsList);
 
 	}
@@ -135,33 +135,46 @@ public class ComputerPlayerDeductionLogic {
 			if (Constants.BEACH_CHAR.equals(areaToken)) {
 				System.out.println("terrain needs to be processed for beach terrain deduction : " + deducedBeachLoc);
 				updateZeroterrainTokenInformation(deducedBeachLoc, playerName, terrainToken);
+				ComputerPlayerInitialization.checkTentativeTerrain1(diretion1);
+				ComputerPlayerInitialization.checkTentativeTerrain(diretion1);
+
+
 			} else if (Constants.FOREST_CHAR.equals(areaToken)) {
 				System.out.println("terrain needs to be processed for forest terrain deduction : " + deducedForestLoc);
 				updateZeroterrainTokenInformation(deducedForestLoc, playerName, terrainToken);
+				ComputerPlayerInitialization.checkTentativeTerrain1(diretion1);
+				ComputerPlayerInitialization.checkTentativeTerrain(diretion1);
+
+
 			} else if (Constants.MOUNTAINS_CHAR.equals(areaToken)) {
 				System.out.println(
 						"terrain needs to be processed for mountain terrain deduction : " + deducedMountainLoc);
 				updateZeroterrainTokenInformation(deducedMountainLoc, playerName, terrainToken);
+				ComputerPlayerInitialization.checkTentativeTerrain1(diretion1);
+				ComputerPlayerInitialization.checkTentativeTerrain(diretion1);
+
+
 			} else {
 				System.out.println("terrain needs to be processed for all terrain deduction : " + deducedAllTokenLoc);
 				updateZeroterrainTokenInformation(deducedAllTokenLoc, playerName, terrainToken);
+				ComputerPlayerInitialization.checkTentativeTerrain(diretion1);
+				ComputerPlayerInitialization.checkTentativeTerrain1(diretion1);
+
+
 			}
 		} else {
-			if (Constants.BEACH_CHAR.equals(areaToken)) {
-				updateTerrainMapForNonZeroInformation(noIfTokens, totBeachLoc, deducedBeachLoc, playerName,
-						terrainToken);
-			} else if (Constants.FOREST_CHAR.equals(areaToken)) {
-				updateTerrainMapForNonZeroInformation(noIfTokens, totForestLoc, deducedForestLoc, playerName,
-						terrainToken);
-			} else if (Constants.MOUNTAINS_CHAR.equals(areaToken)) {
-				updateTerrainMapForNonZeroInformation(noIfTokens, totMountainLoc, deducedMountainLoc, playerName,
-						terrainToken);
-			}
+			
+			ComputerPlayerInitialization.updateAllPersonalTokenMap(messageDetailsList);
+			ComputerPlayerInitialization.checkTentativeTerrain1(diretion1);
+			ComputerPlayerInitialization.checkTentativeTerrain(diretion1);
+
+
 		}
 
 		if (Constants.ALL_CHAR.equals(areaToken)) {
 			ComputerPlayerInitialization.updateAllPersonalTokenMap(messageDetailsList);
 			ComputerPlayerInitialization.checkTentativeTerrain(diretion1);
+			ComputerPlayerInitialization.checkTentativeTerrain1(diretion1);
 		}
 	}
 
