@@ -147,16 +147,19 @@ public class ComputerPlayerDeductionLogic {
 				updateZeroterrainTokenInformation(deducedAllTokenLoc, playerName, terrainToken);
 			}
 		} else {
-			if (Constants.BEACH_CHAR.equals(areaToken)) {
-				updateTerrainMapForNonZeroInformation(noIfTokens, totBeachLoc, deducedBeachLoc, playerName,
-						terrainToken);
-			} else if (Constants.FOREST_CHAR.equals(areaToken)) {
-				updateTerrainMapForNonZeroInformation(noIfTokens, totForestLoc, deducedForestLoc, playerName,
-						terrainToken);
-			} else if (Constants.MOUNTAINS_CHAR.equals(areaToken)) {
-				updateTerrainMapForNonZeroInformation(noIfTokens, totMountainLoc, deducedMountainLoc, playerName,
-						terrainToken);
-			}
+			
+			ComputerPlayerInitialization.updateAllPersonalTokenMap(messageDetailsList);
+			ComputerPlayerInitialization.checkTentativeTerrain1(diretion1);
+//			if (Constants.BEACH_CHAR.equals(areaToken)) {
+//				updateTerrainMapForNonZeroInformation(noIfTokens, totBeachLoc, deducedBeachLoc, playerName,
+//						terrainToken);
+//			} else if (Constants.FOREST_CHAR.equals(areaToken)) {
+//				updateTerrainMapForNonZeroInformation(noIfTokens, totForestLoc, deducedForestLoc, playerName,
+//						terrainToken);
+//			} else if (Constants.MOUNTAINS_CHAR.equals(areaToken)) {
+//				updateTerrainMapForNonZeroInformation(noIfTokens, totMountainLoc, deducedMountainLoc, playerName,
+//						terrainToken);
+//			}
 		}
 
 		if (Constants.ALL_CHAR.equals(areaToken)) {

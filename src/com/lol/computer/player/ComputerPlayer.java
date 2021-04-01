@@ -1,9 +1,13 @@
 package com.lol.computer.player;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.lol.helper.PlayerInformation;
 
 class Node {
 	Map<String, Map<String, Integer>> terrainList;
@@ -33,8 +37,10 @@ public class ComputerPlayer {
 	private Map<String, Integer> playerObj;
 	private static ComputerPlayer computerPlayer = null;
 	private Map<String, List<List<String>>> allTentativeToken;
+	private  Map<String, Map<String, List<List<String>>>> TentativeToken;
 
 
+	
 	private ComputerPlayer() {
 		// private constructor
 	}
@@ -211,5 +217,13 @@ public class ComputerPlayer {
 			current = current.next;
 		} while (current != head);
 		return directionNode;
+	}
+
+	public Map<String, Map<String, List<List<String>>>> getTentativeToken() {
+		return TentativeToken;
+	}
+
+	public void setTentativeToken(Map<String, Map<String, List<List<String>>>> tentativeToken) {
+		TentativeToken = tentativeToken;
 	}
 }
