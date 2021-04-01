@@ -306,6 +306,7 @@ public class ComputerPlayerInitialization {
 							updateTerrainTokenMap(tenTerrain, player.getKey());
 						if ((countTen) > Integer.parseInt(value.get(2))) {
 						}
+						countTen = 0;
 					}
 				});
 			});
@@ -350,6 +351,7 @@ public class ComputerPlayerInitialization {
 									updateTerrainTokenMap(tenTerrain, player.getKey());
 								if ((countTen) > Integer.parseInt(terrain.get(2))) {
 								}
+								countTen = 0;
 							}
 							
 						});
