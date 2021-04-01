@@ -32,14 +32,14 @@ public class ComputerPlayerDeductionLogic {
 		System.out.println(
 				"Number of non Treasure location count ::  " + ComputerPlayer.getInstance().getNotTreasureLoc().size());
 		System.out.println("Treasure Location identified  ::  " + ComputerPlayer.getInstance().getTreasureLoc());
-		checkIsTreasureLocFound();
+		String locFound = checkIsTreasureLocFound();
 		System.out.println("Message [" + messageNumber + "] Player " + messageDetailsList.get(4) + " has "
 				+ messageDetailsList.get(3) + " "
 				+ PlayerInformation.getInstance().getTerrianTokenInformation(messageDetailsList.get(2))
 				+ " terrain between "
 				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(0)) + " and "
 				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(1)) + "\n");
-		if (!PlayerInformation.getInstance().getPlayerName().equals(messageDetailsList.get(4)))
+		if (!PlayerInformation.getInstance().getPlayerName().equals(messageDetailsList.get(4)) && !Constants.YES.equals(locFound))
 			ComputerPlayerDeductionLogic.processAnswerMessage(messageDetailsList);
 
 	}
