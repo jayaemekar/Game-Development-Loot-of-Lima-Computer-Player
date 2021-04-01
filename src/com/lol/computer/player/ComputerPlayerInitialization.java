@@ -90,7 +90,6 @@ public class ComputerPlayerInitialization {
 			Map<String, Integer> terrainMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrainToken);
 			terrainMap.put(playerName, 0);
 		}
-
 	}
 
 	public static void updateAllPersonalTokenMap(List<String> messageDetailsList) {
@@ -117,24 +116,17 @@ public class ComputerPlayerInitialization {
 		}
 		ComputerPlayer.getInstance().setAllTentativeToken(allTentativeToken);
 
-		if (head.direction.equals(tail.direction)) {
-
+		if (head.direction.equals(tail.direction))
 			getTerrainStatus(ComputerPlayer.getInstance().getAllPlayerTrrianMap(), threeSet, playerName);
-
-		} else {
+		else {
 			while (head != tail) {
-
 				getTerrainStatus(head.terrainList, threeSet, playerName);
-
 				head = head.next;
 			}
 		}
 
-		if (threeSet.get(1).size() > 0) {
-
+		if (threeSet.get(1).size() > 0)
 			tokenCount = tokenCount - threeSet.get(1).size();
-
-		}
 
 		if (tokenCount > 0) {
 			if (threeSet.get(2).size() > tokenCount) {
@@ -145,41 +137,19 @@ public class ComputerPlayerInitialization {
 				value.add(Integer.toString(tokenCount));
 
 				if (ComputerPlayer.getInstance().getAllTentativeToken().containsKey(playerName)) {
-
 					List<List<String>> list = ComputerPlayer.getInstance().getAllTentativeToken().get(playerName);
 					list.add(value);
-
 				} else {
 					List<List<String>> list2 = new ArrayList<>();
 					list2.add(value);
 					ComputerPlayer.getInstance().getAllTentativeToken().put(playerName, list2);
-
 				}
-
 			}
 
 			if (threeSet.get(2).size() == tokenCount) {
-
-				List<String> PlayerList = PlayerInformation.getInstance().getPlayerNameList();
-				for (String player : PlayerList) {
-					// marking 1 for having the token
-
-					for (String terrainToken : tenTerrain) {
-						Map<String, Integer> terrainMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap()
-								.get(terrainToken);
-						if (terrainMap != null) {
-							if (!playerName.equals(player))
-								terrainMap.put(player, 0);
-							else
-								terrainMap.put(player, 1);
-							ComputerPlayer.getInstance().getAllPlayerTrrianMap().put(terrainToken, terrainMap);
-						}
-					}
-				}
-
+				updateTerrainTokenMap(tenTerrain, playerName);
 			}
 		}
-
 	}
 
 	public static List<Set<String>> getTerrainStatus(Map<String, Map<String, Integer>> map, List<Set<String>> threeSet,
@@ -189,18 +159,15 @@ public class ComputerPlayerInitialization {
 
 			terrain.getValue().entrySet().stream().forEach(playerMap -> {
 				if (playerMap.getKey().equals(playerName)) {
-					if (playerMap.getValue() == 0) {
+					if (playerMap.getValue() == 0)
 						threeSet.get(0).add(terrain.getKey());
-					}
-					if (playerMap.getValue() == 1) {
+
+					if (playerMap.getValue() == 1)
 						threeSet.get(1).add(terrain.getKey());
-					}
-					if (playerMap.getValue() == -1) {
 
+					if (playerMap.getValue() == -1)
 						threeSet.get(2).add(terrain.getKey());
-					}
 				}
-
 			});
 		});
 
@@ -210,7 +177,6 @@ public class ComputerPlayerInitialization {
 
 	public static void checkTentativeTerrain(String direction1) {
 
-		System.out.println("start checkTentativeTerrain" + ComputerPlayer.getInstance().getAllTentativeToken());
 		Set<String> tenTerrain = new HashSet<>();
 
 		if (ComputerPlayer.getInstance().getAllTentativeToken() != null) {
@@ -221,7 +187,6 @@ public class ComputerPlayerInitialization {
 					if (value.get(0).equals(direction1)) {
 
 						Node head = ComputerPlayer.getInstance().createNode(direction1);
-
 						Node tail = ComputerPlayer.getInstance().createNode(value.get(1));
 
 						while (head != tail) {
@@ -241,26 +206,17 @@ public class ComputerPlayerInitialization {
 							head = head.next;
 						}
 
-						if (value.get(2).equals(Integer.toString(countTen))) {
+						if (value.get(2).equals(Integer.toString(countTen)))
 							updateTerrainTokenMap(tenTerrain, player.getKey());
-
-						}
-
 						if ((countTen) > Integer.parseInt(value.get(2))) {
-
 						}
-
 					}
-
 				});
 			});
 		}
-
-		System.out.println("outside checkTentativeTerrain");
 	}
 
 	private static void updateTerrainTokenMap(Set<String> tenTerrain, String player) {
-		// TODO Auto-generated method stub
 
 		List<String> PlayerList = PlayerInformation.getInstance().getPlayerNameList();
 		for (String player1 : PlayerList) {
@@ -272,9 +228,9 @@ public class ComputerPlayerInitialization {
 				if (terrainMap != null) {
 					if (!player.equals(player1))
 						terrainMap.put(player1, 0);
-					else 
+					else
 						terrainMap.put(player1, 1);
-					
+
 					ComputerPlayer.getInstance().getAllPlayerTrrianMap().put(terrainToken, terrainMap);
 				}
 			}
