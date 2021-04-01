@@ -29,7 +29,8 @@ public class ComputerPlayerDeductionLogic {
 				ComputerPlayer.getInstance().setNotTreasureLoc(treasureNotLocSet);
 			}
 		}
-		System.out.println("Number of non Treasure location count ::  " + ComputerPlayer.getInstance().getNotTreasureLoc().size());
+		System.out.println(
+				"Number of non Treasure location count ::  " + ComputerPlayer.getInstance().getNotTreasureLoc().size());
 		System.out.println("Treasure Location identified  ::  " + ComputerPlayer.getInstance().getTreasureLoc());
 		checkIsTreasureLocFound();
 		System.out.println("Message [" + messageNumber + "] Player " + messageDetailsList.get(4) + " has "
@@ -66,7 +67,7 @@ public class ComputerPlayerDeductionLogic {
 			updateDeducedterrainMap(deducedterrainToken, terrainToken, playerName,
 					PlayerInformation.getInstance().getPlayerNameList(), messageDetailsList, Diretion1);
 		}
-		// after answer processing check is treasure location found or not	
+		// after answer processing check is treasure location found or not
 		checkIsTreasureLocFound();
 
 	}
@@ -266,15 +267,15 @@ public class ComputerPlayerDeductionLogic {
 	 * @return
 	 */
 	public static String checkIsTreasureLocFound() {
-		
+
 		if (ComputerPlayer.getInstance().getTreasureLoc() != null
 				&& ComputerPlayer.getInstance().getTreasureLoc().size() == 2)
 			return Constants.YES;
-		if (ComputerPlayer.getInstance().getNotTreasureLoc() != null
+		else if (ComputerPlayer.getInstance().getNotTreasureLoc() != null
 				&& ComputerPlayer.getInstance().getNotTreasureLoc().size() == 22) {
 			Set<String> allLocation = ComputerPlayer.getInstance().getAllPlayerTrrianMap().keySet();
 			allLocation.removeAll(ComputerPlayer.getInstance().getNotTreasureLoc());
-			
+
 			Set<String> treasureLocSet = new HashSet<>();
 			treasureLocSet.addAll(allLocation);
 			ComputerPlayer.getInstance().setTreasureLoc(treasureLocSet);
