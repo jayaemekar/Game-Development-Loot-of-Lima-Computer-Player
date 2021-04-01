@@ -133,7 +133,6 @@ public class ComputerPlayerInitialization {
 		String playerName = messageDetailsList.get(4);
 		
 		Map<Integer , Set<String>> areaTokenSet = new HashMap<>();
-		System.out.println("Treeset" + threeSet);
 		
 		if(! (areaToken.equals(Constants.ALL_CHAR))) {
 			
@@ -156,10 +155,8 @@ public class ComputerPlayerInitialization {
 			}
 		});
 		threeSet.get(2).forEach(value -> {
-			System.out.println(value.charAt(1));
 			if(Character.toString(value.charAt(1)).equals(areaToken)) {
 				if(!areaTokenSet.containsKey(-1)) {
-					System.out.println("in");
 					areaTokenSet.put(-1, new HashSet<>());
 				}
 				areaTokenSet.get(-1).add(value);
@@ -167,7 +164,6 @@ public class ComputerPlayerInitialization {
 		});
 		
 		if(areaTokenSet.containsKey(1)) {
-			System.out.println(areaTokenSet.get(1).size());
 			tokenCount = tokenCount - areaTokenSet.get(1).size();
 		}
 		if (tokenCount > 0 && areaTokenSet.get(-1) != null) 
@@ -249,7 +245,6 @@ public class ComputerPlayerInitialization {
 				}
 			}
 		}
-		System.out.println("Mine" + ComputerPlayer.getInstance().getTentativeToken());
 	}
 
 	public static List<Set<String>> getTerrainStatus(Map<String, Map<String, Integer>> map, List<Set<String>> threeSet,
@@ -261,16 +256,13 @@ public class ComputerPlayerInitialization {
 				if (playerMap.getKey().equals(playerName)) {
 					if (playerMap.getValue() == 0) {
 						threeSet.get(0).add(terrain.getKey());
-						System.out.println("zero" + terrain.getKey());
 						
 					}
 					if (playerMap.getValue() == 1) {
 						threeSet.get(1).add(terrain.getKey());
-						System.out.println("one" + terrain.getKey());
 					}
 					if (playerMap.getValue() == -1) {
 						threeSet.get(2).add(terrain.getKey());
-						System.out.println("tentative" + terrain.getKey());
 				}}
 			});
 		});
