@@ -38,54 +38,83 @@ public class ComputerPlayer {
 	private static ComputerPlayer computerPlayer = null;
 	private Map<String, List<List<String>>> allTentativeToken;
 	private  Map<String, Map<String, List<List<String>>>> TentativeToken;
-	private Set<String> NorthSet;
-	private Set<String> NorthEastSet;
-	private Set<String> EastSet;
-	private Set<String> SouthEastSet;
-	public Set<String> getSouthEastSet() {
+	private Map<Integer , Set<String>> NorthSet;
+	public Map<Integer, Set<String>> getNorthSet() {
+		return NorthSet;
+	}
+
+	public void setNorthSet(Map<Integer, Set<String>> northSet) {
+		NorthSet = northSet;
+	}
+
+	public Map<Integer, Set<String>> getNorthEastSet() {
+		return NorthEastSet;
+	}
+
+	public void setNorthEastSet(Map<Integer, Set<String>> northEastSet) {
+		NorthEastSet = northEastSet;
+	}
+
+	public Map<Integer, Set<String>> getEastSet() {
+		return EastSet;
+	}
+
+	public void setEastSet(Map<Integer, Set<String>> eastSet) {
+		EastSet = eastSet;
+	}
+
+	public Map<Integer, Set<String>> getSouthEastSet() {
 		return SouthEastSet;
 	}
 
-	public void setSouthEastSet(Set<String> southEastSet) {
+	public void setSouthEastSet(Map<Integer, Set<String>> southEastSet) {
 		SouthEastSet = southEastSet;
 	}
 
-	public Set<String> getSouthSet() {
+	public Map<Integer, Set<String>> getSouthSet() {
 		return SouthSet;
 	}
 
-	public void setSouthSet(Set<String> southSet) {
+	public void setSouthSet(Map<Integer, Set<String>> southSet) {
 		SouthSet = southSet;
 	}
 
-	public Set<String> getSouthWestSet() {
+	public Map<Integer, Set<String>> getSouthWestSet() {
 		return SouthWestSet;
 	}
 
-	public void setSouthWestSet(Set<String> southWestSet) {
+	public void setSouthWestSet(Map<Integer, Set<String>> southWestSet) {
 		SouthWestSet = southWestSet;
 	}
 
-	public Set<String> getWestSet() {
+	public Map<Integer, Set<String>> getWestSet() {
 		return WestSet;
 	}
 
-	public void setWestSet(Set<String> westSet) {
+	public void setWestSet(Map<Integer, Set<String>> westSet) {
 		WestSet = westSet;
 	}
 
-	public Set<String> getNorthWestSet() {
+	public Map<Integer, Set<String>> getNorthWestSet() {
 		return NorthWestSet;
 	}
 
-	public void setNorthWestSet(Set<String> northWestSet) {
+	public void setNorthWestSet(Map<Integer, Set<String>> northWestSet) {
 		NorthWestSet = northWestSet;
 	}
 
-	private Set<String> SouthSet;
-	private Set<String> SouthWestSet;
-	private Set<String> WestSet;
-	private Set<String> NorthWestSet;
+	private Map<Integer , Set<String>> NorthEastSet;
+	private Map<Integer , Set<String>> EastSet;
+	private Map<Integer , Set<String>> SouthEastSet;
+	
+	private Map<Integer , Set<String>> SouthSet;
+	private Map<Integer , Set<String>> SouthWestSet;
+	private Map<Integer , Set<String>> WestSet;
+	private Map<Integer , Set<String>> NorthWestSet;
+	
+	
+
+	
 	
 	private ComputerPlayer() {
 		// private constructor
@@ -273,27 +302,5 @@ public class ComputerPlayer {
 		TentativeToken = tentativeToken;
 	}
 
-	public Set<String> getEastSet() {
-		return EastSet;
-	}
-
-	public void setEastSet(Set<String> eastSet) {
-		EastSet = eastSet;
-	}
-
-	public Set<String> getNorthEastSet() {
-		return NorthEastSet;
-	}
-
-	public void setNorthEastSet(Set<String> northEastSet) {
-		NorthEastSet = northEastSet;
-	}
-
-	public Set<String> getNorthSet() {
-		return NorthSet;
-	}
-
-	public void setNorthSet(Set<String> northSet) {
-		NorthSet = northSet;
-	}
+	
 }

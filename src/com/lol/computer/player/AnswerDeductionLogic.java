@@ -8,16 +8,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
 
 public class AnswerDeductionLogic {
 	
-	
+	static Boolean flag = false;
+
 	public static void getAnswerInformation(String messageNumber, List<String> messageDetailsList) {
+		System.out.println("first " + ComputerPlayer.getInstance().getAllPlayerTrrianMap());
+
 		for (String terrain : ComputerPlayer.getInstance().getAllPlayerTrrianMap().keySet()) {
+			
 			Map<String, Integer> terrainMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrain);
 			int sum = terrainMap.values().stream().reduce(0, Integer::sum);
 			if (sum == 1) {
@@ -26,6 +29,7 @@ public class AnswerDeductionLogic {
 				ComputerPlayer.getInstance().setNotTreasureLoc(treasureNotLocSet);
 			}
 		}
+		
 		System.out.println(
 				"Number of non Treasure location count ::  " + ComputerPlayer.getInstance().getNotTreasureLoc().size());
 		System.out.println("Treasure Location identified  ::  " + ComputerPlayer.getInstance().getTreasureLoc());
@@ -36,12 +40,13 @@ public class AnswerDeductionLogic {
 				+ " terrain between "
 				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(0)) + " and "
 				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(1)) + "\n");
-		if (!PlayerInformation.getInstance().getPlayerName().equals(messageDetailsList.get(4)) && !Constants.YES.equals(locFound))
+		if (!PlayerInformation.getInstance().getPlayerName().equals(messageDetailsList.get(4)) && !Constants.YES.equals(locFound)) {
 			processAnswerMessage(messageDetailsList);
 		
-		AnswerDeductionHelper.checkAllToken();
-
-		System.out.println(ComputerPlayer.getInstance().getAllPlayerTrrianMap());
+//		AnswerDeductionHelper.checkAllToken();
+		}
+		System.out.println(ComputerPlayer.getInstance().getNotTreasureLoc());
+		System.out.println("final" + ComputerPlayer.getInstance().getAllPlayerTrrianMap());
 	}
 
 	
@@ -70,7 +75,7 @@ public class AnswerDeductionLogic {
 				head = head.next;
 			}
 		}
-		System.out.println(areaTokenSet);
+//		System.out.println("before all beach" + areaTokenSet);
 
 		CheckTerrainStatus(areaTokenSet,messageDetailsList);
 		
@@ -81,7 +86,6 @@ public class AnswerDeductionLogic {
 		
 		
 		String areaToken = messageDetailsList.get(2);
-		System.out.println(areaToken);
 		String noOfTokens = messageDetailsList.get(3);
 		int tokenCount = Integer.valueOf(noOfTokens);
 		String Diretion1 = messageDetailsList.get(0).substring(0, 2);
@@ -90,19 +94,16 @@ public class AnswerDeductionLogic {
 			
 		if (Constants.BEACH_CHAR.equals(areaToken)) {
 			updateAreaTokenSet(areaToken,areaTokenSet);
-			System.out.println(areaTokenSet);
 			
 		}
 		
 		if(Constants.FOREST_CHAR.equals(areaToken)) {
 			updateAreaTokenSet(areaToken,areaTokenSet);
-			System.out.println(areaTokenSet);
 			
 		}
 		
 		if(Constants.MOUNTAINS_CHAR.equals(areaToken)) {
 			updateAreaTokenSet(areaToken,areaTokenSet);
-			System.out.println(areaTokenSet);
 			
 		}
 		
@@ -111,19 +112,20 @@ public class AnswerDeductionLogic {
 			
 		}
 		
+//		System.out.println("Area token set" + areaTokenSet);
 		List<List<String>> value = updateStatus(areaTokenSet,areaToken,tokenCount,Diretion1,Diretion2,playerName);
 		if(ComputerPlayer.getInstance().getTentativeToken() != null) {
 		
 		if(ComputerPlayer.getInstance().getTentativeToken().get(playerName).get(areaToken)!=null && !(value.isEmpty())) {
-			System.out.println(value);
 			ComputerPlayer.getInstance().getTentativeToken().get(playerName).remove(areaToken);
 			ComputerPlayer.getInstance().getTentativeToken().get(playerName).put(areaToken, value);
-			System.out.println("Again" + ComputerPlayer.getInstance().getTentativeToken().get(playerName).get(areaToken));
 		}
 		
 		}
-		System.out.println(ComputerPlayer.getInstance().getAllPlayerTrrianMap());
-		System.out.println(ComputerPlayer.getInstance().getTentativeToken());
+		
+//		System.out.println("ComputerPlayer.getInstance().getTentativeToken() out " + ComputerPlayer.getInstance().getTentativeToken());
+
+		
 	}
 	
 
@@ -131,29 +133,30 @@ public class AnswerDeductionLogic {
 	public static List<List<String>> updateStatus(Map<Integer, Set<String>> areaTokenSet, String areaToken, int tokenCount , String Diretion1 , String Diretion2, String playerName) {
 		// TODO Auto-generated method stub
 		List<List<String>> value2 = new ArrayList<>();
+		int tokenCountTemp = 0;
 		
-		System.out.println("update ststus");
-		if (tokenCount == 0 && areaTokenSet.get(-1) != null) {
-			System.out.println("hete");
-			AnswerDeductionHelper.updateTerrainTokenMap(areaTokenSet.get(-1), playerName);
+//		System.out.println("update status");
+		if (tokenCount == 0 && !areaTokenSet.get(-1).isEmpty()) {
+//			System.out.println("hete");
+			updateZeroterrainTokenInformation(areaTokenSet.get(-1), playerName);
 			
 		}
 
 		else if(areaTokenSet.get(1).size() > 0 ) {
-			System.out.println("hete2");
+//			System.out.println("hete2");
 
-				tokenCount = tokenCount - areaTokenSet.get(1).size();
+			tokenCountTemp = tokenCount - areaTokenSet.get(1).size();
 		}
 		
-		if (tokenCount > 0 && !(areaTokenSet.get(-1).isEmpty())) {
-			System.out.println("het2");
+		if (tokenCountTemp > 0 && !(areaTokenSet.get(-1).isEmpty())) {
+//			System.out.println("het2");
 
-			if (areaTokenSet.get(-1).size() == tokenCount) {
+			if (areaTokenSet.get(-1).size() == tokenCountTemp) {
 				
 				AnswerDeductionHelper.updateTerrainTokenMap(areaTokenSet.get(-1), playerName);
 			
 			}
-			if(areaTokenSet.get(-1).size() > tokenCount) {
+			if(areaTokenSet.get(-1).size() > tokenCountTemp) {
 				
 				List<String> value = new ArrayList<>();
 				value.add(Diretion1);
@@ -173,32 +176,32 @@ public class AnswerDeductionLogic {
 					if (ComputerPlayer.getInstance().getTentativeToken().get(playerName).get(areaToken) == null) {
 							List<List<String>> contain = new ArrayList<>();
 							contain.add(value);
-							System.out.println(contain);
 							ComputerPlayer.getInstance().getTentativeToken().get(playerName).put(areaToken, contain);
 									
 									
 					}
 					else {
-						System.out.println("88");
-						System.out.println("before" + ComputerPlayer.getInstance().getTentativeToken());
 						ComputerPlayer.getInstance().getTentativeToken().get(playerName).get(areaToken).forEach( loca ->{
 							
-							System.out.println(loca);
+//							System.out.println("loca"  +loca );
 							value2.add(loca);
-							if(!(loca.get(0).equals(Diretion1) && loca.get(1).equals(Diretion2))) {
-								System.out.println("second" + value);
-								value2.add(value);
-								
+							if(!(loca.get(0).equals(Diretion1)) && !(loca.get(1).equals(Diretion2))) {
+									flag = true;
+//								System.out.println("in true flag");
+								System.out.println(value2);
 							}
 						});
+						if(flag.equals(true)) {
+							value2.add(value);
+							flag = false;
+						}
 					}
 				
 			}
-			
-
+//			System.out.println("ComputerPlayer.getInstance().getTentativeToken() in " + ComputerPlayer.getInstance().getTentativeToken());
 		}
 		
-		System.out.println("ComputerPlayer.getInstance().getTentativeToken()" + ComputerPlayer.getInstance().getTentativeToken());
+		
 		return value2;
 	}
 
@@ -236,4 +239,34 @@ public class AnswerDeductionLogic {
 
 	}
 
+	private static void updateZeroterrainTokenInformation(Set<String> terrainToken, String playerName ) {
+		List<String> PlayerList = PlayerInformation.getInstance().getPlayerNameList();
+		for (String player1 : PlayerList) {
+			// marking 1 for having the token
+
+			for (String terrain : terrainToken) {
+				Map<String, Integer> terrainMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap()
+						.get(terrain);
+				if (terrainMap != null) {
+					if (playerName.equals(player1))
+						terrainMap.put(player1, 0);
+					else
+						terrainMap.put(player1, ComputerPlayer.getInstance().getAllPlayerTrrianMap()
+								.get(terrain).get(player1));
+
+					ComputerPlayer.getInstance().getAllPlayerTrrianMap().put(terrain, terrainMap);
+				}
+			}
+		}
+		AnswerDeductionHelper.checkTentativeTerrain();
+
+	}
+	
+	public static void updateterrainMapForNotTreasureLoc(List<String> updatedterrainList, String playerName) {
+		for (String terrainToken : updatedterrainList) {
+			Map<String, Integer> terrainMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrainToken);
+			terrainMap.put(playerName, 0);
+			ComputerPlayer.getInstance().getAllPlayerTrrianMap().put(terrainToken, terrainMap);
+		}
+	}
 }
