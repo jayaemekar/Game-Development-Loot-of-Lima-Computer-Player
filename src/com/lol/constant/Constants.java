@@ -43,6 +43,17 @@ public class Constants {
 	public static final String SOUTH_WEST_CHAR = "SW";
 	public static final String WEST_CHAR = "WW";
 	public static final String EAST_CHAR = "EE";
+	
+	public static final String NN = "1";
+	public static final String NE = "2";
+	public static final String EE = "3";
+	public static final String SS = "4";
+	public static final String SE = "5";
+	public static final String SW = "6";
+	public static final String WW = "7";
+	public static final String NW = "8";
+	
+	
 
 	public static final String INAVALID_DIRECTION = "Invalid Direction";
 	public static final String INVALID_TERRIAN_TYPE = "INVALID_TERRIAN_TYPE";

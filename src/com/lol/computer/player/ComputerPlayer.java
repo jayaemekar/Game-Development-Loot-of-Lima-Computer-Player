@@ -38,8 +38,54 @@ public class ComputerPlayer {
 	private static ComputerPlayer computerPlayer = null;
 	private Map<String, List<List<String>>> allTentativeToken;
 	private  Map<String, Map<String, List<List<String>>>> TentativeToken;
+	private Set<String> NorthSet;
+	private Set<String> NorthEastSet;
+	private Set<String> EastSet;
+	private Set<String> SouthEastSet;
+	public Set<String> getSouthEastSet() {
+		return SouthEastSet;
+	}
 
+	public void setSouthEastSet(Set<String> southEastSet) {
+		SouthEastSet = southEastSet;
+	}
 
+	public Set<String> getSouthSet() {
+		return SouthSet;
+	}
+
+	public void setSouthSet(Set<String> southSet) {
+		SouthSet = southSet;
+	}
+
+	public Set<String> getSouthWestSet() {
+		return SouthWestSet;
+	}
+
+	public void setSouthWestSet(Set<String> southWestSet) {
+		SouthWestSet = southWestSet;
+	}
+
+	public Set<String> getWestSet() {
+		return WestSet;
+	}
+
+	public void setWestSet(Set<String> westSet) {
+		WestSet = westSet;
+	}
+
+	public Set<String> getNorthWestSet() {
+		return NorthWestSet;
+	}
+
+	public void setNorthWestSet(Set<String> northWestSet) {
+		NorthWestSet = northWestSet;
+	}
+
+	private Set<String> SouthSet;
+	private Set<String> SouthWestSet;
+	private Set<String> WestSet;
+	private Set<String> NorthWestSet;
 	
 	private ComputerPlayer() {
 		// private constructor
@@ -225,5 +271,29 @@ public class ComputerPlayer {
 
 	public void setTentativeToken(Map<String, Map<String, List<List<String>>>> tentativeToken) {
 		TentativeToken = tentativeToken;
+	}
+
+	public Set<String> getEastSet() {
+		return EastSet;
+	}
+
+	public void setEastSet(Set<String> eastSet) {
+		EastSet = eastSet;
+	}
+
+	public Set<String> getNorthEastSet() {
+		return NorthEastSet;
+	}
+
+	public void setNorthEastSet(Set<String> northEastSet) {
+		NorthEastSet = northEastSet;
+	}
+
+	public Set<String> getNorthSet() {
+		return NorthSet;
+	}
+
+	public void setNorthSet(Set<String> northSet) {
+		NorthSet = northSet;
 	}
 }
