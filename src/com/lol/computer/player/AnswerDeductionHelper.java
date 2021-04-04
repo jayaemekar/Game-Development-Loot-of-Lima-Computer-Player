@@ -195,20 +195,20 @@ public class AnswerDeductionHelper {
 							}
 							if(Character.toString(ter.charAt(0)).equals(Constants.NE) ) {
 				
-								if( !ComputerPlayer.getInstance().getNorthEastSet().containsValue(ter))
+								if( !ComputerPlayer.getInstance().getNorthEastSet().containsKey(tera.getKey()))
 									ComputerPlayer.getInstance().getNorthEastSet().put(tera.getKey() , new HashSet<>());
 								else
 									ComputerPlayer.getInstance().getNorthEastSet().get(tera.getKey()).add(ter);
 								}
 							if(Character.toString(ter.charAt(0)).equals(Constants.EE)) {
-								 if(!ComputerPlayer.getInstance().getEastSet().containsValue(ter))
+								 if(!ComputerPlayer.getInstance().getEastSet().containsKey(tera.getKey()))
 									 ComputerPlayer.getInstance().getEastSet().put(tera.getKey() , new HashSet<>());
 								 else
 										ComputerPlayer.getInstance().getEastSet().get(tera.getKey()).add(ter);
 							}
 							if(Character.toString(ter.charAt(0)).equals(Constants.SE) ){
 								
-								if (!ComputerPlayer.getInstance().getSouthEastSet().containsValue(ter))
+								if (!ComputerPlayer.getInstance().getSouthEastSet().containsKey(tera.getKey()))
 									ComputerPlayer.getInstance().getSouthEastSet().put(tera.getKey() , new HashSet<>());
 								else
 									ComputerPlayer.getInstance().getSouthEastSet().get(tera.getKey()).add(ter);
@@ -216,7 +216,7 @@ public class AnswerDeductionHelper {
 							if(Character.toString(ter.charAt(0)).equals(Constants.SS) ) {
 								
 								
-								if( !ComputerPlayer.getInstance().getSouthSet().containsValue(ter))
+								if( !ComputerPlayer.getInstance().getSouthSet().containsKey(tera.getKey()))
 									ComputerPlayer.getInstance().getSouthSet().put(tera.getKey() , new HashSet<>());
 								else
 									ComputerPlayer.getInstance().getSouthSet().get(tera.getKey()).add(ter);
@@ -224,21 +224,21 @@ public class AnswerDeductionHelper {
 							if(Character.toString(ter.charAt(0)).equals(Constants.SW) ) {
 								
 								
-								if(!ComputerPlayer.getInstance().getSouthWestSet().containsValue(ter))
+								if(!ComputerPlayer.getInstance().getSouthWestSet().containsKey(tera.getKey()))
 									ComputerPlayer.getInstance().getSouthWestSet().put(tera.getKey() , new HashSet<>());
 								else
 									ComputerPlayer.getInstance().getSouthWestSet().get(tera.getKey()).add(ter);
 							}
 							if(Character.toString(ter.charAt(0)).equals(Constants.WW)) {
 								
-								if (!ComputerPlayer.getInstance().getWestSet().containsValue(ter))
+								if (!ComputerPlayer.getInstance().getWestSet().containsKey(tera.getKey()))
 									ComputerPlayer.getInstance().getWestSet().put(tera.getKey() , new HashSet<>());
 								else
 									ComputerPlayer.getInstance().getWestSet().get(tera.getKey()).add(ter);
 							}
 							if(Character.toString(ter.charAt(0)).equals(Constants.NW)) {
 								
-								if(!ComputerPlayer.getInstance().getNorthWestSet().containsValue(ter))
+								if(!ComputerPlayer.getInstance().getNorthWestSet().containsKey(tera.getKey()))
 									ComputerPlayer.getInstance().getNorthWestSet().put(tera.getKey() , new HashSet<>());
 								else
 									ComputerPlayer.getInstance().getNorthWestSet().get(tera.getKey()).add(ter);

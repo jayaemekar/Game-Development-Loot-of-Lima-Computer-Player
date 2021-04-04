@@ -258,7 +258,6 @@ public class AnswerDeductionLogic {
 				}
 			}
 		}
-		
 		AnswerDeductionHelper.checkTentativeTerrain();
 
 	}
