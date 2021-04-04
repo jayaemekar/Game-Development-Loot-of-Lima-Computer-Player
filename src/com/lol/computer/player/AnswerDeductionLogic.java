@@ -3,11 +3,9 @@ package com.lol.computer.player;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 
 import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
@@ -27,6 +25,10 @@ public class AnswerDeductionLogic {
 				Set<String> treasureNotLocSet = ComputerPlayer.getInstance().getNotTreasureLoc();
 				treasureNotLocSet.add(terrain);
 				ComputerPlayer.getInstance().setNotTreasureLoc(treasureNotLocSet);
+			} else if (sum == 0) {
+				Set<String> treasureLocSet = ComputerPlayer.getInstance().getTreasureLoc();
+				treasureLocSet.add(terrain);
+				ComputerPlayer.getInstance().setTreasureLoc(treasureLocSet);
 			}
 		}
 		
@@ -79,7 +81,22 @@ public class AnswerDeductionLogic {
 
 		CheckTerrainStatus(areaTokenSet,messageDetailsList);
 		
-
+	for (String terrain : ComputerPlayer.getInstance().getAllPlayerTrrianMap().keySet()) {
+			
+			Map<String, Integer> terrainMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrain);
+			int sum = terrainMap.values().stream().reduce(0, Integer::sum);
+			if (sum == 1) {
+				Set<String> treasureNotLocSet = ComputerPlayer.getInstance().getNotTreasureLoc();
+				treasureNotLocSet.add(terrain);
+				ComputerPlayer.getInstance().setNotTreasureLoc(treasureNotLocSet);
+			} else if (sum == 0) {
+				Set<String> treasureLocSet = ComputerPlayer.getInstance().getTreasureLoc();
+				treasureLocSet.add(terrain);
+				ComputerPlayer.getInstance().setTreasureLoc(treasureLocSet);
+			}
+		}
+checkIsTreasureLocFound();
+		
 	}
 	
 	private static void CheckTerrainStatus(Map<Integer , Set<String>> areaTokenSet, List<String> messageDetailsList) {
@@ -135,28 +152,28 @@ public class AnswerDeductionLogic {
 		List<List<String>> value2 = new ArrayList<>();
 		int tokenCountTemp = 0;
 		
-//		System.out.println("update status");
+		System.out.println("update status areaTokenSet" +areaTokenSet);
 		if (tokenCount == 0 && !areaTokenSet.get(-1).isEmpty()) {
 //			System.out.println("hete");
 			updateZeroterrainTokenInformation(areaTokenSet.get(-1), playerName);
 			
 		}
 
-		else if(areaTokenSet.get(1).size() > 0 ) {
+		else if(areaTokenSet.get(-1).size() > 0 ) {
 //			System.out.println("hete2");
 
-			tokenCountTemp = tokenCount - areaTokenSet.get(1).size();
+			tokenCount = tokenCount - areaTokenSet.get(1).size();
 		}
 		
-		if (tokenCountTemp > 0 && !(areaTokenSet.get(-1).isEmpty())) {
+		if (tokenCount > 0 && !(areaTokenSet.get(-1).isEmpty())) {
 //			System.out.println("het2");
 
-			if (areaTokenSet.get(-1).size() == tokenCountTemp) {
+			if (areaTokenSet.get(-1).size() == tokenCount ) {
 				
 				AnswerDeductionHelper.updateTerrainTokenMap(areaTokenSet.get(-1), playerName);
 			
 			}
-			if(areaTokenSet.get(-1).size() > tokenCountTemp) {
+			if(areaTokenSet.get(-1).size() > tokenCount ) {
 				
 				List<String> value = new ArrayList<>();
 				value.add(Diretion1);
