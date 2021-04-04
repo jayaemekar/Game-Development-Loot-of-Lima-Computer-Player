@@ -79,6 +79,7 @@ public class ComputerPlayer {
 		SouthSet = southSet;
 	}
 
+	
 	public Map<Integer, Set<String>> getSouthWestSet() {
 		return SouthWestSet;
 	}

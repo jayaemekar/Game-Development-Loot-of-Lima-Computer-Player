@@ -158,6 +158,7 @@ public class AnswerDeductionHelper {
 		areaTokenSet.put(-1, new HashSet<>());
 		HashSet<String> finalSet = new HashSet<>();
 		HashSet<String> sureSet = new HashSet<>();
+		
 		ComputerPlayer.getInstance().setNorthSet(new HashMap<>());
 		ComputerPlayer.getInstance().setNorthEastSet(new HashMap<>());
 		ComputerPlayer.getInstance().setEastSet(new HashMap<>());
