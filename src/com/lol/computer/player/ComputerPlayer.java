@@ -1,5 +1,6 @@
 package com.lol.computer.player;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,17 @@ public class ComputerPlayer {
 	private Map<String, Integer> playerObj;
 	private static ComputerPlayer computerPlayer = null;
 	private Map<String, List<List<String>>> allTentativeToken;
-	private  Map<String, Map<String, List<List<String>>>> TentativeToken;
-	private Map<Integer , Set<String>> NorthSet;
+	private Map<String, Map<String, List<List<String>>>> TentativeToken;
+	private Map<Integer, Set<String>> NorthSet = new HashMap<>();
+	private Map<Integer, Set<String>> NorthEastSet = new HashMap<>();
+	private Map<Integer, Set<String>> EastSet = new HashMap<>();
+	private Map<Integer, Set<String>> SouthEastSet = new HashMap<>();
+
+	private Map<Integer, Set<String>> SouthSet = new HashMap<>();
+	private Map<Integer, Set<String>> SouthWestSet = new HashMap<>();
+	private Map<Integer, Set<String>> WestSet = new HashMap<>();
+	private Map<Integer, Set<String>> NorthWestSet = new HashMap<>();
+
 	public Map<Integer, Set<String>> getNorthSet() {
 		return NorthSet;
 	}
@@ -75,7 +85,6 @@ public class ComputerPlayer {
 		SouthSet = southSet;
 	}
 
-	
 	public Map<Integer, Set<String>> getSouthWestSet() {
 		return SouthWestSet;
 	}
@@ -100,19 +109,6 @@ public class ComputerPlayer {
 		NorthWestSet = northWestSet;
 	}
 
-	private Map<Integer , Set<String>> NorthEastSet;
-	private Map<Integer , Set<String>> EastSet;
-	private Map<Integer , Set<String>> SouthEastSet;
-	
-	private Map<Integer , Set<String>> SouthSet;
-	private Map<Integer , Set<String>> SouthWestSet;
-	private Map<Integer , Set<String>> WestSet;
-	private Map<Integer , Set<String>> NorthWestSet;
-	
-	
-
-	
-	
 	private ComputerPlayer() {
 		// private constructor
 	}
@@ -133,6 +129,7 @@ public class ComputerPlayer {
 		this.playerObj = playerObj;
 		return playerObj;
 	}
+
 	public Map<String, Boolean> getPlayerTokenArray() {
 		return playerTokenArray;
 	}
@@ -164,8 +161,6 @@ public class ComputerPlayer {
 	public void setAllPlayerTrrianMap(Map<String, Map<String, Integer>> terrainList) {
 		this.allPlayerTrrianMap = terrainList;
 	}
-
-
 
 	public static ComputerPlayer getComputerPlayer() {
 		return computerPlayer;
@@ -277,14 +272,14 @@ public class ComputerPlayer {
 			System.out.println();
 		}
 	}
-	
+
 	public Node createNode(String direction) {
 		Node current = head;
 		Node directionNode = null;
 		do {
-			if (current.direction.equals(direction)){
+			if (current.direction.equals(direction)) {
 				directionNode = current;
-				break;				
+				break;
 			}
 			current = current.next;
 		} while (current != head);
@@ -299,5 +294,4 @@ public class ComputerPlayer {
 		TentativeToken = tentativeToken;
 	}
 
-	
 }
