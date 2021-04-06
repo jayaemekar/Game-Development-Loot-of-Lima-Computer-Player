@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.lol.constant.Constants;
@@ -25,9 +26,8 @@ public class AnswerDeductionHelper {
 					else if (playerMap.getValue() == Constants.CONFIRM_TERRAIN)
 						areaTokenSet.get(Constants.CONFIRM_TERRAIN).add(terrain.getKey());
 
-					else if (playerMap.getValue() == Constants.TENTATIVE_TERRAIN) {
+					else if (playerMap.getValue() == Constants.TENTATIVE_TERRAIN)
 						areaTokenSet.get(Constants.TENTATIVE_TERRAIN).add(terrain.getKey());
-					}
 				}
 			});
 		});
@@ -79,12 +79,11 @@ public class AnswerDeductionHelper {
 						if (head.direction.equals(tail.direction))
 							AnswerDeductionHelper.getTerrainStatus(ComputerPlayer.getInstance().getAllPlayerTrrianMap(),
 									areaTokenSet, player.getKey());
-						else {
+						else
 							while (head != tail) {
 								AnswerDeductionHelper.getTerrainStatus(head.terrainList, areaTokenSet, player.getKey());
 								head = head.next;
 							}
-						}
 
 						if (Constants.BEACH_CHAR.equals(location.getKey()))
 							AnswerDeductionLogic.updateAreaTokenSet(location.getKey(), areaTokenSet);
@@ -95,7 +94,7 @@ public class AnswerDeductionHelper {
 
 						List<List<String>> value2 = AnswerDeductionLogic.updateStatus(areaTokenSet, location.getKey(),
 								Integer.parseInt(block.get(2)), block.get(0), block.get(1), player.getKey());
-						System.out.println(value2);
+
 						if (!Map.containsKey(location.getKey())) {
 							Map.put(location.getKey(), value2);
 						} else {
@@ -104,9 +103,9 @@ public class AnswerDeductionHelper {
 						}
 					});
 
-					if (!(TentativeToken.containsKey(player.getKey()))) {
+					if (!(TentativeToken.containsKey(player.getKey())))
 						TentativeToken.put(player.getKey(), Map);
-					}
+
 				});
 
 				Map.clear();
@@ -122,19 +121,6 @@ public class AnswerDeductionHelper {
 		areaTokenSet.put(0, new HashSet<>());
 		areaTokenSet.put(1, new HashSet<>());
 		areaTokenSet.put(-1, new HashSet<>());
-		HashSet<String> finalSet = new HashSet<>();
-		HashSet<String> sureSet = new HashSet<>();
-
-		ComputerPlayer.getInstance().setNorthSet(new HashMap<>());
-		ComputerPlayer.getInstance().setNorthEastSet(new HashMap<>());
-		ComputerPlayer.getInstance().setEastSet(new HashMap<>());
-		ComputerPlayer.getInstance().setSouthEastSet(new HashMap<>());
-		ComputerPlayer.getInstance().setSouthSet(new HashMap<>());
-		ComputerPlayer.getInstance().setSouthWestSet(new HashMap<>());
-		ComputerPlayer.getInstance().setWestSet(new HashMap<>());
-		ComputerPlayer.getInstance().setNorthWestSet(new HashMap<>());
-
-		Map<String, List<List<String>>> token = new HashMap<>();
 
 		for (String player : PlayerInformation.getInstance().getPlayerNameList()) {
 
@@ -146,127 +132,31 @@ public class AnswerDeductionHelper {
 				tera.getValue().forEach(ter -> {
 
 					if (tera.getKey() != 0) {
-
-						ter.charAt(0);
-						if (Character.toString(ter.charAt(0)).equals(Constants.NN)) {
-
-							if (!ComputerPlayer.getInstance().getNorthSet().containsKey(tera.getKey()))
-								ComputerPlayer.getInstance().getNorthSet().put(tera.getKey(), new HashSet<>());
-							else
-								ComputerPlayer.getInstance().getNorthSet().get(tera.getKey()).add(ter);
-						}
-						if (Character.toString(ter.charAt(0)).equals(Constants.NE)) {
-
-							if (!ComputerPlayer.getInstance().getNorthEastSet().containsKey(tera.getKey()))
-								ComputerPlayer.getInstance().getNorthEastSet().put(tera.getKey(), new HashSet<>());
-							else
-								ComputerPlayer.getInstance().getNorthEastSet().get(tera.getKey()).add(ter);
-						}
-						if (Character.toString(ter.charAt(0)).equals(Constants.EE)) {
-							if (!ComputerPlayer.getInstance().getEastSet().containsKey(tera.getKey()))
-								ComputerPlayer.getInstance().getEastSet().put(tera.getKey(), new HashSet<>());
-							else
-								ComputerPlayer.getInstance().getEastSet().get(tera.getKey()).add(ter);
-						}
-						if (Character.toString(ter.charAt(0)).equals(Constants.SE)) {
-
-							if (!ComputerPlayer.getInstance().getSouthEastSet().containsKey(tera.getKey()))
-								ComputerPlayer.getInstance().getSouthEastSet().put(tera.getKey(), new HashSet<>());
-							else
-								ComputerPlayer.getInstance().getSouthEastSet().get(tera.getKey()).add(ter);
-						}
-						if (Character.toString(ter.charAt(0)).equals(Constants.SS)) {
-
-							if (!ComputerPlayer.getInstance().getSouthSet().containsKey(tera.getKey()))
-								ComputerPlayer.getInstance().getSouthSet().put(tera.getKey(), new HashSet<>());
-							else
-								ComputerPlayer.getInstance().getSouthSet().get(tera.getKey()).add(ter);
-						}
-						if (Character.toString(ter.charAt(0)).equals(Constants.SW)) {
-
-							if (!ComputerPlayer.getInstance().getSouthWestSet().containsKey(tera.getKey()))
-								ComputerPlayer.getInstance().getSouthWestSet().put(tera.getKey(), new HashSet<>());
-							else
-								ComputerPlayer.getInstance().getSouthWestSet().get(tera.getKey()).add(ter);
-						}
-						if (Character.toString(ter.charAt(0)).equals(Constants.WW)) {
-
-							if (!ComputerPlayer.getInstance().getWestSet().containsKey(tera.getKey()))
-								ComputerPlayer.getInstance().getWestSet().put(tera.getKey(), new HashSet<>());
-							else
-								ComputerPlayer.getInstance().getWestSet().get(tera.getKey()).add(ter);
-						}
-						if (Character.toString(ter.charAt(0)).equals(Constants.NW)) {
-
-							if (!ComputerPlayer.getInstance().getNorthWestSet().containsKey(tera.getKey()))
-								ComputerPlayer.getInstance().getNorthWestSet().put(tera.getKey(), new HashSet<>());
-							else
-								ComputerPlayer.getInstance().getNorthWestSet().get(tera.getKey()).add(ter);
-						}
-
+						checkAllTokensWithDirection(ter, tera, Constants.NN);
+						checkAllTokensWithDirection(ter, tera, Constants.NE);
+						checkAllTokensWithDirection(ter, tera, Constants.EE);
+						checkAllTokensWithDirection(ter, tera, Constants.SE);
+						checkAllTokensWithDirection(ter, tera, Constants.SS);
+						checkAllTokensWithDirection(ter, tera, Constants.SW);
+						checkAllTokensWithDirection(ter, tera, Constants.WW);
+						checkAllTokensWithDirection(ter, tera, Constants.NW);
 					}
 				});
-
-			});
-
-		}
-
-		Map<String, Map<String, List<List<String>>>> tentativetoken = new HashMap<String, Map<String, List<List<String>>>>();
-		if (ComputerPlayer.getInstance().getTentativeToken() != null) {
-			ComputerPlayer.getInstance().getTentativeToken().entrySet().stream().forEach(play -> {
-				tentativetoken.put(play.getKey(), new HashMap<>());
-				play.getValue().entrySet().stream().forEach(terr -> {
-					List<List<String>> list = new ArrayList<>();
-
-					terr.getValue().forEach(loc -> {
-						List<String> list1 = new ArrayList<>();
-						list1.add(loc.get(0));
-						list1.add(loc.get(1));
-						list1.add(loc.get(2));
-						list.add(list1);
-
-					});
-
-					tentativetoken.get(play.getKey()).put(terr.getKey(), list);
-
-				});
-
 			});
 		}
+
+		Map<String, Map<String, List<List<String>>>> tentativetoken = createTentativeTokenMap();
 
 		if (tentativetoken != null) {
-			tentativetoken.entrySet().stream().forEach(value -> {
-
-				value.getValue().entrySet().stream().forEach(direc -> {
-
-					direc.getValue().forEach(val -> {
-						List<String> list = new ArrayList<>();
-
-						if (token.containsKey(direc.getKey())) {
-							for (List<String> y1 : token.get(direc.getKey())) {
-
-								if (y1.get(0).equals(val.get(0)) && y1.get(1).equals(val.get(1))) {
-
-									int count = Integer.parseInt(y1.get(2));
-									int count2 = Integer.parseInt(val.get(2));
-									int finalcount = count + count2;
-									y1.set(2, Integer.toString(finalcount));
-									list.addAll(y1);
-								}
-							}
-							token.get(direc.getKey()).add(val);
-						}
-
-						else {
-							List<List<String>> token3 = new ArrayList<>();
-							token3.add(val);
-							token.put(direc.getKey(), token3);
-						}
-					});
-				});
-			});
+			Map<String, List<List<String>>> token = updateTentativeTokenMap(tentativetoken);
+			updateFinalSet(token);
 		}
 
+	}
+
+	private static void updateFinalSet(Map<String, List<List<String>>> token) {
+		HashSet<String> finalSet = new HashSet<>();
+		HashSet<String> sureSet = new HashSet<>();
 		token.entrySet().stream().forEach(to -> {
 
 			to.getValue().forEach(value1 -> {
@@ -295,116 +185,102 @@ public class AnswerDeductionHelper {
 		});
 	}
 
-	private static Set<String> getLocation(String location, String Terrain, HashSet<String> finalSet,
+	private static Map<String, List<List<String>>> updateTentativeTokenMap(
+			Map<String, Map<String, List<List<String>>>> tentativetoken) {
+		Map<String, List<List<String>>> token = new HashMap<>();
+		tentativetoken.entrySet().stream().forEach(value -> {
+
+			value.getValue().entrySet().stream().forEach(direc -> {
+
+				direc.getValue().forEach(val -> {
+					List<String> list = new ArrayList<>();
+
+					if (token.containsKey(direc.getKey())) {
+						for (List<String> y1 : token.get(direc.getKey())) {
+
+							if (y1.get(0).equals(val.get(0)) && y1.get(1).equals(val.get(1))) {
+								y1.set(2, Integer.toString(Integer.parseInt(y1.get(2)) + Integer.parseInt(val.get(2))));
+								list.addAll(y1);
+							}
+						}
+						token.get(direc.getKey()).add(val);
+					}
+
+					else {
+						List<List<String>> token3 = new ArrayList<>();
+						token3.add(val);
+						token.put(direc.getKey(), token3);
+					}
+				});
+			});
+		});
+		return token;
+	}
+
+	private static Map<String, Map<String, List<List<String>>>> createTentativeTokenMap() {
+		Map<String, Map<String, List<List<String>>>> tentativetoken = new HashMap<String, Map<String, List<List<String>>>>();
+		if (ComputerPlayer.getInstance().getTentativeToken() != null) {
+			ComputerPlayer.getInstance().getTentativeToken().entrySet().stream().forEach(play -> {
+				tentativetoken.put(play.getKey(), new HashMap<>());
+				play.getValue().entrySet().stream().forEach(terr -> {
+					List<List<String>> list = new ArrayList<>();
+
+					terr.getValue().forEach(loc -> {
+						List<String> listTemp = new ArrayList<>();
+						listTemp.add(loc.get(0));
+						listTemp.add(loc.get(1));
+						listTemp.add(loc.get(2));
+						list.add(listTemp);
+
+					});
+
+					tentativetoken.get(play.getKey()).put(terr.getKey(), list);
+
+				});
+
+			});
+		}
+		return tentativetoken;
+	}
+
+	private static void checkAllTokensWithDirection(String ter, Entry<Integer, Set<String>> tera, String direction) {
+		if (Character.toString(ter.charAt(0)).equals(direction)) {
+
+			if (!ComputerPlayer.getInstance().getNorthSet().containsKey(tera.getKey()))
+				ComputerPlayer.getInstance().getNorthSet().put(tera.getKey(), new HashSet<>());
+			else
+				ComputerPlayer.getInstance().getNorthSet().get(tera.getKey()).add(ter);
+		}
+	}
+
+	private static Set<String> getLocation(String location, String terrain, HashSet<String> finalSet,
 			HashSet<String> sureSet) {
 
-		if (location.equals(Constants.NORTH_CHAR))
-			ComputerPlayer.getInstance().getNorthSet().entrySet().stream().forEach(value1 -> {
-				value1.getValue().forEach(value -> {
-					if (Character.toString(value.charAt(1)).equals(Terrain)
-							|| Character.toString(value.charAt(1)).equals(Constants.ALL_CHAR))
+		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.NORTH_CHAR);
+		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.NORTH_EAST_CHAR);
+		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.EAST_CHAR);
+		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.SOUTH_EAST_CHAR);
+		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.SOUTH_CHAR);
+		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.SOUTH_WEST_CHAR);
+		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.WEST_CHAR);
+		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.NORTH_WEST_CHAR);
 
-						if (value1.getKey() == -1)
-							finalSet.add(value);
-						else
-							sureSet.add(value);
-				});
-
-			});
-		if (location.equals(Constants.NORTH_EAST_CHAR))
-			ComputerPlayer.getInstance().getNorthEastSet().entrySet().stream().forEach(value1 -> {
-				value1.getValue().forEach(value -> {
-					if (Character.toString(value.charAt(1)).equals(Terrain)
-							|| Character.toString(value.charAt(1)).equals(Constants.ALL_CHAR))
-
-						if (value1.getKey() == -1)
-							finalSet.add(value);
-						else
-							sureSet.add(value);
-				});
-
-			});
-		if (location.equals(Constants.EAST_CHAR))
-			ComputerPlayer.getInstance().getEastSet().entrySet().stream().forEach(value1 -> {
-				value1.getValue().forEach(value -> {
-					if (Character.toString(value.charAt(1)).equals(Terrain)
-							|| Character.toString(value.charAt(1)).equals(Constants.ALL_CHAR))
-						;
-					if (value1.getKey() == -1)
-						finalSet.add(value);
-					else
-						sureSet.add(value);
-				});
-
-			});
-
-		if (location.equals(Constants.SOUTH_EAST_CHAR))
-			ComputerPlayer.getInstance().getSouthEastSet().entrySet().stream().forEach(value1 -> {
-				value1.getValue().forEach(value -> {
-					if (Character.toString(value.charAt(1)).equals(Terrain)
-							|| Character.toString(value.charAt(1)).equals(Constants.ALL_CHAR))
-						;
-					if (value1.getKey() == -1)
-						finalSet.add(value);
-					else
-						sureSet.add(value);
-				});
-
-			});
-		if (location.equals(Constants.SOUTH_CHAR))
-			ComputerPlayer.getInstance().getSouthSet().entrySet().stream().forEach(value1 -> {
-				value1.getValue().forEach(value -> {
-					if (Character.toString(value.charAt(1)).equals(Terrain)
-							|| Character.toString(value.charAt(1)).equals(Constants.ALL_CHAR))
-						;
-					if (value1.getKey() == -1)
-						finalSet.add(value);
-					else
-						sureSet.add(value);
-				});
-
-			});
-		if (location.equals(Constants.SOUTH_WEST_CHAR))
-			ComputerPlayer.getInstance().getSouthWestSet().entrySet().stream().forEach(value1 -> {
-				value1.getValue().forEach(value -> {
-					if (Character.toString(value.charAt(1)).equals(Terrain)
-							|| Character.toString(value.charAt(1)).equals(Constants.ALL_CHAR))
-						;
-					if (value1.getKey() == -1)
-						finalSet.add(value);
-					else
-						sureSet.add(value);
-				});
-
-			});
-		if (location.equals(Constants.WEST_CHAR))
-			ComputerPlayer.getInstance().getWestSet().entrySet().stream().forEach(value1 -> {
-				value1.getValue().forEach(value -> {
-					if (Character.toString(value.charAt(1)).equals(Terrain)
-							|| Character.toString(value.charAt(1)).equals(Constants.ALL_CHAR))
-						;
-					if (value1.getKey() == -1)
-						finalSet.add(value);
-					else
-						sureSet.add(value);
-				});
-
-			});
-		if (location.equals(Constants.NORTH_WEST_CHAR))
-			ComputerPlayer.getInstance().getNorthWestSet().entrySet().stream().forEach(value1 -> {
-				value1.getValue().forEach(value -> {
-					if (Character.toString(value.charAt(1)).equals(Terrain)
-							|| Character.toString(value.charAt(1)).equals(Constants.ALL_CHAR))
-						;
-					if (value1.getKey() == -1)
-						finalSet.add(value);
-					else
-						sureSet.add(value);
-				});
-
-			});
 		return finalSet;
 
+	}
+
+	private static void getLocationForEachDirection(String location, String terrain, HashSet<String> finalSet,
+			HashSet<String> sureSet, String direction) {
+		if (location.equals(direction))
+			ComputerPlayer.getInstance().getNorthSet().entrySet().stream().forEach(value1 -> {
+				value1.getValue().forEach(value -> {
+
+					if (value1.getKey() == Constants.TENTATIVE_TERRAIN)
+						finalSet.add(value);
+					else
+						sureSet.add(value);
+				});
+			});
 	}
 
 }
