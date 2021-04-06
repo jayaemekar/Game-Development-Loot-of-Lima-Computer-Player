@@ -174,7 +174,6 @@ public class AnswerDeductionHelper {
 					finalSet.removeAll(ComputerPlayer.getInstance().getNotTreasureLoc());
 					finalSet.forEach(tres -> {
 						ComputerPlayer.getInstance().getNotTreasureLoc().add(tres);
-
 					});
 				}
 				finalSet.clear();

@@ -26,7 +26,6 @@ public class AnswerDeductionLogic {
 				&& !Constants.YES.equals(locFound)) {
 			
 			processAnswerMessage(messageDetailsList);
-
 			AnswerDeductionHelper.checkAllToken();
 		}
 		System.out.println(ComputerPlayer.getInstance().getNotTreasureLoc());

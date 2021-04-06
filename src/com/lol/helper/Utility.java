@@ -101,7 +101,7 @@ public class Utility {
 		else if (Constants.MESSAAGE_05.equals(messageNumber))
 			gameProcessing.getQuestionInformation(messageNumber, messageDetailsList);
 		else if (Constants.MESSAAGE_06.equals(messageNumber))
-			AnswerDeductionLogic.getAnswerInformation(messageNumber, messageDetailsList);
+				AnswerDeductionLogic.getAnswerInformation(messageNumber, messageDetailsList);
 		else if (Constants.MESSAAGE_07.equals(messageNumber))
 			gameProcessing.getTreasureGuessInformation(messageNumber, messageDetailsList);
 		else if (Constants.MESSAAGE_08.equals(messageNumber)) {
