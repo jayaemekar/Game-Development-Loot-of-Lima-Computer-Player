@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.omg.Messaging.SyncScopeHelper;
+
 import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
 
@@ -118,10 +120,10 @@ public class AnswerDeductionHelper {
 	public static void checkAllToken() {
 
 		Map<Integer, Set<String>> areaTokenSet = new HashMap<>();
-		areaTokenSet.put(0, new HashSet<>());
-		areaTokenSet.put(1, new HashSet<>());
-		areaTokenSet.put(-1, new HashSet<>());
-
+		areaTokenSet.put(Constants.NOT_WITH_PLAYER_TERRAIN, new HashSet<>());
+		areaTokenSet.put(Constants.CONFIRM_TERRAIN, new HashSet<>());
+		areaTokenSet.put(Constants.TENTATIVE_TERRAIN, new HashSet<>());
+		System.out.println("in all check");
 		for (String player : PlayerInformation.getInstance().getPlayerNameList()) {
 
 			AnswerDeductionHelper.getTerrainStatus(ComputerPlayer.getInstance().getAllPlayerTrrianMap(), areaTokenSet,
@@ -132,23 +134,19 @@ public class AnswerDeductionHelper {
 				tera.getValue().forEach(ter -> {
 
 					if (tera.getKey() != 0) {
-						checkAllTokensWithDirection(ter, tera, Constants.NN);
-						checkAllTokensWithDirection(ter, tera, Constants.NE);
-						checkAllTokensWithDirection(ter, tera, Constants.EE);
-						checkAllTokensWithDirection(ter, tera, Constants.SE);
-						checkAllTokensWithDirection(ter, tera, Constants.SS);
-						checkAllTokensWithDirection(ter, tera, Constants.SW);
-						checkAllTokensWithDirection(ter, tera, Constants.WW);
-						checkAllTokensWithDirection(ter, tera, Constants.NW);
+						checkAllTokensWithDirection(ter, tera);
 					}
+//					System.out.println("ComputerPlayer.getInstance().getWestSet()"+ ComputerPlayer.getInstance().getWestSet());
 				});
 			});
 		}
 
 		Map<String, Map<String, List<List<String>>>> tentativetoken = createTentativeTokenMap();
-
+		System.out.println(ComputerPlayer.getInstance().getTentativeToken());
+		System.out.println(tentativetoken);
 		if (tentativetoken != null) {
 			Map<String, List<List<String>>> token = updateTentativeTokenMap(tentativetoken);
+			System.out.println("token" + token);
 			updateFinalSet(token);
 		}
 
@@ -164,16 +162,26 @@ public class AnswerDeductionHelper {
 				Node head = ComputerPlayer.getInstance().createNode(value1.get(0));
 				Node tail = ComputerPlayer.getInstance().createNode(value1.get(1));
 				if (head.direction.equals(tail.direction))
-					getLocation(value1.get(0), to.getKey(), finalSet, sureSet);
+					getLocationForEachDirection(value1.get(0), to.getKey(), finalSet, sureSet);
 				else {
 
 					while (head != tail) {
-						getLocation(head.direction, to.getKey(), finalSet, sureSet);
+						System.out.println(head.direction);
+						getLocationForEachDirection(head.direction, to.getKey(), finalSet, sureSet);
 						head = head.next;
 					}
 				}
+				
+				PlayerInformation.getInstance().getPersonalTokenMap().entrySet().forEach(pertoken->{
+					sureSet.removeAll(pertoken.getValue());
+					
+				});
 				int count = finalSet.size() + sureSet.size();
+				System.out.println(finalSet.size());
+				System.out.println(sureSet.size());
+				
 				if (Integer.toString(count).equals(value1.get(2))) {
+					System.out.println("in sure");
 					finalSet.removeAll(ComputerPlayer.getInstance().getNotTreasureLoc());
 					finalSet.forEach(tres -> {
 						ComputerPlayer.getInstance().getNotTreasureLoc().add(tres);
@@ -181,6 +189,7 @@ public class AnswerDeductionHelper {
 					});
 				}
 				finalSet.clear();
+				sureSet.clear();
 			});
 		});
 	}
@@ -188,6 +197,7 @@ public class AnswerDeductionHelper {
 	private static Map<String, List<List<String>>> updateTentativeTokenMap(
 			Map<String, Map<String, List<List<String>>>> tentativetoken) {
 		Map<String, List<List<String>>> token = new HashMap<>();
+		Map<String, List<List<String>>> map2 = new  HashMap<>();
 		tentativetoken.entrySet().stream().forEach(value -> {
 
 			value.getValue().entrySet().stream().forEach(direc -> {
@@ -197,10 +207,21 @@ public class AnswerDeductionHelper {
 
 					if (token.containsKey(direc.getKey())) {
 						for (List<String> y1 : token.get(direc.getKey())) {
-
+							
 							if (y1.get(0).equals(val.get(0)) && y1.get(1).equals(val.get(1))) {
+								
+								System.out.println("y1" + y1);
 								y1.set(2, Integer.toString(Integer.parseInt(y1.get(2)) + Integer.parseInt(val.get(2))));
+								
 								list.addAll(y1);
+								if(map2.containsKey(direc.getKey())) {
+									map2.get(direc.getKey()).add(list);
+								}
+								else {
+									map2.put(direc.getKey(), new ArrayList<>());
+									map2.get(direc.getKey()).add(list);
+								}
+								System.out.println(list);
 							}
 						}
 						token.get(direc.getKey()).add(val);
@@ -214,7 +235,8 @@ public class AnswerDeductionHelper {
 				});
 			});
 		});
-		return token;
+		System.out.println(token);
+		return map2;
 	}
 
 	private static Map<String, Map<String, List<List<String>>>> createTentativeTokenMap() {
@@ -243,44 +265,171 @@ public class AnswerDeductionHelper {
 		return tentativetoken;
 	}
 
-	private static void checkAllTokensWithDirection(String ter, Entry<Integer, Set<String>> tera, String direction) {
-		if (Character.toString(ter.charAt(0)).equals(direction)) {
+	private static void checkAllTokensWithDirection(String ter, Entry<Integer, Set<String>> tera) {
+		if (Character.toString(ter.charAt(0)).equals(Constants.NN)) {
 
 			if (!ComputerPlayer.getInstance().getNorthSet().containsKey(tera.getKey()))
 				ComputerPlayer.getInstance().getNorthSet().put(tera.getKey(), new HashSet<>());
 			else
 				ComputerPlayer.getInstance().getNorthSet().get(tera.getKey()).add(ter);
 		}
+		if (Character.toString(ter.charAt(0)).equals(Constants.NE)) {
+
+			if (!ComputerPlayer.getInstance().getNorthEastSet().containsKey(tera.getKey()))
+				ComputerPlayer.getInstance().getNorthEastSet().put(tera.getKey(), new HashSet<>());
+			else
+				ComputerPlayer.getInstance().getNorthEastSet().get(tera.getKey()).add(ter);
+		}
+		if (Character.toString(ter.charAt(0)).equals(Constants.EE)) {
+
+			if (!ComputerPlayer.getInstance().getEastSet().containsKey(tera.getKey()))
+				ComputerPlayer.getInstance().getEastSet().put(tera.getKey(), new HashSet<>());
+			else
+				ComputerPlayer.getInstance().getEastSet().get(tera.getKey()).add(ter);
+		}
+		if (Character.toString(ter.charAt(0)).equals(Constants.SE)) {
+
+			if (!ComputerPlayer.getInstance().getSouthEastSet().containsKey(tera.getKey()))
+				ComputerPlayer.getInstance().getSouthEastSet().put(tera.getKey(), new HashSet<>());
+			else
+				ComputerPlayer.getInstance().getSouthEastSet().get(tera.getKey()).add(ter);
+		}
+		if (Character.toString(ter.charAt(0)).equals(Constants.SS)) {
+
+			if (!ComputerPlayer.getInstance().getSouthSet().containsKey(tera.getKey()))
+				ComputerPlayer.getInstance().getSouthSet().put(tera.getKey(), new HashSet<>());
+			else
+				ComputerPlayer.getInstance().getSouthSet().get(tera.getKey()).add(ter);
+		}
+		if (Character.toString(ter.charAt(0)).equals(Constants.SW)) {
+
+			if (!ComputerPlayer.getInstance().getSouthWestSet().containsKey(tera.getKey()))
+				ComputerPlayer.getInstance().getSouthWestSet().put(tera.getKey(), new HashSet<>());
+			else
+				ComputerPlayer.getInstance().getSouthWestSet().get(tera.getKey()).add(ter);
+		}
+		if (Character.toString(ter.charAt(0)).equals(Constants.WW)) {
+
+			if (!ComputerPlayer.getInstance().getWestSet().containsKey(tera.getKey()))
+				ComputerPlayer.getInstance().getWestSet().put(tera.getKey(), new HashSet<>());
+			else
+				ComputerPlayer.getInstance().getWestSet().get(tera.getKey()).add(ter);
+		}
+		if (Character.toString(ter.charAt(0)).equals(Constants.NW)) {
+
+			if (!ComputerPlayer.getInstance().getNorthWestSet().containsKey(tera.getKey()))
+				ComputerPlayer.getInstance().getNorthWestSet().put(tera.getKey(), new HashSet<>());
+			else
+				ComputerPlayer.getInstance().getNorthWestSet().get(tera.getKey()).add(ter);
+		}
 	}
 
-	private static Set<String> getLocation(String location, String terrain, HashSet<String> finalSet,
-			HashSet<String> sureSet) {
-
-		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.NORTH_CHAR);
-		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.NORTH_EAST_CHAR);
-		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.EAST_CHAR);
-		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.SOUTH_EAST_CHAR);
-		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.SOUTH_CHAR);
-		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.SOUTH_WEST_CHAR);
-		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.WEST_CHAR);
-		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.NORTH_WEST_CHAR);
-
-		return finalSet;
-
-	}
+//	private static Set<String> getLocation(String location, String terrain, HashSet<String> finalSet,
+//			HashSet<String> sureSet) {
+//
+//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.NORTH_CHAR);
+//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.NORTH_EAST_CHAR);
+//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.EAST_CHAR);
+//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.SOUTH_EAST_CHAR);
+//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.SOUTH_CHAR);
+//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.SOUTH_WEST_CHAR);
+//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.WEST_CHAR);
+//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.NORTH_WEST_CHAR);
+//
+//		return finalSet;
+//
+//	}
 
 	private static void getLocationForEachDirection(String location, String terrain, HashSet<String> finalSet,
-			HashSet<String> sureSet, String direction) {
-		if (location.equals(direction))
+			HashSet<String> sureSet) {
+		if (location.equals(Constants.NORTH_CHAR)) {
 			ComputerPlayer.getInstance().getNorthSet().entrySet().stream().forEach(value1 -> {
 				value1.getValue().forEach(value -> {
 
 					if (value1.getKey() == Constants.TENTATIVE_TERRAIN)
 						finalSet.add(value);
-					else
+					if(value1.getKey() == Constants.CONFIRM_TERRAIN)
 						sureSet.add(value);
 				});
 			});
+		}
+		if (location.equals(Constants.NORTH_EAST_CHAR)) {
+			ComputerPlayer.getInstance().getNorthEastSet().entrySet().stream().forEach(value1 -> {
+				value1.getValue().forEach(value -> {
+
+					if (value1.getKey() == Constants.TENTATIVE_TERRAIN)
+						finalSet.add(value);
+					if(value1.getKey() == Constants.CONFIRM_TERRAIN)
+						sureSet.add(value);
+				});
+			});
+		}
+		if (location.equals(Constants.EAST_CHAR)) {
+			ComputerPlayer.getInstance().getEastSet().entrySet().stream().forEach(value1 -> {
+				value1.getValue().forEach(value -> {
+
+					if (value1.getKey() == Constants.TENTATIVE_TERRAIN)
+						finalSet.add(value);
+					if(value1.getKey() == Constants.CONFIRM_TERRAIN)
+						sureSet.add(value);
+				});
+			});
+		}
+		if (location.equals(Constants.SOUTH_EAST_CHAR)) {
+			ComputerPlayer.getInstance().getSouthEastSet().entrySet().stream().forEach(value1 -> {
+				value1.getValue().forEach(value -> {
+
+					if (value1.getKey() == Constants.TENTATIVE_TERRAIN)
+						finalSet.add(value);
+					if(value1.getKey() == Constants.CONFIRM_TERRAIN)
+						sureSet.add(value);
+				});
+			});
+		}
+		if (location.equals(Constants.SOUTH_CHAR)) {
+			ComputerPlayer.getInstance().getSouthSet().entrySet().stream().forEach(value1 -> {
+				value1.getValue().forEach(value -> {
+
+					if (value1.getKey() == Constants.TENTATIVE_TERRAIN)
+						finalSet.add(value);
+					if(value1.getKey() == Constants.CONFIRM_TERRAIN)
+						sureSet.add(value);
+				});
+			});
+		}
+		if (location.equals(Constants.SOUTH_WEST)) {
+			ComputerPlayer.getInstance().getSouthWestSet().entrySet().stream().forEach(value1 -> {
+				value1.getValue().forEach(value -> {
+
+					if (value1.getKey() == Constants.TENTATIVE_TERRAIN)
+						finalSet.add(value);
+					if(value1.getKey() == Constants.CONFIRM_TERRAIN)
+						sureSet.add(value);
+				});
+			});
+		}
+		if (location.equals(Constants.WEST_CHAR)) {
+			ComputerPlayer.getInstance().getWestSet().entrySet().stream().forEach(value1 -> {
+				value1.getValue().forEach(value -> {
+
+					if (value1.getKey() == Constants.TENTATIVE_TERRAIN)
+						finalSet.add(value);
+					if(value1.getKey() == Constants.CONFIRM_TERRAIN)
+						sureSet.add(value);
+				});
+			});
+		}
+		if (location.equals(Constants.NORTH_WEST_CHAR)) {
+			ComputerPlayer.getInstance().getNorthWestSet().entrySet().stream().forEach(value1 -> {
+				value1.getValue().forEach(value -> {
+
+					if (value1.getKey() == Constants.TENTATIVE_TERRAIN)
+						finalSet.add(value);
+					if(value1.getKey() == Constants.CONFIRM_TERRAIN)
+						sureSet.add(value);
+				});
+			});
+		}
 	}
 
 }

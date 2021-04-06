@@ -54,7 +54,7 @@ public class AnswerDeductionLogic {
 				directionHead = directionHead.next;
 			}
 		}
-
+		System.out.println(areaTokenSet);
 		CheckTerrainStatus(areaTokenSet, messageDetailsList);
 		checkIsTreasureLocFound();
 	}
@@ -92,18 +92,19 @@ public class AnswerDeductionLogic {
 			int tokenCount, String Diretion1, String Diretion2, String playerName) {
 
 		List<List<String>> updatedList = new ArrayList<>();
+		int tmpTokenCount = 0;
 
 		if (tokenCount == 0 && !areaTokenSet.get(-1).isEmpty())
 			updateZeroterrainTokenInformation(areaTokenSet.get(-1), playerName);
 		else if (areaTokenSet.get(-1).size() > 0)
-			tokenCount = tokenCount - areaTokenSet.get(1).size();
+			tmpTokenCount = tokenCount - areaTokenSet.get(1).size();
 
-		if (tokenCount > 0 && !(areaTokenSet.get(-1).isEmpty())) {
-
-			if (areaTokenSet.get(-1).size() == tokenCount)
+		if (tmpTokenCount > 0 && !(areaTokenSet.get(-1).isEmpty())) {
+			if (areaTokenSet.get(-1).size() == tmpTokenCount)
 				AnswerDeductionHelper.updateTerrainTokenMap(areaTokenSet.get(-1), playerName);
 
-			if (areaTokenSet.get(-1).size() > tokenCount) {
+			if (areaTokenSet.get(-1).size() > tmpTokenCount) {
+
 				List<String> value = new ArrayList<>();
 				value.add(Diretion1);
 				value.add(Diretion2);
@@ -116,7 +117,7 @@ public class AnswerDeductionLogic {
 							tentativeToken.put(player, new HashMap<>());
 					}
 					ComputerPlayer.getInstance().setTentativeToken(tentativeToken);
-				} else if (ComputerPlayer.getInstance().getTentativeToken().get(playerName).get(areaToken) == null) {
+				} if (ComputerPlayer.getInstance().getTentativeToken().get(playerName).get(areaToken) == null) {
 					List<List<String>> contain = new ArrayList<>();
 					contain.add(value);
 					ComputerPlayer.getInstance().getTentativeToken().get(playerName).put(areaToken, contain);
