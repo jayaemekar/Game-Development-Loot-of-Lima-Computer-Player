@@ -24,9 +24,10 @@ public class AnswerDeductionLogic {
 				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(1)) + "\n");
 		if (!PlayerInformation.getInstance().getPlayerName().equals(messageDetailsList.get(4))
 				&& !Constants.YES.equals(locFound)) {
+			
 			processAnswerMessage(messageDetailsList);
 
-			 AnswerDeductionHelper.checkAllToken();
+			AnswerDeductionHelper.checkAllToken();
 		}
 		System.out.println(ComputerPlayer.getInstance().getNotTreasureLoc());
 	}
@@ -54,7 +55,6 @@ public class AnswerDeductionLogic {
 				directionHead = directionHead.next;
 			}
 		}
-		System.out.println(areaTokenSet);
 		CheckTerrainStatus(areaTokenSet, messageDetailsList);
 		checkIsTreasureLocFound();
 	}

@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.omg.Messaging.SyncScopeHelper;
-
 import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
 
@@ -123,7 +121,6 @@ public class AnswerDeductionHelper {
 		areaTokenSet.put(Constants.NOT_WITH_PLAYER_TERRAIN, new HashSet<>());
 		areaTokenSet.put(Constants.CONFIRM_TERRAIN, new HashSet<>());
 		areaTokenSet.put(Constants.TENTATIVE_TERRAIN, new HashSet<>());
-		System.out.println("in all check");
 		for (String player : PlayerInformation.getInstance().getPlayerNameList()) {
 
 			AnswerDeductionHelper.getTerrainStatus(ComputerPlayer.getInstance().getAllPlayerTrrianMap(), areaTokenSet,
@@ -136,17 +133,13 @@ public class AnswerDeductionHelper {
 					if (tera.getKey() != 0) {
 						checkAllTokensWithDirection(ter, tera);
 					}
-//					System.out.println("ComputerPlayer.getInstance().getWestSet()"+ ComputerPlayer.getInstance().getWestSet());
 				});
 			});
 		}
 
 		Map<String, Map<String, List<List<String>>>> tentativetoken = createTentativeTokenMap();
-		System.out.println(ComputerPlayer.getInstance().getTentativeToken());
-		System.out.println(tentativetoken);
 		if (tentativetoken != null) {
 			Map<String, List<List<String>>> token = updateTentativeTokenMap(tentativetoken);
-			System.out.println("token" + token);
 			updateFinalSet(token);
 		}
 
@@ -166,7 +159,6 @@ public class AnswerDeductionHelper {
 				else {
 
 					while (head != tail) {
-						System.out.println(head.direction);
 						getLocationForEachDirection(head.direction, to.getKey(), finalSet, sureSet);
 						head = head.next;
 					}
@@ -177,11 +169,8 @@ public class AnswerDeductionHelper {
 					
 				});
 				int count = finalSet.size() + sureSet.size();
-				System.out.println(finalSet.size());
-				System.out.println(sureSet.size());
 				
 				if (Integer.toString(count).equals(value1.get(2))) {
-					System.out.println("in sure");
 					finalSet.removeAll(ComputerPlayer.getInstance().getNotTreasureLoc());
 					finalSet.forEach(tres -> {
 						ComputerPlayer.getInstance().getNotTreasureLoc().add(tres);
@@ -192,6 +181,8 @@ public class AnswerDeductionHelper {
 				sureSet.clear();
 			});
 		});
+		AnswerDeductionLogic.checkIsTreasureLocFound();
+
 	}
 
 	private static Map<String, List<List<String>>> updateTentativeTokenMap(
@@ -210,7 +201,6 @@ public class AnswerDeductionHelper {
 							
 							if (y1.get(0).equals(val.get(0)) && y1.get(1).equals(val.get(1))) {
 								
-								System.out.println("y1" + y1);
 								y1.set(2, Integer.toString(Integer.parseInt(y1.get(2)) + Integer.parseInt(val.get(2))));
 								
 								list.addAll(y1);
@@ -221,7 +211,6 @@ public class AnswerDeductionHelper {
 									map2.put(direc.getKey(), new ArrayList<>());
 									map2.get(direc.getKey()).add(list);
 								}
-								System.out.println(list);
 							}
 						}
 						token.get(direc.getKey()).add(val);
@@ -235,7 +224,6 @@ public class AnswerDeductionHelper {
 				});
 			});
 		});
-		System.out.println(token);
 		return map2;
 	}
 
@@ -323,22 +311,6 @@ public class AnswerDeductionHelper {
 				ComputerPlayer.getInstance().getNorthWestSet().get(tera.getKey()).add(ter);
 		}
 	}
-
-//	private static Set<String> getLocation(String location, String terrain, HashSet<String> finalSet,
-//			HashSet<String> sureSet) {
-//
-//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.NORTH_CHAR);
-//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.NORTH_EAST_CHAR);
-//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.EAST_CHAR);
-//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.SOUTH_EAST_CHAR);
-//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.SOUTH_CHAR);
-//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.SOUTH_WEST_CHAR);
-//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.WEST_CHAR);
-//		getLocationForEachDirection(location, terrain, finalSet, sureSet, Constants.NORTH_WEST_CHAR);
-//
-//		return finalSet;
-//
-//	}
 
 	private static void getLocationForEachDirection(String location, String terrain, HashSet<String> finalSet,
 			HashSet<String> sureSet) {
