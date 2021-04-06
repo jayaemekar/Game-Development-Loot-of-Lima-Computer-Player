@@ -99,4 +99,9 @@ public class Constants {
 	public static final String FOREST_6 = "6F";
 	public static final String FOREST_7 = "7F";
 	public static final String FOREST_8 = "8F";
+	
+	public static int CONFIRM_TERRAIN = 1;
+	public static int TENTATIVE_TERRAIN = -1;
+	public static int NOT_WITH_PLAYER_TERRAIN = 0;
+	
 }
