@@ -1,13 +1,9 @@
 package com.lol.computer.player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.lol.helper.PlayerInformation;
 
 class Node {
 	Map<String, Map<String, Integer>> terrainList;
