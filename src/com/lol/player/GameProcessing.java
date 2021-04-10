@@ -163,4 +163,12 @@ public class GameProcessing {
 
 	}
 
+	public void getReRollInformation(String messageNumber, List<String> messageDetailsList) {
+		// TODO Auto-generated method stub
+		System.out.println("\nMessage [" + messageNumber + "] BARREL- Player " + PlayerInformation.getInstance().getPlayerName()
+		+ " has requested to reroll Die-"+messageDetailsList.get(1)+" and Die-"+messageDetailsList.get(2));
+		
+		
+	}
+
 }

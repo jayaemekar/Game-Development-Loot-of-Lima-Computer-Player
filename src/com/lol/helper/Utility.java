@@ -108,7 +108,12 @@ public class Utility {
 			gameProcessing.getWinnerPlayerGuessCorrect(messageNumber, messageDetailsList);
 			PlayerInformation.getInstance().setGameOver(true);
 			return true;
-		} else if (Constants.MESSAAGE_09.equals(messageNumber)) {
+		}
+		else if (Constants.MESSAAGE_12.equals(messageNumber))
+			gameProcessing.getReRollInformation(messageNumber, messageDetailsList);
+		
+		
+		else if (Constants.MESSAAGE_09.equals(messageNumber)) {
 			boolean flag = gameProcessing.getDisqualifiedPlayerInformationOrInCorrectGuess(messageNumber,
 					messageDetailsList);
 			PlayerInformation.getInstance().setGameOver(flag);

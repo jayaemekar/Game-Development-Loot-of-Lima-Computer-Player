@@ -14,40 +14,61 @@ import com.lol.helper.Utility;
 import com.lol.validation.PlayerInfoValidation;
 
 public class QuestionDeductionLogic {
-
+	
+	
+	private static Boolean SetShovel=false;
+	private static Boolean SetPistol=false;
+	private static Boolean Barrel=false;
+	
 	/**
 	 * This method is used to introduce the question deduction logic in computer
 	 * player
 	 * 
 	 * @param messageDetailsList
 	 */
+	
 	public static void createQuestion(List<String> messageDetailsList) {
 
 		SortedMap<Integer, String> messageMap = new TreeMap<Integer, String>();
+		
 
 		String dieFaceOne = messageDetailsList.get(0);
 		String dieFaceTwo = messageDetailsList.get(1);
 		String dieFaceThree = messageDetailsList.get(2);
 
+		
 		questionProxy(dieFaceOne, dieFaceTwo, messageMap);
+		
 		questionProxy(dieFaceOne, dieFaceThree, messageMap);
 		questionProxy(dieFaceTwo, dieFaceOne, messageMap);
 		questionProxy(dieFaceTwo, dieFaceThree, messageMap);
 		questionProxy(dieFaceThree, dieFaceTwo, messageMap);
 		questionProxy(dieFaceThree, dieFaceOne, messageMap);
-
+		
+		
+		
 		if (!messageMap.isEmpty()) {
 			for (Entry<Integer, String> en : messageMap.entrySet()) {
 				if (en.getKey() != 0) {
 					String message = en.getValue();
-					if (message != null && !message.isEmpty()) {
+					if (message != null && !message.isEmpty() && Barrel==false) {
 						System.out.println("Selected  Die Face  One :" + message.substring(3, 6));
 						System.out.println("Selected  Die Face  Two :" + message.substring(7, 10));
 						System.out.println("Selected  Area  Terrain  :" + message.substring(11, 12));
 						System.out.println("Selected  Player :" + message.substring(13, 15));
+						
+						System.out.println("Message Type : "+message.substring(16));
+						
 						Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), message);
 						Utility.parseMessage(message);
 						break;
+					}
+					else if(message != null && !message.isEmpty() && Barrel==true) {
+						
+						//this is temporary the placement of this code can very.
+						String rerollmessage = "12:2,0,2";
+						Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), rerollmessage);
+						Utility.parseMessage(rerollmessage);
 					}
 				}
 			}
@@ -66,6 +87,8 @@ public class QuestionDeductionLogic {
 	 */
 	public static HashMap<String, HashMap<String, Integer>> generateQuestionMap(String dieFaceOne, String dieFaceTwo,
 			String terrainType, SortedMap<Integer, String> messageMap) {
+		
+		System.out.println("messageMap####:" + messageMap);
 		Node current = ComputerPlayer.getInstance().getHead();
 		HashMap<String, HashMap<String, Integer>> terrainCountMap = new HashMap<>();
 		do {
@@ -110,8 +133,26 @@ public class QuestionDeductionLogic {
 				if (terrain.getValue() <= terrainCount && terrainTypes.contains(terrain.getKey())) {
 
 					String message = "05:" + dieFaceOne + "," + dieFaceTwo + "," + terrainType + "," + player.getKey();
-
+					
+					
+					
+					if(SetShovel==true && ComputerPlayer.getInstance().getShovelFlagStatus()==false) {
+						message=message.concat(",S");
+						ComputerPlayer.getInstance().setShovelFlag();  		//shovel used marked
+					}
+					
+					if(SetPistol==true && ComputerPlayer.getInstance().getPistolFlagStatus()==false) {
+						message=message.concat(",P");
+						ComputerPlayer.getInstance().setPistolFlag();		//pistol used marked
+					}
+					
+					if(SetShovel==false && SetPistol==false) {
+						message=message.concat(",Q");						//default message type
+					}
+					
+					
 					messageMap.put(terrain.getValue(), message);
+					//System.out.println("Shovel set : #####"+message);
 				}
 			});
 		});

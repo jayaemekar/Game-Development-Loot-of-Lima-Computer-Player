@@ -14,7 +14,8 @@ public class Player {
 	public static void main(String[] args) throws Exception {
 	
 		System.out.println("\nEnter Your Team Name (in the format alpha, all etc.) : ");
-		String teamName = args[0]; 
+		//String teamName = args[0]; 
+		String teamName = "all";
 		
 		System.out.println("________________ LOOT OF LIMA!! Let's Begin the Game !_________________ ");
 		System.out.println("________________ Instructions to Play Game_____________________________ ");
@@ -23,10 +24,14 @@ public class Player {
 		System.out.println("________________ Game Ready !! ________________________________________ ");			
 		System.out.println("\nEnter Your Player Name (in the format P1,P2,P3 etc.) : ");
 		
-		String playerNumber = args[1]; 
+	//	String playerNumber = args[1]; 
+		String playerNumber = "1"; 
 		
-		String fileWritePath = "/tmp/" + teamName +"from"+ playerNumber; // Write File path
-		String fileReadPath  = "/tmp/" + teamName +"to"  + playerNumber; // Read File path
+	//	String fileWritePath = "/tmp/" + teamName +"from"+ playerNumber; // Write File path
+	//	String fileReadPath  = "/tmp/" + teamName +"to"  + playerNumber; // Read File path
+		
+		String fileWritePath = "C:\\Users\\sanga\\git\\LimaComputerPlayer\\src\\PlayerFile.txt"; // Write File path
+		String fileReadPath  = "C:\\Users\\sanga\\git\\LimaComputerPlayer\\src\\Serverfile.txt"; // Read File path
 		
 		PlayerInformation.getInstance().setFileReadPath(fileReadPath);
 		PlayerInformation.getInstance().setFileWritePath(fileWritePath);

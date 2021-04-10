@@ -44,6 +44,39 @@ public class ComputerPlayer {
 	private Map<Integer, Set<String>> SouthWestSet = new HashMap<>();
 	private Map<Integer, Set<String>> WestSet = new HashMap<>();
 	private Map<Integer, Set<String>> NorthWestSet = new HashMap<>();
+	
+	//special abilities
+	private Boolean ShovelFlag=false;
+	private Boolean PistolFlag=false;
+	private Boolean BarrelFlag=false;
+	
+	public Boolean getShovelFlagStatus() {
+		return ShovelFlag;
+	}
+	
+	public Boolean getPistolFlagStatus() {
+		return PistolFlag;
+	}
+	
+	public Boolean getBarrelFlagStatus() {
+		return BarrelFlag;
+	}
+	
+	public void setShovelFlag() {
+		ShovelFlag=true;
+	}
+	
+	public void setPistolFlag() {
+		PistolFlag=true;
+	}
+	
+	public void setBarrelFlag() {
+		 PistolFlag=true;
+	}
+	
+	
+	
+	
 
 	public Map<Integer, Set<String>> getNorthSet() {
 		return NorthSet;
