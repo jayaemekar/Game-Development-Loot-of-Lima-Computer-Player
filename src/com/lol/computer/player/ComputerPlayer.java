@@ -30,6 +30,8 @@ public class ComputerPlayer {
 	private Set<String> deducedForestLoc = new HashSet<>();
 	private Set<String> deducedBeachLoc = new HashSet<>();
 	private Set<String> deducedMountainLoc = new HashSet<>();
+	
+	private Set<String> defaultMap = new HashSet<>();
 	private Node currentNode;
 	private Map<String, Integer> playerObj;
 	private static ComputerPlayer computerPlayer = null;
@@ -46,7 +48,7 @@ public class ComputerPlayer {
 	private Map<Integer, Set<String>> NorthWestSet = new HashMap<>();
 	
 	//special abilities
-	private Boolean ShovelFlag=false;
+	private Boolean ShovelFlag=true;
 	private Boolean PistolFlag=false;
 	private Boolean BarrelFlag=false;
 	
@@ -63,7 +65,7 @@ public class ComputerPlayer {
 	}
 	
 	public void setShovelFlag() {
-		ShovelFlag=true;
+		ShovelFlag=false;
 	}
 	
 	public void setPistolFlag() {
@@ -262,6 +264,7 @@ public class ComputerPlayer {
 	// This function will add the new node at the end of the list.
 	public void add(Map<String, Map<String, Integer>> terrainList, String direction, int number) {
 		// Create new node
+		
 		Node newNode = new Node(terrainList, direction, String.valueOf(number));
 		// Checks if the list is empty.
 		if (head == null) {
@@ -325,6 +328,17 @@ public class ComputerPlayer {
 
 	public void setTentativeToken(Map<String, Map<String, List<List<String>>>> tentativeToken) {
 		TentativeToken = tentativeToken;
+	}
+
+	public void addDefaultMap(String token) {
+		this.defaultMap.add(token);
+	}
+	public Set<String> getDefaultMap() {
+		return defaultMap;
+	}
+
+	public void setDefaultMap(Set<String> defaultMap) {
+		this.defaultMap = defaultMap;
 	}
 
 }
