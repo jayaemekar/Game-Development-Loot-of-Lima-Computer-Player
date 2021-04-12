@@ -59,7 +59,7 @@ public class QuestionDeductionLogic {
 
 		System.out.println("Not treasurer count "+ComputerPlayer.getInstance().getNotTreasureLoc().size());
 
-		if(ComputerPlayer.getInstance().getNotTreasureLoc().size()>15 && !SetPistol) {
+		if(ComputerPlayer.getInstance().getNotTreasureLoc().size()>20 && !SetPistol) {
 			System.out.println("pistol");
 			pistol();
 			SetPistol=true;
@@ -116,8 +116,15 @@ public class QuestionDeductionLogic {
 				}
 			}
 		} else {
-			
-			createQuestionRandomly(messageDetailsList);
+			if(Barrel) {
+				System.out.println("Barrel roll");
+				String rerollmessage = "12:2,0,2";
+				Barrel=false;
+				Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), rerollmessage);
+				Utility.parseMessage(rerollmessage);
+			}else {				
+				createQuestionRandomly(messageDetailsList);
+			}
 		}
 	}
 	
@@ -166,7 +173,7 @@ public class QuestionDeductionLogic {
 		} while (current != ComputerPlayer.getInstance().getTail());
 
 		HashSet<String> terrainTypes = new HashSet<String>();
-		if (!Constants.ALL_CHAR.equals(terrainType)) {
+		if (Constants.ALL_CHAR.equals(terrainType)) {
 			terrainTypes.add("M");
 			terrainTypes.add("F");
 			terrainTypes.add("B");
@@ -188,11 +195,6 @@ public class QuestionDeductionLogic {
 						ComputerPlayer.getInstance().setShovelFlag();  		//shovel used marked
 					}
 					
-					if(msgType.equals("P")) {
-						message=message.concat(",P");
-						ComputerPlayer.getInstance().setPistolFlag();		//pistol used marked
-					}
-					
 					if(msgType.equals("Q")) {
 						message=message.concat(",Q");						//default message type
 					}
@@ -203,7 +205,7 @@ public class QuestionDeductionLogic {
 				}
 			});
 		});
-
+		System.out.println(messageMap);
 		return terrainCountMap;
 
 	}
@@ -231,7 +233,7 @@ public class QuestionDeductionLogic {
 
 		if (headTerrian.equals(tailTerrian) && !Constants.WILD_CHAR.equals(headTerrian)) {
 			generateQuestionMap(dieFaceOne, dieFaceTwo, tailTerrian, messageMap,"Q");
-			if(SetShovel) {
+			if(SetShovel && ComputerPlayer.getInstance().getRoundCount()>10) {
 				terrains.remove(dieFaceOne.substring(2,3));
 				dieFaceOne=dieFaceOne.substring(0,2)+terrains.stream().skip(new Random().nextInt(terrains.size())).findFirst().orElse(null);
 				generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap,"S");
@@ -240,7 +242,7 @@ public class QuestionDeductionLogic {
 		} else if (!headTerrian.equals(tailTerrian)
 				&& !(Constants.WILD_CHAR.equals(headTerrian) || Constants.WILD_CHAR.equals(tailTerrian))) {
 			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap,"Q");
-			if(SetShovel) {
+			if(SetShovel && ComputerPlayer.getInstance().getRoundCount()>10) {
 				String temp = dieFaceTwo.substring(2,3);
 				terrains.remove(temp);
 				String dieFaceTwo2 = dieFaceTwo.subSequence(0, 2)+headTerrian;
@@ -258,7 +260,7 @@ public class QuestionDeductionLogic {
 			String terrainType = !Constants.WILD_CHAR.equals(headTerrian) ? headTerrian : tailTerrian;
 			generateQuestionMap(dieFaceOne, dieFaceTwo, terrainType, messageMap,"Q");
 			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap,"Q");
-			if(SetShovel) {
+			if(SetShovel && ComputerPlayer.getInstance().getRoundCount()>10) {
 				terrains.remove(terrainType);
 				Iterator terrainIterator = terrains.iterator();
 				while (terrainIterator.hasNext()) {

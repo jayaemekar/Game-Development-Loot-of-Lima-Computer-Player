@@ -14,7 +14,7 @@ import com.lol.validation.PlayerInfoValidation;
 public class GameProcessing {
 
 	private static Integer roundNumber = 0;
-	private static Integer roundCount = 0;
+	public static Integer roundCount = 0;
 	private static boolean treasureGuessSent = false;
 
 	/**
@@ -28,7 +28,8 @@ public class GameProcessing {
 		String playerName = messageDetailsList.get(0);
 		messageDetailsList.remove(0);
 		if (roundNumber == 0 || roundNumber % PlayerInformation.getInstance().getNumberOfPlayers() == 0) {
-			roundCount++;
+			//roundCount++;
+			ComputerPlayer.getInstance().setRoundCount(roundCount++);
 			System.out.println(
 					"\n====== ====== ====== ====== ROUND-" + roundCount + " ====== ====== ====== ====== ======\n");
 		}

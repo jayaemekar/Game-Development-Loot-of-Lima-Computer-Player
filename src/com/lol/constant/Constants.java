@@ -105,4 +105,5 @@ public class Constants {
 	public static int TENTATIVE_TERRAIN = -1;
 	public static int NOT_WITH_PLAYER_TERRAIN = 0;
 	
+	
 }

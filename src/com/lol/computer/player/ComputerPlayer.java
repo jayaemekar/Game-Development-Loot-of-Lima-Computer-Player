@@ -52,6 +52,7 @@ public class ComputerPlayer {
 	private Boolean PistolFlag=false;
 	private Boolean BarrelFlag=false;
 	
+	private Integer roundCount=0;
 	public Boolean getShovelFlagStatus() {
 		return ShovelFlag;
 	}
@@ -339,6 +340,14 @@ public class ComputerPlayer {
 
 	public void setDefaultMap(Set<String> defaultMap) {
 		this.defaultMap = defaultMap;
+	}
+
+	public Integer getRoundCount() {
+		return roundCount;
+	}
+
+	public void setRoundCount(Integer roundCount) {
+		this.roundCount = roundCount;
 	}
 
 }
