@@ -24,23 +24,25 @@ public class PlayerInformation {
 	String fileReadPath;
 	String fileWritePath;
 	boolean isGameOver = false;
-	
-	
-	private static PlayerInformation playerInformation = null;
 
+	private static volatile PlayerInformation playerInformation;
 
 	public PlayerInformation(String playerName) {
 		PlayerInformation.getInstance().setPlayerName(playerName);
 	}
-	
-	public PlayerInformation() {
-		// TODO Auto-generated constructor stub
+
+	private PlayerInformation() {
+		// private constructor
 	}
 
 	public static PlayerInformation getInstance() {
-		if (playerInformation == null)
-			playerInformation = new PlayerInformation();
-
+		if (playerInformation == null) {
+			synchronized (PlayerInformation.class) {
+				if (playerInformation == null) {
+					playerInformation = new PlayerInformation();
+				}
+			}
+		}
 		return playerInformation;
 	}
 
@@ -107,7 +109,7 @@ public class PlayerInformation {
 	public void setPlayerNameList(List<String> playerNameList2) {
 		this.playerNameList = playerNameList2;
 	}
-	
+
 	public Set<String> getDieFaceList() {
 		return dieFaceList;
 	}
@@ -135,23 +137,30 @@ public class PlayerInformation {
 	public String getFileReadPath() {
 		return fileReadPath;
 	}
+
 	public void setFileReadPath(String fileReadPath) {
 		this.fileReadPath = fileReadPath;
 	}
+
 	public String getFileWritePath() {
 		return fileWritePath;
 	}
+
 	public void setFileWritePath(String fileWritePath) {
 		this.fileWritePath = fileWritePath;
 	}
+
 	public boolean isGameOver() {
 		return isGameOver;
 	}
+
 	public void setGameOver(boolean isGameOver) {
 		this.isGameOver = isGameOver;
 	}
+
 	/**
 	 * This method is used to save the information of players personal token
+	 * 
 	 * @param messageDetailsList
 	 * @param personalTokenMap
 	 * @param isLeftOverToken
@@ -313,5 +322,5 @@ public class PlayerInformation {
 		}
 
 	}
-	
+
 }
