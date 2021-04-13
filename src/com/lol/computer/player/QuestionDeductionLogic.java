@@ -35,7 +35,9 @@ public class QuestionDeductionLogic {
 		HashSet<String> nonTreasureLocation = new HashSet<String>(ComputerPlayer.getInstance().getNotTreasureLoc());
 		HashSet<String> players = new HashSet<String>(ComputerPlayer.getInstance().getPlayerObj().keySet());
 		defaultMap.removeAll(nonTreasureLocation);
-		String token=defaultMap.stream().skip(new Random().nextInt(defaultMap.size())).findFirst().orElse(null);
+		int n = new Random().nextInt(defaultMap.size());
+		System.out.println("Random: "+n);
+		String token=defaultMap.stream().skip(n).findFirst().orElse(null);
 		String[] directions= {"NN","NW","WW","SW","SS","SE","EE","NE"};
 		int tokenNumber=Integer.parseInt(token.substring(0,1))-1;
 		String tokenTerrain=token.substring(1,2);
