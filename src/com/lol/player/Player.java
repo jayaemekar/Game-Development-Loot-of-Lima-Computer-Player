@@ -28,6 +28,7 @@ public class Player {
 		String fileWritePath = "/tmp/" + teamName +"from"+ playerNumber; // Write File path
 		String fileReadPath  = "/tmp/" + teamName +"to"  + playerNumber; // Read File path
 		
+		PlayerInformation.getInstance().setPlayerName(playerNumber);
 		PlayerInformation.getInstance().setFileReadPath(fileReadPath);
 		PlayerInformation.getInstance().setFileWritePath(fileWritePath);
 		PlayerInformation.getInstance().setGameOver(false); // Game over flag to set
