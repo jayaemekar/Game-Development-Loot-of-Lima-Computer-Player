@@ -33,20 +33,22 @@ public class AnswerDeductionLogic {
 	}
 
 	private static void updateNonTreasureLocationMap() {
-		
-		Map <String,Map<String, Integer>> allPlayerMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap();
-		for (String terrain : allPlayerMap.keySet()) {
 
-			Map<String, Integer> terrainMap = allPlayerMap.get(terrain);
-			int sum = terrainMap.values().stream().reduce(0, Integer::sum);
-			if (sum == 1) {
-				Set<String> treasureNotLocSet = ComputerPlayer.getInstance().getNotTreasureLoc();
-				treasureNotLocSet.add(terrain);
-				ComputerPlayer.getInstance().setNotTreasureLoc(treasureNotLocSet);
-			} else if (sum == 0) {
-				Set<String> treasureLocSet = ComputerPlayer.getInstance().getTreasureLoc();
-				treasureLocSet.add(terrain);
-				ComputerPlayer.getInstance().setTreasureLoc(treasureLocSet);
+		Map<String, Map<String, Integer>> allPlayerMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap();
+		if (allPlayerMap != null) {
+			for (String terrain : allPlayerMap.keySet()) {
+
+				Map<String, Integer> terrainMap = allPlayerMap.get(terrain);
+				int sum = terrainMap.values().stream().reduce(0, Integer::sum);
+				if (sum == 1) {
+					Set<String> treasureNotLocSet = ComputerPlayer.getInstance().getNotTreasureLoc();
+					treasureNotLocSet.add(terrain);
+					ComputerPlayer.getInstance().setNotTreasureLoc(treasureNotLocSet);
+				} else if (sum == 0) {
+					Set<String> treasureLocSet = ComputerPlayer.getInstance().getTreasureLoc();
+					treasureLocSet.add(terrain);
+					ComputerPlayer.getInstance().setTreasureLoc(treasureLocSet);
+				}
 			}
 		}
 	}
