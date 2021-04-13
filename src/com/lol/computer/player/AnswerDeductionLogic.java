@@ -15,6 +15,7 @@ public class AnswerDeductionLogic {
 	static Boolean flag = false;
 
 	public static void getAnswerInformation(String messageNumber, List<String> messageDetailsList) {
+		updateNonTreasureLocationMap();
 		String locFound = checkIsTreasureLocFound();
 		System.out.println("Message [" + messageNumber + "] Player " + messageDetailsList.get(4) + " has "
 				+ messageDetailsList.get(3) + " "
@@ -24,11 +25,30 @@ public class AnswerDeductionLogic {
 				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(1)) + "\n");
 		if (!PlayerInformation.getInstance().getPlayerName().equals(messageDetailsList.get(4))
 				&& !Constants.YES.equals(locFound)) {
-			
+
 			processAnswerMessage(messageDetailsList);
 			AnswerDeductionHelper.checkAllToken();
 		}
 		System.out.println(ComputerPlayer.getInstance().getNotTreasureLoc());
+	}
+
+	private static void updateNonTreasureLocationMap() {
+		
+		Map <String,Map<String, Integer>> allPlayerMap = ComputerPlayer.getComputerPlayer().getAllPlayerTrrianMap();
+		for (String terrain : allPlayerMap.keySet()) {
+
+			Map<String, Integer> terrainMap = allPlayerMap.get(terrain);
+			int sum = terrainMap.values().stream().reduce(0, Integer::sum);
+			if (sum == 1) {
+				Set<String> treasureNotLocSet = ComputerPlayer.getInstance().getNotTreasureLoc();
+				treasureNotLocSet.add(terrain);
+				ComputerPlayer.getInstance().setNotTreasureLoc(treasureNotLocSet);
+			} else if (sum == 0) {
+				Set<String> treasureLocSet = ComputerPlayer.getInstance().getTreasureLoc();
+				treasureLocSet.add(terrain);
+				ComputerPlayer.getInstance().setTreasureLoc(treasureLocSet);
+			}
+		}
 	}
 
 	public static void processAnswerMessage(List<String> messageDetailsList) {
@@ -55,6 +75,7 @@ public class AnswerDeductionLogic {
 			}
 		}
 		CheckTerrainStatus(areaTokenSet, messageDetailsList);
+		updateNonTreasureLocationMap();
 		checkIsTreasureLocFound();
 	}
 
@@ -116,7 +137,8 @@ public class AnswerDeductionLogic {
 							tentativeToken.put(player, new HashMap<>());
 					}
 					ComputerPlayer.getInstance().setTentativeToken(tentativeToken);
-				} if (ComputerPlayer.getInstance().getTentativeToken().get(playerName).get(areaToken) == null) {
+				}
+				if (ComputerPlayer.getInstance().getTentativeToken().get(playerName).get(areaToken) == null) {
 					List<List<String>> contain = new ArrayList<>();
 					contain.add(value);
 					ComputerPlayer.getInstance().getTentativeToken().get(playerName).put(areaToken, contain);
@@ -148,20 +170,7 @@ public class AnswerDeductionLogic {
 	}
 
 	public static String checkIsTreasureLocFound() {
-		for (String terrain : ComputerPlayer.getInstance().getAllPlayerTrrianMap().keySet()) {
 
-			Map<String, Integer> terrainMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap().get(terrain);
-			int sum = terrainMap.values().stream().reduce(0, Integer::sum);
-			if (sum == 1) {
-				Set<String> treasureNotLocSet = ComputerPlayer.getInstance().getNotTreasureLoc();
-				treasureNotLocSet.add(terrain);
-				ComputerPlayer.getInstance().setNotTreasureLoc(treasureNotLocSet);
-			} else if (sum == 0) {
-				Set<String> treasureLocSet = ComputerPlayer.getInstance().getTreasureLoc();
-				treasureLocSet.add(terrain);
-				ComputerPlayer.getInstance().setTreasureLoc(treasureLocSet);
-			}
-		}
 		System.out.println(
 				"Number of non Treasure location count ::  " + ComputerPlayer.getInstance().getNotTreasureLoc().size());
 		System.out.println("Treasure Location identified  ::  " + ComputerPlayer.getInstance().getTreasureLoc());
