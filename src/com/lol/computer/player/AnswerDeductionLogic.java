@@ -34,7 +34,7 @@ public class AnswerDeductionLogic {
 
 	private static void updateNonTreasureLocationMap() {
 		
-		Map <String,Map<String, Integer>> allPlayerMap = ComputerPlayer.getComputerPlayer().getAllPlayerTrrianMap();
+		Map <String,Map<String, Integer>> allPlayerMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap();
 		for (String terrain : allPlayerMap.keySet()) {
 
 			Map<String, Integer> terrainMap = allPlayerMap.get(terrain);
