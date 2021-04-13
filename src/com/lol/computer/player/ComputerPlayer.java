@@ -32,7 +32,7 @@ public class ComputerPlayer {
 	private Set<String> deducedMountainLoc = new HashSet<>();
 	private Node currentNode;
 	private Map<String, Integer> playerObj;
-	private static ComputerPlayer computerPlayer = null;
+	private static volatile ComputerPlayer computerPlayer = null;
 	private Map<String, List<List<String>>> allTentativeToken;
 	private Map<String, Map<String, List<List<String>>>> TentativeToken;
 	private Map<Integer, Set<String>> NorthSet = new HashMap<>();
@@ -113,12 +113,17 @@ public class ComputerPlayer {
 		// private constructor
 	}
 
+	
 	public static ComputerPlayer getInstance() {
-		if (computerPlayer == null)
-			computerPlayer = new ComputerPlayer();
-		return computerPlayer;
-	}
-
+        if (computerPlayer == null) {
+            synchronized (ComputerPlayer .class) {
+                if (computerPlayer == null) {
+                	computerPlayer = new ComputerPlayer();
+                }
+            }
+        }
+        return computerPlayer;
+    }
 	public Map<String, Integer> getPlayerObj() {
 		return playerObj;
 	}
@@ -277,7 +282,7 @@ public class ComputerPlayer {
 		Node current = head;
 		Node directionNode = null;
 		do {
-			if (current.direction.equals(direction)) {
+			if (current.direction != null && current.direction.equals(direction)) {
 				directionNode = current;
 				break;
 			}
