@@ -17,14 +17,15 @@ public class AnswerDeductionLogic {
 	public static void getAnswerInformation(String messageNumber, List<String> messageDetailsList) {
 		updateNonTreasureLocationMap();
 		String locFound = checkIsTreasureLocFound();
+		String playerName = PlayerInformation.getInstance().getPlayerName();
 		System.out.println("Message [" + messageNumber + "] Player " + messageDetailsList.get(4) + " has "
 				+ messageDetailsList.get(3) + " "
 				+ PlayerInformation.getInstance().getTerrianTokenInformation(messageDetailsList.get(2))
 				+ " terrain between "
 				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(0)) + " and "
 				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(1)) + "\n");
-		if (!PlayerInformation.getInstance().getPlayerName().equals(messageDetailsList.get(4))
-				&& !Constants.YES.equals(locFound)) {
+		
+		if (!playerName.equals(messageDetailsList.get(4)) && !Constants.YES.equals(locFound)) {
 
 			processAnswerMessage(messageDetailsList);
 			AnswerDeductionHelper.checkAllToken();
@@ -35,22 +36,22 @@ public class AnswerDeductionLogic {
 	private static void updateNonTreasureLocationMap() {
 
 		Map<String, Map<String, Integer>> allPlayerMap = ComputerPlayer.getInstance().getAllPlayerTrrianMap();
-		if (allPlayerMap != null) {
-			for (String terrain : allPlayerMap.keySet()) {
 
-				Map<String, Integer> terrainMap = allPlayerMap.get(terrain);
-				int sum = terrainMap.values().stream().reduce(0, Integer::sum);
-				if (sum == 1) {
-					Set<String> treasureNotLocSet = ComputerPlayer.getInstance().getNotTreasureLoc();
-					treasureNotLocSet.add(terrain);
-					ComputerPlayer.getInstance().setNotTreasureLoc(treasureNotLocSet);
-				} else if (sum == 0) {
-					Set<String> treasureLocSet = ComputerPlayer.getInstance().getTreasureLoc();
-					treasureLocSet.add(terrain);
-					ComputerPlayer.getInstance().setTreasureLoc(treasureLocSet);
-				}
+		for (String terrain : allPlayerMap.keySet()) {
+
+			Map<String, Integer> terrainMap = allPlayerMap.get(terrain);
+			int sum = terrainMap.values().stream().reduce(0, Integer::sum);
+			if (sum == 1) {
+				Set<String> treasureNotLocSet = ComputerPlayer.getInstance().getNotTreasureLoc();
+				treasureNotLocSet.add(terrain);
+				ComputerPlayer.getInstance().setNotTreasureLoc(treasureNotLocSet);
+			} else if (sum == 0) {
+				Set<String> treasureLocSet = ComputerPlayer.getInstance().getTreasureLoc();
+				treasureLocSet.add(terrain);
+				ComputerPlayer.getInstance().setTreasureLoc(treasureLocSet);
 			}
 		}
+
 	}
 
 	public static void processAnswerMessage(List<String> messageDetailsList) {
