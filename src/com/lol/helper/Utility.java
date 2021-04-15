@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.lol.computer.player.AnswerDeductionLogic;
-import com.lol.computer.player.ComputerPlayerDeductionLogic;
 import com.lol.constant.Constants;
 import com.lol.player.GameInitialization;
 import com.lol.player.GameProcessing;
@@ -96,11 +95,11 @@ public class Utility {
 			gameIntialization.getLeftOverTokens(messageNumber, messageDetailsList);
 		else if (Constants.MESSAAGE_10.equals(messageNumber))
 			gameIntialization.getBonusPlayerInformation(messageNumber, messageDetailsList);
-		else if (Constants.MESSAAGE_04.equals(messageNumber))
+		else if (Constants.MESSAAGE_04.equals(messageNumber) || Constants.MESSAAGE_13.equals(messageNumber))
 			gameProcessing.playersTurn(messageNumber, messageDetailsList);
 		else if (Constants.MESSAAGE_05.equals(messageNumber))
 			gameProcessing.getQuestionInformation(messageNumber, messageDetailsList);
-		else if (Constants.MESSAAGE_06.equals(messageNumber))
+		else if (Constants.MESSAAGE_06.equals(messageNumber) || Constants.MESSAAGE_15.equals(messageNumber))
 			AnswerDeductionLogic.getAnswerInformation(messageNumber, messageDetailsList);
 		else if (Constants.MESSAAGE_07.equals(messageNumber))
 			gameProcessing.getTreasureGuessInformation(messageNumber, messageDetailsList);
@@ -111,8 +110,8 @@ public class Utility {
 		}
 		else if (Constants.MESSAAGE_12.equals(messageNumber))
 			gameProcessing.getReRollInformation(messageNumber, messageDetailsList);
-		
-		
+		else if (Constants.MESSAAGE_14.equals(messageNumber))
+			System.out.println(messageDetailsList.get(0) +" Player is asking screat question to "+ messageDetailsList.get(1));
 		else if (Constants.MESSAAGE_09.equals(messageNumber)) {
 			boolean flag = gameProcessing.getDisqualifiedPlayerInformationOrInCorrectGuess(messageNumber,
 					messageDetailsList);
