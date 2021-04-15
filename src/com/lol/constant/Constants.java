@@ -13,6 +13,9 @@ public class Constants {
 	public static final String MESSAAGE_09 = "09";
 	public static final String MESSAAGE_10 = "10";
 	public static final String MESSAAGE_12 = "12";
+	public static final String MESSAAGE_13 = "13";
+	public static final String MESSAAGE_14 = "14";
+	public static final String MESSAAGE_15 = "15";
 	public static final String ERROR_MESSAAGE = "99";
 
 	public static final String MOUNTAINS = "Mountain";
