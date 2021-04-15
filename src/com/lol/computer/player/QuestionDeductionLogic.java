@@ -1,9 +1,14 @@
 package com.lol.computer.player;
 
+import static java.util.Map.Entry.comparingByValue;
+import static java.util.stream.Collectors.toMap;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.SortedMap;
@@ -58,16 +63,13 @@ public class QuestionDeductionLogic {
 
 	public static void createQuestion(List<String> messageDetailsList) {
 
-		if (ComputerPlayer.getInstance().getNotTreasureLoc().size() >= 20 && !SetPistol
-				&& !(ComputerPlayer.getInstance().getNotTreasureLoc().size() == 24)) {
-
+		if (ComputerPlayer.getInstance().getNotTreasureLoc().size() >= 20 && !SetPistol) {
 			pistol();
 			SetPistol = true;
 			return;
-
 		}
 
-		SortedMap<Integer, String> messageMap = new TreeMap<Integer, String>();
+		SortedMap<String, Integer> messageMap = new TreeMap<>();
 
 		String dieFaceOne = messageDetailsList.get(0);
 		String dieFaceTwo = messageDetailsList.get(1);
@@ -80,10 +82,15 @@ public class QuestionDeductionLogic {
 		questionProxy(dieFaceThree, dieFaceTwo, messageMap);
 		questionProxy(dieFaceThree, dieFaceOne, messageMap);
 
-		if (!messageMap.isEmpty()) {
-			for (Entry<Integer, String> en : messageMap.entrySet()) {
-				if (en.getKey() != 0) {
-					String message = en.getValue();
+		Map<String, Integer> sortedMapByValue = messageMap.entrySet().stream().sorted(comparingByValue())
+				.collect(toMap(e -> e.getKey(), e -> e.getValue(), (e1, e2) -> e2, LinkedHashMap::new));
+		System.out.println("sortedMapByValue  :: " + sortedMapByValue);
+
+		if (!sortedMapByValue.isEmpty()) {
+			for (Entry<String, Integer> en : sortedMapByValue.entrySet()) {
+				if (en.getValue() != 0) {
+					String message = en.getKey();
+
 					if (message != null && !message.isEmpty() && Barrel == false) {
 						System.out.println("Selected  Die Face  One :" + message.substring(3, 6));
 						System.out.println("Selected  Die Face  Two :" + message.substring(7, 10));
@@ -98,28 +105,21 @@ public class QuestionDeductionLogic {
 						Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), message);
 						Utility.parseMessage(message);
 						break;
-					} else if (message != null && !message.isEmpty() && Barrel == true) {
+					} else if (en.getValue() > 3 && ComputerPlayer.getInstance().getBarrelFlagStatus() == false) {
 
-						// this is temporary the placement of this code can very.
-						// roll all three die
-						System.out.println("Barrel roll");
-						String rerollmessage = "12:2,0,2";
 						Barrel = true;
-						Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), rerollmessage);
-						Utility.parseMessage(rerollmessage);
+						String RerollMessage = RerollDieReq(2, message.substring(3, 6), message.substring(7, 10),
+								messageDetailsList);
+						Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), RerollMessage);
+						Utility.parseMessage(RerollMessage);
+						ComputerPlayer.getInstance().setBarrelFlag();
+						break;
 					}
+
 				}
 			}
 		} else {
-			if (Barrel) {
-				System.out.println("Barrel roll");
-				String rerollmessage = "12:2,0,2";
-				Barrel = false;
-				Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), rerollmessage);
-				Utility.parseMessage(rerollmessage);
-			} else {
-				createQuestionRandomly(messageDetailsList);
-			}
+			createQuestionRandomly(messageDetailsList);
 		}
 	}
 
@@ -133,7 +133,7 @@ public class QuestionDeductionLogic {
 	 * @return
 	 */
 	public static HashMap<String, HashMap<String, Integer>> generateQuestionMap(String dieFaceOne, String dieFaceTwo,
-			String terrainType, SortedMap<Integer, String> messageMap, String msgType) {
+			String terrainType, SortedMap<String, Integer> messageMap, String msgType) {
 
 		System.out.println("messageMap####:" + messageMap);
 		Node current = ComputerPlayer.getInstance().getHead();
@@ -189,8 +189,8 @@ public class QuestionDeductionLogic {
 					if (msgType.equals("Q")) {
 						message = message.concat(",Q"); // default message type
 					}
-
-					messageMap.put(terrain.getValue(), message);
+					if(!dieFaceOne.substring(2).equals(dieFaceTwo.substring(2)))
+					messageMap.put(message, terrain.getValue());
 					// System.out.println("Shovel set : #####"+message);
 				}
 			});
@@ -206,7 +206,7 @@ public class QuestionDeductionLogic {
 	 * @param dieFaceTwo
 	 * @param messageMap
 	 */
-	public static void questionProxy(String dieFaceOne, String dieFaceTwo, SortedMap<Integer, String> messageMap) {
+	public static void questionProxy(String dieFaceOne, String dieFaceTwo, SortedMap<String, Integer> messageMap) {
 
 		String directionOne = String.valueOf(dieFaceOne.charAt(0)) + String.valueOf(dieFaceOne.charAt(1));
 		String directionTwo = String.valueOf(dieFaceTwo.charAt(0)) + String.valueOf(dieFaceTwo.charAt(1));
@@ -273,12 +273,6 @@ public class QuestionDeductionLogic {
 		}
 	}
 
-	/**
-	 * This method is to build the question form human user input 05:NNF,NEF,A,P3
-	 * 
-	 * @param messageDetailsList
-	 */
-
 	private static void createQuestionRandomly(List<String> messageDetailsList) {
 		System.out.println("Select Two Die Faces...... ");
 		StringBuilder message = new StringBuilder(); // NN W,WW W,WW E
@@ -291,7 +285,7 @@ public class QuestionDeductionLogic {
 			message.append(dieFace1).append(Constants.COMMA);
 		} else {
 			System.out.println("\n ====== Invalid DIE Face! Create question again ====== \n");
-			createQuestion(messageDetailsList);
+			createQuestionRandomly(messageDetailsList);
 			return;
 		}
 
@@ -304,7 +298,7 @@ public class QuestionDeductionLogic {
 			message.append(dieFace2).append(Constants.COMMA);
 		} else {
 			System.out.println(" ====== Invalid DIE Face! Create question again ====== \n");
-			createQuestion(messageDetailsList);
+			createQuestionRandomly(messageDetailsList);
 			return;
 		}
 
@@ -327,7 +321,7 @@ public class QuestionDeductionLogic {
 				message.append(terrianToken).append(Constants.COMMA);
 			else {
 				System.out.println(" ====== Invalid Terrian Token! Ask Question Again!! ====== \n");
-				createQuestion(messageDetailsList);
+				createQuestionRandomly(messageDetailsList);
 				return;
 			}
 		} else if (Constants.WILD_CHAR.equals(dieFace1Terrian) || Constants.WILD_CHAR.equals(dieFace2Terrian)) {
@@ -341,7 +335,7 @@ public class QuestionDeductionLogic {
 					message.append(terrianToken).append(Constants.COMMA);
 				else {
 					System.out.println(" ====== Invalid Terrian Token! Ask Question Again!! ====== \n");
-					createQuestion(messageDetailsList);
+					createQuestionRandomly(messageDetailsList);
 					return;
 				}
 			} else if (Constants.BEACH_CHAR.equals(dieFace1Terrian) || Constants.BEACH_CHAR.equals(dieFace2Terrian)) {
@@ -353,7 +347,7 @@ public class QuestionDeductionLogic {
 					message.append(terrianToken).append(Constants.COMMA);
 				else {
 					System.out.println(" ====== Invalid Terrian Token! Ask Question Again!! ====== \n");
-					createQuestion(messageDetailsList);
+					createQuestionRandomly(messageDetailsList);
 					return;
 				}
 
@@ -367,7 +361,7 @@ public class QuestionDeductionLogic {
 					message.append(terrianToken).append(Constants.COMMA);
 				else {
 					System.out.println(" ====== Invalid Terrian Token! Ask Question Again!! ====== \n");
-					createQuestion(messageDetailsList);
+					createQuestionRandomly(messageDetailsList);
 					return;
 				}
 			}
@@ -386,7 +380,7 @@ public class QuestionDeductionLogic {
 			message.append(playerAnswering);
 		} else {
 			System.out.println(" ====== Invalid Player! Create question again ====== \n");
-			createQuestion(messageDetailsList);
+			createQuestionRandomly(messageDetailsList);
 			return;
 		}
 		message.append(",Q");
@@ -394,4 +388,9 @@ public class QuestionDeductionLogic {
 		Utility.parseMessage(message.toString());
 	}
 
+	public static String RerollDieReq(int numberofDies, String die1, String die2, List<String> messageDetailsList) {
+		return Constants.MESSAAGE_12 + numberofDies + "," + messageDetailsList.indexOf(die1) + ","
+				+ messageDetailsList.indexOf(die2);
+
+	}
 }
