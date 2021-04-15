@@ -2,6 +2,7 @@ package com.lol.computer.player;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -12,49 +13,124 @@ import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
 import com.lol.helper.Utility;
 import com.lol.validation.PlayerInfoValidation;
+import com.lol.player.GameProcessing;
 
 public class QuestionDeductionLogic {
-
+	
+	
+	private static Boolean SetShovel=true;
+	private static Boolean SetPistol=false;
+	private static Boolean Barrel=false;
+	
 	/**
 	 * This method is used to introduce the question deduction logic in computer
 	 * player
 	 * 
 	 * @param messageDetailsList
 	 */
+	
+	public static void pistol() {
+		System.out.print(ComputerPlayer.getInstance().getPlayerObj().keySet());
+		HashSet<String> defaultMap =new HashSet<String>(ComputerPlayer.getInstance().getAllPlayerTrrianMap().keySet());
+		HashSet<String> nonTreasureLocation = new HashSet<String>(ComputerPlayer.getInstance().getNotTreasureLoc());
+		HashSet<String> players = new HashSet<String>(ComputerPlayer.getInstance().getPlayerObj().keySet());
+		defaultMap.removeAll(nonTreasureLocation);
+		int n = new Random().nextInt(defaultMap.size());
+		System.out.println("Random: "+n);
+		String token=defaultMap.stream().skip(n).findFirst().orElse(null);
+		String[] directions= {"NN","NW","WW","SW","SS","SE","EE","NE"};
+		int tokenNumber=Integer.parseInt(token.substring(0,1))-1;
+		String tokenTerrain=token.substring(1,2);
+		System.out.println("Inside pistol "+token.substring(0,1));
+		String firstToken=directions[tokenNumber];
+		String secondToken="";
+		if(tokenNumber+1>7){
+			secondToken="NN";
+		}else {
+			secondToken=directions[tokenNumber+1];
+		}
+		String dieFaceOne=firstToken+tokenTerrain;
+		String dieFaceTwo=secondToken+tokenTerrain;
+		String player=players.stream().skip(new Random().nextInt(players.size())).findFirst().orElse(null);
+		String message = "05:" + dieFaceOne + "," + dieFaceTwo + "," + tokenTerrain + "," + player + ",P";
+		Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), message);
+		Utility.parseMessage(message);
+	}
+	
 	public static void createQuestion(List<String> messageDetailsList) {
 
+		System.out.println("Not treasurer count "+ComputerPlayer.getInstance().getNotTreasureLoc().size());
+
+		if(ComputerPlayer.getInstance().getNotTreasureLoc().size()>20 && !SetPistol) {
+			System.out.println("pistol");
+			pistol();
+			SetPistol=true;
+			return;
+			
+		}
+
 		SortedMap<Integer, String> messageMap = new TreeMap<Integer, String>();
+		
 
 		String dieFaceOne = messageDetailsList.get(0);
 		String dieFaceTwo = messageDetailsList.get(1);
 		String dieFaceThree = messageDetailsList.get(2);
 
+		
 		questionProxy(dieFaceOne, dieFaceTwo, messageMap);
 		questionProxy(dieFaceOne, dieFaceThree, messageMap);
 		questionProxy(dieFaceTwo, dieFaceOne, messageMap);
 		questionProxy(dieFaceTwo, dieFaceThree, messageMap);
 		questionProxy(dieFaceThree, dieFaceTwo, messageMap);
 		questionProxy(dieFaceThree, dieFaceOne, messageMap);
-
+		
+		
+		
 		if (!messageMap.isEmpty()) {
 			for (Entry<Integer, String> en : messageMap.entrySet()) {
 				if (en.getKey() != 0) {
 					String message = en.getValue();
-					if (message != null && !message.isEmpty()) {
+					if (message != null && !message.isEmpty() && Barrel==false) {
 						System.out.println("Selected  Die Face  One :" + message.substring(3, 6));
 						System.out.println("Selected  Die Face  Two :" + message.substring(7, 10));
 						System.out.println("Selected  Area  Terrain  :" + message.substring(11, 12));
 						System.out.println("Selected  Player :" + message.substring(13, 15));
+						
+						System.out.println("Message Type : "+message.substring(16));
+						if(message.substring(16).equals("S")) {
+							SetShovel=false;
+							ComputerPlayer.getInstance().setShovelFlag();
+						}
 						Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), message);
 						Utility.parseMessage(message);
 						break;
 					}
+					else if(message != null && !message.isEmpty() && Barrel==true) {
+						
+						//this is temporary the placement of this code can very.
+						//roll all three die
+						System.out.println("Barrel roll");
+						String rerollmessage = "12:2,0,2";
+						Barrel=true;
+						Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), rerollmessage);
+						Utility.parseMessage(rerollmessage);
+					}
 				}
 			}
 		} else {
-			createQuestionRandomly(messageDetailsList);
+			if(Barrel) {
+				System.out.println("Barrel roll");
+				String rerollmessage = "12:2,0,2";
+				Barrel=false;
+				Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), rerollmessage);
+				Utility.parseMessage(rerollmessage);
+			}else {				
+				createQuestionRandomly(messageDetailsList);
+			}
 		}
 	}
+	
+	
 
 	/**
 	 * 
@@ -62,10 +138,13 @@ public class QuestionDeductionLogic {
 	 * @param dieFaceTwo
 	 * @param terrainType
 	 * @param messageMap
+	 * @param msgType
 	 * @return
 	 */
 	public static HashMap<String, HashMap<String, Integer>> generateQuestionMap(String dieFaceOne, String dieFaceTwo,
-			String terrainType, SortedMap<Integer, String> messageMap) {
+			String terrainType, SortedMap<Integer, String> messageMap,String msgType) {
+		
+		System.out.println("messageMap####:" + messageMap);
 		Node current = ComputerPlayer.getInstance().getHead();
 		HashMap<String, HashMap<String, Integer>> terrainCountMap = new HashMap<>();
 		do {
@@ -96,7 +175,7 @@ public class QuestionDeductionLogic {
 		} while (current != ComputerPlayer.getInstance().getTail());
 
 		HashSet<String> terrainTypes = new HashSet<String>();
-		if (!Constants.ALL_CHAR.equals(terrainType)) {
+		if (Constants.ALL_CHAR.equals(terrainType)) {
 			terrainTypes.add("M");
 			terrainTypes.add("F");
 			terrainTypes.add("B");
@@ -110,12 +189,25 @@ public class QuestionDeductionLogic {
 				if (terrain.getValue() <= terrainCount && terrainTypes.contains(terrain.getKey())) {
 
 					String message = "05:" + dieFaceOne + "," + dieFaceTwo + "," + terrainType + "," + player.getKey();
-
+					
+					
+					
+					if(msgType.equals("S")) {
+						message=message.concat(",S");
+						ComputerPlayer.getInstance().setShovelFlag();  		//shovel used marked
+					}
+					
+					if(msgType.equals("Q")) {
+						message=message.concat(",Q");						//default message type
+					}
+					
+					
 					messageMap.put(terrain.getValue(), message);
+					//System.out.println("Shovel set : #####"+message);
 				}
 			});
 		});
-
+		System.out.println(messageMap);
 		return terrainCountMap;
 
 	}
@@ -135,17 +227,60 @@ public class QuestionDeductionLogic {
 
 		ComputerPlayer.getInstance().setHead(ComputerPlayer.getInstance().createNode(directionOne));
 		ComputerPlayer.getInstance().setTail(ComputerPlayer.getInstance().createNode(directionTwo));
+		
+		HashSet<String> terrains = new HashSet<String>();
+		terrains.add("M");
+		terrains.add("B");
+		terrains.add("F");
 
 		if (headTerrian.equals(tailTerrian) && !Constants.WILD_CHAR.equals(headTerrian)) {
-			generateQuestionMap(dieFaceOne, dieFaceTwo, tailTerrian, messageMap);
+			generateQuestionMap(dieFaceOne, dieFaceTwo, tailTerrian, messageMap,"Q");
+			if(SetShovel && ComputerPlayer.getInstance().getRoundCount()>10) {
+				terrains.remove(dieFaceOne.substring(2,3));
+				dieFaceOne=dieFaceOne.substring(0,2)+terrains.stream().skip(new Random().nextInt(terrains.size())).findFirst().orElse(null);
+				generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap,"S");
+			}
+			
 		} else if (!headTerrian.equals(tailTerrian)
 				&& !(Constants.WILD_CHAR.equals(headTerrian) || Constants.WILD_CHAR.equals(tailTerrian))) {
-			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap);
+			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap,"Q");
+			if(SetShovel && ComputerPlayer.getInstance().getRoundCount()>10) {
+				String temp = dieFaceTwo.substring(2,3);
+				terrains.remove(temp);
+				String dieFaceTwo2 = dieFaceTwo.subSequence(0, 2)+headTerrian;
+				generateQuestionMap(dieFaceOne, dieFaceTwo2, headTerrian, messageMap,"S");
+				terrains.add(temp);
+				temp=dieFaceOne.substring(2,3);
+				terrains.remove(temp);
+				String dieFaceOne1 = dieFaceOne.substring(0,2)+tailTerrian;
+				generateQuestionMap(dieFaceOne1, dieFaceTwo, tailTerrian, messageMap,"S");
+				
+			}
+			
 		} else if (!headTerrian.equals(tailTerrian)
 				&& (Constants.WILD_CHAR.equals(headTerrian) || Constants.WILD_CHAR.equals(tailTerrian))) {
 			String terrainType = !Constants.WILD_CHAR.equals(headTerrian) ? headTerrian : tailTerrian;
-			generateQuestionMap(dieFaceOne, dieFaceTwo, terrainType, messageMap);
-			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap);
+			generateQuestionMap(dieFaceOne, dieFaceTwo, terrainType, messageMap,"Q");
+			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap,"Q");
+			if(SetShovel && ComputerPlayer.getInstance().getRoundCount()>10) {
+				terrains.remove(terrainType);
+				Iterator terrainIterator = terrains.iterator();
+				while (terrainIterator.hasNext()) {
+					String dieFaceOne1 = dieFaceOne;
+					String dieFaceTwo2 = dieFaceTwo;
+					String ty = (String) terrainIterator.next();
+					if(!headTerrian.equals(Constants.WILD_CHAR)) {
+						dieFaceOne1=dieFaceOne1.substring(0,2)+ty;
+					}else {
+						dieFaceTwo2= dieFaceTwo2.substring(0,2)+ty;
+					}
+					generateQuestionMap(dieFaceOne1, dieFaceTwo2, ty, messageMap,"Q");
+		        }
+			}
+		} else {
+			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.MOUNTAINS_CHAR, messageMap,"Q");
+			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.BEACH_CHAR, messageMap,"Q");
+			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.FOREST_CHAR, messageMap,"Q");
 		}
 	}
 
@@ -266,7 +401,7 @@ public class QuestionDeductionLogic {
 			createQuestion(messageDetailsList);
 			return;
 		}
-
+		message.append(",Q");
 		Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), message.toString());
 		Utility.parseMessage(message.toString());
 	}

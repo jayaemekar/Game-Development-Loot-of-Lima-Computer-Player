@@ -14,7 +14,7 @@ import com.lol.validation.PlayerInfoValidation;
 public class GameProcessing {
 
 	private static Integer roundNumber = 0;
-	private static Integer roundCount = 0;
+	public static Integer roundCount = 0;
 	private static boolean treasureGuessSent = false;
 
 	/**
@@ -28,7 +28,8 @@ public class GameProcessing {
 		String playerName = messageDetailsList.get(0);
 		messageDetailsList.remove(0);
 		if (roundNumber == 0 || roundNumber % PlayerInformation.getInstance().getNumberOfPlayers() == 0) {
-			roundCount++;
+			// roundCount++;
+			ComputerPlayer.getInstance().setRoundCount(roundCount++);
 			System.out.println(
 					"\n====== ====== ====== ====== ROUND-" + roundCount + " ====== ====== ====== ====== ======\n");
 		}
@@ -68,10 +69,8 @@ public class GameProcessing {
 
 	}
 
-
 	/**
-	 * This method is to send the treasure Guess message to the server
-	 * 07:P1,3F,6M
+	 * This method is to send the treasure Guess message to the server 07:P1,3F,6M
 	 * 
 	 * @param messageNumber
 	 * @param messageDetailsList
@@ -160,6 +159,14 @@ public class GameProcessing {
 			treasureGuessSent = false;
 			return treasureGuessSent;
 		}
+
+	}
+
+	public void getReRollInformation(String messageNumber, List<String> messageDetailsList) {
+
+		System.out.println("\nMessage [" + messageNumber + "] BARREL- Player "
+				+ PlayerInformation.getInstance().getPlayerName() + " has requested to reroll Die-"
+				+ messageDetailsList.get(1) + " and Die-" + messageDetailsList.get(2));
 
 	}
 
