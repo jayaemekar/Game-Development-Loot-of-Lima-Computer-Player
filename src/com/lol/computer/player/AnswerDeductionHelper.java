@@ -368,7 +368,7 @@ public class AnswerDeductionHelper {
 				});
 			});
 		}
-		if (location.equals(Constants.SOUTH_WEST)) {
+		if (location.equals(Constants.SOUTH_WEST_CHAR)) {
 			ComputerPlayer.getInstance().getSouthWestSet().entrySet().stream().forEach(value1 -> {
 				value1.getValue().forEach(value -> {
 
