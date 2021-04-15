@@ -33,6 +33,7 @@ public class QuestionDeductionLogic {
 		HashSet<String> nonTreasureLocation = new HashSet<String>(ComputerPlayer.getInstance().getNotTreasureLoc());
 		HashSet<String> players = new HashSet<String>(ComputerPlayer.getInstance().getPlayerObj().keySet());
 		defaultMap.removeAll(nonTreasureLocation);
+
 		int n = new Random().nextInt(defaultMap.size());
 
 		String token = defaultMap.stream().skip(n).findFirst().orElse(null);
@@ -57,8 +58,9 @@ public class QuestionDeductionLogic {
 
 	public static void createQuestion(List<String> messageDetailsList) {
 
-		if (ComputerPlayer.getInstance().getNotTreasureLoc().size() >= 20 && !SetPistol) {
-			System.out.println("pistol");
+		if (ComputerPlayer.getInstance().getNotTreasureLoc().size() >= 20 && !SetPistol
+				&& !(ComputerPlayer.getInstance().getNotTreasureLoc().size() == 24)) {
+
 			pistol();
 			SetPistol = true;
 			return;
@@ -193,7 +195,7 @@ public class QuestionDeductionLogic {
 				}
 			});
 		});
-		
+
 		return terrainCountMap;
 
 	}
