@@ -25,7 +25,7 @@ public class ComputerPlayer {
 	private Map<String, Boolean> playerTokenArray;
 	private Set<String> notTreasureLoc = new HashSet<>();;
 	private Set<String> treasureLoc = new HashSet<>();;
-	private Map<String, Map<String, Integer>> allPlayerTrrianMap;
+	private Map<String, Map<String, Integer>> allPlayerTrrianMap = new HashMap<>();
 	private Map<String, Map<String, Integer>> deducedPlayerTokenMap;
 	private Set<String> deducedForestLoc = new HashSet<>();
 	private Set<String> deducedBeachLoc = new HashSet<>();
@@ -34,9 +34,10 @@ public class ComputerPlayer {
 	private Set<String> defaultMap = new HashSet<>();
 	private Node currentNode;
 	private Map<String, Integer> playerObj;
-	private static ComputerPlayer computerPlayer = null;
+	private static volatile ComputerPlayer computerPlayer = null;
 	private Map<String, List<List<String>>> allTentativeToken;
 	private Map<String, Map<String, List<List<String>>>> TentativeToken;
+	
 	private Map<Integer, Set<String>> NorthSet = new HashMap<>();
 	private Map<Integer, Set<String>> NorthEastSet = new HashMap<>();
 	private Map<Integer, Set<String>> EastSet = new HashMap<>();
@@ -81,6 +82,21 @@ public class ComputerPlayer {
 	
 	
 
+	private ComputerPlayer() {
+		// private constructor
+	}
+	
+	public static ComputerPlayer getInstance() {
+        if (computerPlayer == null) {
+            synchronized (ComputerPlayer .class) {
+                if (computerPlayer == null) {
+                	computerPlayer = new ComputerPlayer();
+                }
+            }
+        }
+        return computerPlayer;
+    }
+	
 	public Map<Integer, Set<String>> getNorthSet() {
 		return NorthSet;
 	}
@@ -145,15 +161,6 @@ public class ComputerPlayer {
 		NorthWestSet = northWestSet;
 	}
 
-	private ComputerPlayer() {
-		// private constructor
-	}
-
-	public static ComputerPlayer getInstance() {
-		if (computerPlayer == null)
-			computerPlayer = new ComputerPlayer();
-		return computerPlayer;
-	}
 
 	public Map<String, Integer> getPlayerObj() {
 		return playerObj;
@@ -314,7 +321,7 @@ public class ComputerPlayer {
 		Node current = head;
 		Node directionNode = null;
 		do {
-			if (current.direction.equals(direction)) {
+			if (current.direction != null && current.direction.equals(direction)) {
 				directionNode = current;
 				break;
 			}

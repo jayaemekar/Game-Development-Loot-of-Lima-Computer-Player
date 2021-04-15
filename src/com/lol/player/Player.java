@@ -24,15 +24,15 @@ public class Player {
 		System.out.println("________________ Game Ready !! ________________________________________ ");
 		System.out.println("\nEnter Your Player Name (in the format P1,P2,P3 etc.) : ");
 
-		String playerNumber = args[1];
-
-		String fileWritePath = "/tmp/" + teamName + "from" + playerNumber; // Write File path
-		String fileReadPath = "/tmp/" + teamName + "to" + playerNumber; // Read File path
+		String playerNumber = args[1]; 
+		
+		String fileWritePath = "/tmp/" + teamName +"from"+ playerNumber; // Write File path
+		String fileReadPath  = "/tmp/" + teamName +"to"  + playerNumber; // Read File path
 
 		PlayerInformation.getInstance().setFileReadPath(fileReadPath);
 		PlayerInformation.getInstance().setFileWritePath(fileWritePath);
 		PlayerInformation.getInstance().setGameOver(false); // Game over flag to set
 		Utility.readFile(PlayerInformation.getInstance().getFileReadPath(),
-				PlayerInformation.getInstance().isGameOver()); //
+		PlayerInformation.getInstance().isGameOver()); //
 	}
 }
