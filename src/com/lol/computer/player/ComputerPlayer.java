@@ -71,7 +71,7 @@ public class ComputerPlayer {
 	}
 	
 	public void setBarrelFlag() {
-		 PistolFlag=true;
+		BarrelFlag=true;
 	}
 	
 	

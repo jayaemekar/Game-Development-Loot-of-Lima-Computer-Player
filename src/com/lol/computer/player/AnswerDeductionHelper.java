@@ -17,8 +17,10 @@ public class AnswerDeductionHelper {
 			Map<Integer, Set<String>> areaTokenSet, String playerName) {
 
 		map.entrySet().stream().forEach(terrain -> {
-
+			
+		//	System.out.println("terrain @@@ "+terrain);
 			terrain.getValue().entrySet().stream().forEach(playerMap -> {
+			//	System.out.println("playerMap @@@ "+playerMap);
 				if (playerMap.getKey().equals(playerName)) {
 					if (playerMap.getValue() == Constants.NOT_WITH_PLAYER_TERRAIN)
 						areaTokenSet.get(Constants.NOT_WITH_PLAYER_TERRAIN).add(terrain.getKey());
@@ -31,7 +33,7 @@ public class AnswerDeductionHelper {
 				}
 			});
 		});
-
+		//System.out.println("areaTokenSet @@@ "+areaTokenSet);
 		return areaTokenSet;
 	}
 

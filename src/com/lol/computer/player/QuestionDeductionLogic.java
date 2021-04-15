@@ -36,7 +36,7 @@ public class QuestionDeductionLogic {
 		String dieFaceTwo = messageDetailsList.get(1);
 		String dieFaceThree = messageDetailsList.get(2);
 
-		
+		System.out.println("messageDetailsList****** : "+messageDetailsList);
 		questionProxy(dieFaceOne, dieFaceTwo, messageMap);
 		
 		questionProxy(dieFaceOne, dieFaceThree, messageMap);
@@ -49,9 +49,22 @@ public class QuestionDeductionLogic {
 		
 		if (!messageMap.isEmpty()) {
 			for (Entry<Integer, String> en : messageMap.entrySet()) {
+				//System.out.println("en****** : "+en.getKey());
 				if (en.getKey() != 0) {
 					String message = en.getValue();
-					if (message != null && !message.isEmpty() && Barrel==false) {
+					
+					if(en.getKey()>3 && ComputerPlayer.getInstance().getBarrelFlagStatus()==false) {
+						//String Enmessage = en.getValue();
+						Barrel=true;
+						System.out.println("USING BARREL : "+en);
+						String RerollMessage = RerollDieReq(2,message.substring(3, 6),message.substring(7, 10),messageDetailsList);
+						Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), RerollMessage);
+						Utility.parseMessage(RerollMessage);
+						ComputerPlayer.getInstance().setBarrelFlag();
+						break;
+					}
+					
+					else if (message != null && !message.isEmpty() && Barrel==false) {
 						System.out.println("Selected  Die Face  One :" + message.substring(3, 6));
 						System.out.println("Selected  Die Face  Two :" + message.substring(7, 10));
 						System.out.println("Selected  Area  Terrain  :" + message.substring(11, 12));
@@ -63,13 +76,13 @@ public class QuestionDeductionLogic {
 						Utility.parseMessage(message);
 						break;
 					}
-					else if(message != null && !message.isEmpty() && Barrel==true) {
+				//	else if(message != null && !message.isEmpty() && Barrel==true) {
 						
 						//this is temporary the placement of this code can very.
-						String rerollmessage = "12:2,0,2";
-						Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), rerollmessage);
-						Utility.parseMessage(rerollmessage);
-					}
+				//		String rerollmessage = "12:2,0,2";
+				//		Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), rerollmessage);
+				//		Utility.parseMessage(rerollmessage);
+				//	}
 				}
 			}
 		} else {
@@ -77,6 +90,10 @@ public class QuestionDeductionLogic {
 		}
 	}
 
+	
+	
+	//12:1,0,1
+	
 	/**
 	 * 
 	 * @param dieFaceOne
@@ -88,7 +105,7 @@ public class QuestionDeductionLogic {
 	public static HashMap<String, HashMap<String, Integer>> generateQuestionMap(String dieFaceOne, String dieFaceTwo,
 			String terrainType, SortedMap<Integer, String> messageMap) {
 		
-		System.out.println("messageMap####:" + messageMap);
+		//System.out.println("messageMap####:" + messageMap);
 		Node current = ComputerPlayer.getInstance().getHead();
 		HashMap<String, HashMap<String, Integer>> terrainCountMap = new HashMap<>();
 		do {
@@ -141,12 +158,12 @@ public class QuestionDeductionLogic {
 						ComputerPlayer.getInstance().setShovelFlag();  		//shovel used marked
 					}
 					
-					if(SetPistol==true && ComputerPlayer.getInstance().getPistolFlagStatus()==false) {
+					else if(SetPistol==true && ComputerPlayer.getInstance().getPistolFlagStatus()==false) {
 						message=message.concat(",P");
 						ComputerPlayer.getInstance().setPistolFlag();		//pistol used marked
 					}
 					
-					if(SetShovel==false && SetPistol==false) {
+					else if(SetShovel==false && SetPistol==false) {
 						message=message.concat(",Q");						//default message type
 					}
 					
@@ -310,6 +327,12 @@ public class QuestionDeductionLogic {
 
 		Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), message.toString());
 		Utility.parseMessage(message.toString());
+	}
+	
+	public static String RerollDieReq(int numberofDies, String die1, String die2,List<String> messageDetailsList) {
+		String rollmessage = "12:" + numberofDies + "," + messageDetailsList.indexOf(die1) + "," + messageDetailsList.indexOf(die2);
+		
+		return rollmessage;
 	}
 
 }
