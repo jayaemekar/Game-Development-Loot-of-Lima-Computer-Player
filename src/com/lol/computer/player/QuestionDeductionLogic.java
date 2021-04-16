@@ -62,7 +62,8 @@ public class QuestionDeductionLogic {
 		String dieFaceOne = firstToken + tokenTerrain;
 		String dieFaceTwo = secondToken + tokenTerrain;
 		String player = players.stream().skip(new Random().nextInt(players.size())).findFirst().orElse(null);
-		String message = "05:" + dieFaceOne + "," + dieFaceTwo + "," + tokenTerrain + "," + player + ",P";
+		String message = Constants.MESSAAGE_05 + ":" + dieFaceOne + "," + dieFaceTwo + "," + tokenTerrain + "," + player
+				+ "," + Constants.P_CHAR;
 		Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), message);
 		Utility.parseMessage(message);
 	}
@@ -196,8 +197,8 @@ public class QuestionDeductionLogic {
 				Integer terrainCount = 24;
 				if (terrain.getValue() <= terrainCount && terrainTypes.contains(terrain.getKey())) {
 
-					String message = Constants.MESSAAGE_05 + dieFaceOne + "," + dieFaceTwo + "," + terrainType + ","
-							+ player.getKey();
+					String message = Constants.MESSAAGE_05 + ":" + dieFaceOne + "," + dieFaceTwo + "," + terrainType
+							+ "," + player.getKey();
 
 					if (msgType.equals(Constants.S_CHAR)) {
 						message = message.concat("," + Constants.S_CHAR);
@@ -300,7 +301,7 @@ public class QuestionDeductionLogic {
 	private static void createQuestionRandomly(List<String> messageDetailsList) {
 
 		StringBuilder message = new StringBuilder(); // NN W,WW W,WW E
-		message.append(Constants.MESSAAGE_05);
+		message.append(Constants.MESSAAGE_05).append(":");
 		String dieFace1 = messageDetailsList.get(new Random().nextInt(messageDetailsList.size()));
 		if (PlayerInfoValidation.getInstance().validateDiceFace(dieFace1) && messageDetailsList.contains(dieFace1)) {
 			message.append(dieFace1).append(Constants.COMMA);
@@ -395,6 +396,7 @@ public class QuestionDeductionLogic {
 
 	/**
 	 * This is used to create the Barrel message
+	 * 
 	 * @param numberofDies
 	 * @param die1
 	 * @param die2
@@ -402,7 +404,7 @@ public class QuestionDeductionLogic {
 	 * @return
 	 */
 	private static String RerollDieReq(int numberofDies, String die1, String die2, List<String> messageDetailsList) {
-		return Constants.MESSAAGE_12 + numberofDies + "," + messageDetailsList.indexOf(die1) + ","
+		return Constants.MESSAAGE_12 + ":" + numberofDies + "," + messageDetailsList.indexOf(die1) + ","
 				+ messageDetailsList.indexOf(die2);
 
 	}
