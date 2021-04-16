@@ -116,13 +116,15 @@ public class AnswerDeductionLogic {
 	 * @param Diretion1
 	 * @param Diretion2
 	 * @param playerName
-	 * @return
+	 * @return 
 	 */
 	protected static List<List<String>> updateStatus(Map<Integer, Set<String>> areaTokenSet, String areaToken,
 			int tokenCount, String Diretion1, String Diretion2, String playerName) {
 
 		List<List<String>> updatedList = new ArrayList<>();
 		int tmpTokenCount = 0;
+		int sumPlayerToken = ( 22/PlayerInformation.getInstance().getNumberOfPlayers() ); 
+		if (tokenCount != sumPlayerToken) {
 
 		if (tokenCount == Constants.NOT_WITH_PLAYER_TERRAIN && !areaTokenSet.get(-1).isEmpty())
 			updateZeroterrainTokenInformation(areaTokenSet.get(-1), playerName);
@@ -130,7 +132,7 @@ public class AnswerDeductionLogic {
 			tmpTokenCount = tokenCount - areaTokenSet.get(1).size();
 
 		if (tmpTokenCount > 0 && !(areaTokenSet.get(Constants.TENTATIVE_TERRAIN).isEmpty())) {
-			if (areaTokenSet.get(-1).size() == tmpTokenCount)
+			if ( areaTokenSet.get(-1).size() == tmpTokenCount )
 				AnswerDeductionHelper.updateTerrainTokenMap(areaTokenSet.get(Constants.TENTATIVE_TERRAIN), playerName);
 
 			if (areaTokenSet.get(Constants.TENTATIVE_TERRAIN).size() > tmpTokenCount) {
@@ -167,6 +169,7 @@ public class AnswerDeductionLogic {
 				}
 			}
 		}
+	}
 		return updatedList;
 	}
 
