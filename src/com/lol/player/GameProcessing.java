@@ -3,13 +3,12 @@ package com.lol.player;
 import java.util.List;
 import java.util.Set;
 
+import com.lol.computer.player.AnswerDeductionLogic;
 import com.lol.computer.player.ComputerPlayer;
-import com.lol.computer.player.ComputerPlayerDeductionLogic;
 import com.lol.computer.player.QuestionDeductionLogic;
 import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
 import com.lol.helper.Utility;
-import com.lol.validation.PlayerInfoValidation;
 
 public class GameProcessing {
 
@@ -28,25 +27,23 @@ public class GameProcessing {
 		String playerName = messageDetailsList.get(0);
 		messageDetailsList.remove(0);
 		if (roundNumber == 0 || roundNumber % PlayerInformation.getInstance().getNumberOfPlayers() == 0) {
-			// roundCount++;
 			ComputerPlayer.getInstance().setRoundCount(roundCount++);
-			System.out.println(
-					"\n====== ====== ====== ====== ROUND-" + roundCount + " ====== ====== ====== ====== ======\n");
+			System.out.println("============");
+			System.out.println("ROUND-" + roundCount);
+			System.out.println("============");
 		}
 		roundNumber++;
-
-		System.out.println("_______________________Player " + playerName + "'s turn____________________________");
+		System.out.println("______________________");
+		System.out.println("Player " + playerName + "'s turn");
+		System.out.println("______________________");
 		String istreasureLocFound = Constants.NO;
-		if (!treasureGuessSent) {
-			istreasureLocFound = ComputerPlayerDeductionLogic.checkIsTreasureLocFound();
-			System.out.println("\nGuess the Treasure Locations???(YES/NO)???  :: " + istreasureLocFound);
-		}
+		if (!treasureGuessSent)
+			istreasureLocFound = AnswerDeductionLogic.checkIsTreasureLocFound();
 
 		if (Constants.YES.equalsIgnoreCase(istreasureLocFound))
 			treasureGuessSent = treasureGuess();
 		else {
-			System.out.println(
-					"Message [" + messageNumber + "] Player " + playerName + " rolled the dices " + messageDetailsList);
+			System.out.println("Player " + playerName + " rolled the dices " + messageDetailsList);
 			if (PlayerInformation.getInstance().getPlayerName().equals(playerName) && !treasureGuessSent)
 				QuestionDeductionLogic.createQuestion(messageDetailsList);
 			else if (treasureGuessSent)
@@ -62,11 +59,9 @@ public class GameProcessing {
 	 * @param messageDetailsList
 	 */
 	public void getQuestionInformation(String messageNumber, List<String> messageDetailsList) {
-
 		System.out.println("\nMessage [" + messageNumber + "] Question asked to player " + messageDetailsList.get(3)
 				+ ", How many " + PlayerInformation.getInstance().getTerrianTokenInformation(messageDetailsList.get(2))
 				+ " terrains between " + messageDetailsList.get(0) + " and " + messageDetailsList.get(1));
-
 	}
 
 	/**
@@ -78,40 +73,22 @@ public class GameProcessing {
 	 */
 
 	public boolean treasureGuess() {
-		StringBuilder message = new StringBuilder("07:");
+
 		Set<String> treasureLoc = ComputerPlayer.getInstance().getTreasureLoc();
 		String[] treasureLocArr = treasureLoc.toArray(new String[treasureLoc.size()]);
-
-		message.append(PlayerInformation.getInstance().getPlayerName()).append(Constants.COMMA);
-		String guessOne = treasureLocArr[0];
-		System.out.println("First guess identified as :: " + guessOne);
-		if (PlayerInfoValidation.getInstance().validateTerrianLocation(guessOne)) {
-			message.append(guessOne).append(Constants.COMMA);
-		} else {
-			System.out.println("\n ====== Invalid terrian token create message again ====== \n");
-			treasureGuess();
-			return false;
-		}
-
-		String guessTwo = treasureLocArr[1];
-		System.out.println("Second guess identified as :: " + guessTwo);
-		if (PlayerInfoValidation.getInstance().validateTerrianLocation(guessTwo)) {
-			message.append(guessTwo);
-		} else {
-			System.out.println("\n ====== Invalid terrian token create message again ====== \n");
-			treasureGuess();
-			return false;
-		}
+		StringBuilder message = new StringBuilder(Constants.MESSAAGE_07).append(":");
+		message.append(PlayerInformation.getInstance().getPlayerName()).append(Constants.COMMA)
+				.append(treasureLocArr[0]).append(Constants.COMMA).append(treasureLocArr[1]);
 
 		Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), message.toString());
 		Utility.parseMessage(message.toString());
-		System.out.println("\n ====== ====== ====== ====== Your guess sent to server ====== ====== ====== ======\n");
+		System.out.println("____Your guess sent to server.!!______");
 		return true;
 	}
 
 	public void getTreasureGuessInformation(String messageNumber, List<String> messageDetailsList) {
-		System.out.println("\nMessage [" + messageNumber + "] Player " + messageDetailsList.get(0)
-				+ " says treasures are located at " + messageDetailsList.get(1) + " and " + messageDetailsList.get(2));
+		System.out.println(" Player " + messageDetailsList.get(0) + " says treasures are located at "
+				+ messageDetailsList.get(1) + " and " + messageDetailsList.get(2));
 	}
 
 	/**
@@ -122,17 +99,15 @@ public class GameProcessing {
 	 * @param messageDetailsList
 	 */
 	public void getWinnerPlayerGuessCorrect(String messageNumber, List<String> messageDetailsList) {
-		System.out.println("\nMessage [" + messageNumber + "] Player " + messageDetailsList.get(0)
-				+ " guessed the correct treasure locations\n");
-		if (messageDetailsList.get(0).equals(PlayerInformation.getInstance().getPlayerName())) {
-			System.out.println("\n\n====== ====== ====== ====== YOU ARE THE WINNER !!====== ====== ====== ======");
-		} else {
-
+		System.out.println(" Player " + messageDetailsList.get(0) + " guessed the correct treasure locations");
+		if (messageDetailsList.get(0).equals(PlayerInformation.getInstance().getPlayerName()))
+			System.out.println("__________YOU ARE THE WINNER !!__________");
+		else
 			System.out.println(
-					"\n======***====== PLAYER " + messageDetailsList.get(0) + " IS THE WINNER !! ======***======");
-		}
+					"____________PLAYER " + messageDetailsList.get(0) + " IS THE WINNER !! __________________");
+
 		messageDetailsList.remove(0);
-		System.out.println("\nThe treasure location are: " + messageDetailsList);
+		System.out.println("The treasure location are: " + messageDetailsList);
 		System.out.println("\n======***====== GAME OVER !!======***======\n");
 	}
 
@@ -162,11 +137,16 @@ public class GameProcessing {
 
 	}
 
+	/**
+	 * This method is used to print barrel message
+	 * 
+	 * @param messageNumber
+	 * @param messageDetailsList
+	 */
 	public void getReRollInformation(String messageNumber, List<String> messageDetailsList) {
-
-		System.out.println("\nMessage [" + messageNumber + "] BARREL- Player "
-				+ PlayerInformation.getInstance().getPlayerName() + " has requested to reroll Die-"
-				+ messageDetailsList.get(1) + " and Die-" + messageDetailsList.get(2));
+		System.out.println(
+				"BARREL- Player " + PlayerInformation.getInstance().getPlayerName() + " has requested to reroll Die-"
+						+ messageDetailsList.get(1) + " and Die-" + messageDetailsList.get(2));
 
 	}
 
