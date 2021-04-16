@@ -14,70 +14,52 @@ public class AnswerDeductionLogic {
 
 	static Boolean flag = false;
 
-	/**
-	 * This method is used to process the answer message with deduction logic
-	 * 
-	 * @param messageNumber
-	 * @param messageDetailsList
-	 */
 	public static void getAnswerInformation(String messageNumber, List<String> messageDetailsList) {
 		String locFound = checkIsTreasureLocFound();
-		System.out.println("Player " + messageDetailsList.get(4) + " has " + messageDetailsList.get(3) + " "
+		System.out.println("Message [" + messageNumber + "] Player " + messageDetailsList.get(4) + " has "
+				+ messageDetailsList.get(3) + " "
 				+ PlayerInformation.getInstance().getTerrianTokenInformation(messageDetailsList.get(2))
 				+ " terrain between "
 				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(0)) + " and "
-				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(1)));
+				+ PlayerInformation.getInstance().getDirectionInformation(messageDetailsList.get(1)) + "\n");
 		if (!PlayerInformation.getInstance().getPlayerName().equals(messageDetailsList.get(4))
 				&& !Constants.YES.equals(locFound)) {
 
 			processAnswerMessage(messageDetailsList);
 			AnswerDeductionHelper.checkAllToken();
 		}
-		System.out.println(
-				"Non Treasure Location identified till now " + ComputerPlayer.getInstance().getNotTreasureLoc());
-		System.out.println(
-				"Number of non Treasure location count ::  " + ComputerPlayer.getInstance().getNotTreasureLoc().size());
-		System.out.println("Treasure Location identified  ::  " + ComputerPlayer.getInstance().getTreasureLoc());
+		System.out.println(ComputerPlayer.getInstance().getNotTreasureLoc());
 	}
 
-	/**
-	 * This is internal method to process answer message
-	 * 
-	 * @param messageDetailsList
-	 */
-	private static void processAnswerMessage(List<String> messageDetailsList) {
+	public static void processAnswerMessage(List<String> messageDetailsList) {
 
 		String playerName = messageDetailsList.get(4);
-		String diretion1 = messageDetailsList.get(0).substring(0, 2);
-		String diretion2 = messageDetailsList.get(1).substring(0, 2);
+		String Diretion1 = messageDetailsList.get(0).substring(0, 2);
+		String Diretion2 = messageDetailsList.get(1).substring(0, 2);
 
-		Map<Integer, Set<String>> areaTokenSet = new HashMap<>();
-		areaTokenSet.put(Constants.NOT_WITH_PLAYER_TERRAIN, new HashSet<>());
-		areaTokenSet.put(Constants.CONFIRM_TERRAIN, new HashSet<>());
-		areaTokenSet.put(Constants.TENTATIVE_TERRAIN, new HashSet<>());
+		if (!Diretion1.equals(Diretion2)) {
+			Map<Integer, Set<String>> areaTokenSet = new HashMap<>();
+			areaTokenSet.put(Constants.NOT_WITH_PLAYER_TERRAIN, new HashSet<>());
+			areaTokenSet.put(Constants.CONFIRM_TERRAIN, new HashSet<>());
+			areaTokenSet.put(Constants.TENTATIVE_TERRAIN, new HashSet<>());
 
-		Node directionHead = ComputerPlayer.getInstance().createNode(diretion1);
-		Node dirtectionTail = ComputerPlayer.getInstance().createNode(diretion2);
+			Node directionHead = ComputerPlayer.getInstance().createNode(Diretion1);
+			Node dirtectionTail = ComputerPlayer.getInstance().createNode(Diretion2);
 
-		if (directionHead.direction.equals(dirtectionTail.direction))
-			AnswerDeductionHelper.getTerrainStatus(ComputerPlayer.getInstance().getAllPlayerTrrianMap(), areaTokenSet,
-					playerName);
-		else {
-			while (directionHead != dirtectionTail) {
-				AnswerDeductionHelper.getTerrainStatus(directionHead.terrainList, areaTokenSet, playerName);
-				directionHead = directionHead.next;
+			if (directionHead.direction.equals(dirtectionTail.direction))
+				AnswerDeductionHelper.getTerrainStatus(ComputerPlayer.getInstance().getAllPlayerTrrianMap(),
+						areaTokenSet, playerName);
+			else {
+				while (directionHead != dirtectionTail) {
+					AnswerDeductionHelper.getTerrainStatus(directionHead.terrainList, areaTokenSet, playerName);
+					directionHead = directionHead.next;
+				}
 			}
+			CheckTerrainStatus(areaTokenSet, messageDetailsList);
+			checkIsTreasureLocFound();
 		}
-		CheckTerrainStatus(areaTokenSet, messageDetailsList);
-		checkIsTreasureLocFound();
 	}
 
-	/**
-	 * This method is used to get tentative terrain status
-	 * 
-	 * @param areaTokenSet
-	 * @param messageDetailsList
-	 */
 	private static void CheckTerrainStatus(Map<Integer, Set<String>> areaTokenSet, List<String> messageDetailsList) {
 
 		String areaToken = messageDetailsList.get(2);
@@ -107,33 +89,22 @@ public class AnswerDeductionLogic {
 		}
 	}
 
-	/**
-	 * this method is used to update the status of terrain
-	 * 
-	 * @param areaTokenSet
-	 * @param areaToken
-	 * @param tokenCount
-	 * @param Diretion1
-	 * @param Diretion2
-	 * @param playerName
-	 * @return
-	 */
-	protected static List<List<String>> updateStatus(Map<Integer, Set<String>> areaTokenSet, String areaToken,
+	public static List<List<String>> updateStatus(Map<Integer, Set<String>> areaTokenSet, String areaToken,
 			int tokenCount, String Diretion1, String Diretion2, String playerName) {
 
 		List<List<String>> updatedList = new ArrayList<>();
 		int tmpTokenCount = 0;
 
-		if (tokenCount == Constants.NOT_WITH_PLAYER_TERRAIN && !areaTokenSet.get(-1).isEmpty())
+		if (tokenCount == 0 && !areaTokenSet.get(-1).isEmpty())
 			updateZeroterrainTokenInformation(areaTokenSet.get(-1), playerName);
-		else if (areaTokenSet.get(Constants.TENTATIVE_TERRAIN).size() > 0)
+		else if (areaTokenSet.get(-1).size() > 0)
 			tmpTokenCount = tokenCount - areaTokenSet.get(1).size();
 
-		if (tmpTokenCount > 0 && !(areaTokenSet.get(Constants.TENTATIVE_TERRAIN).isEmpty())) {
+		if (tmpTokenCount > 0 && !(areaTokenSet.get(-1).isEmpty())) {
 			if (areaTokenSet.get(-1).size() == tmpTokenCount)
-				AnswerDeductionHelper.updateTerrainTokenMap(areaTokenSet.get(Constants.TENTATIVE_TERRAIN), playerName);
+				AnswerDeductionHelper.updateTerrainTokenMap(areaTokenSet.get(-1), playerName);
 
-			if (areaTokenSet.get(Constants.TENTATIVE_TERRAIN).size() > tmpTokenCount) {
+			if (areaTokenSet.get(-1).size() > tmpTokenCount) {
 
 				List<String> value = new ArrayList<>();
 				value.add(Diretion1);
@@ -170,14 +141,7 @@ public class AnswerDeductionLogic {
 		return updatedList;
 	}
 
-	/**
-	 * This method is used to update particular area terrain set
-	 * 
-	 * @param areaToken
-	 * @param areaTokenSet
-	 * @return
-	 */
-	protected static Map<Integer, Set<String>> updateAreaTokenSet(String areaToken,
+	public static Map<Integer, Set<String>> updateAreaTokenSet(String areaToken,
 			Map<Integer, Set<String>> areaTokenSet) {
 
 		areaTokenSet.entrySet().stream().forEach(value -> {
@@ -186,11 +150,6 @@ public class AnswerDeductionLogic {
 		return areaTokenSet;
 	}
 
-	/**
-	 * This method is used to check treasure location found or not
-	 * 
-	 * @return
-	 */
 	public static String checkIsTreasureLocFound() {
 		for (String terrain : ComputerPlayer.getInstance().getAllPlayerTrrianMap().keySet()) {
 
@@ -223,12 +182,6 @@ public class AnswerDeductionLogic {
 
 	}
 
-	/**
-	 * This method is used to mark the tokens which are not with the player
-	 * 
-	 * @param terrainToken
-	 * @param playerName
-	 */
 	private static void updateZeroterrainTokenInformation(Set<String> terrainToken, String playerName) {
 		List<String> PlayerList = PlayerInformation.getInstance().getPlayerNameList();
 		for (String player1 : PlayerList) {
@@ -247,5 +200,4 @@ public class AnswerDeductionLogic {
 		}
 		AnswerDeductionHelper.checkTentativeTerrain();
 	}
-
 }
