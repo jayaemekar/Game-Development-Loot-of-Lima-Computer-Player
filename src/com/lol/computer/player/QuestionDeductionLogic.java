@@ -75,13 +75,16 @@ public class QuestionDeductionLogic {
 		String dieFaceTwo = messageDetailsList.get(1);
 		String dieFaceThree = messageDetailsList.get(2);
 
-		questionProxy(dieFaceOne, dieFaceTwo, messageMap);
-		questionProxy(dieFaceOne, dieFaceThree, messageMap);
-		questionProxy(dieFaceTwo, dieFaceOne, messageMap);
-		questionProxy(dieFaceTwo, dieFaceThree, messageMap);
-		questionProxy(dieFaceThree, dieFaceTwo, messageMap);
-		questionProxy(dieFaceThree, dieFaceOne, messageMap);
+		SortedMap<String, Integer> messageMapAll = new TreeMap<>();
+		questionProxy(dieFaceOne, dieFaceTwo, messageMap, messageMapAll);
+		questionProxy(dieFaceOne, dieFaceThree, messageMap, messageMapAll);
+		questionProxy(dieFaceTwo, dieFaceOne, messageMap, messageMapAll);
+		questionProxy(dieFaceTwo, dieFaceThree, messageMap, messageMapAll);
+		questionProxy(dieFaceThree, dieFaceTwo, messageMap, messageMapAll);
+		questionProxy(dieFaceThree, dieFaceOne, messageMap, messageMapAll);
 
+		if (messageMap.isEmpty())
+			messageMap = messageMapAll;
 		Map<String, Integer> sortedMapByValue = messageMap.entrySet().stream().sorted(comparingByValue())
 				.collect(toMap(e -> e.getKey(), e -> e.getValue(), (e1, e2) -> e2, LinkedHashMap::new));
 		System.out.println("sortedMapByValue  :: " + sortedMapByValue);
@@ -133,7 +136,8 @@ public class QuestionDeductionLogic {
 	 * @return
 	 */
 	public static HashMap<String, HashMap<String, Integer>> generateQuestionMap(String dieFaceOne, String dieFaceTwo,
-			String terrainType, SortedMap<String, Integer> messageMap, String msgType) {
+			String terrainType, SortedMap<String, Integer> messageMap, SortedMap<String, Integer> messageMapAll,
+			String msgType) {
 
 		System.out.println("messageMap####:" + messageMap);
 		Node current = ComputerPlayer.getInstance().getHead();
@@ -184,14 +188,14 @@ public class QuestionDeductionLogic {
 					if (msgType.equals("S")) {
 						message = message.concat(",S");
 						ComputerPlayer.getInstance().setShovelFlag(); // shovel used marked
-					}
-
-					if (msgType.equals("Q")) {
+					} else if (msgType.equals("Q")) {
 						message = message.concat(",Q"); // default message type
 					}
-					if(!dieFaceOne.substring(2).equals(dieFaceTwo.substring(2)))
-					messageMap.put(message, terrain.getValue());
-					// System.out.println("Shovel set : #####"+message);
+					if (!dieFaceOne.substring(2).equals(dieFaceTwo.substring(2)))
+						if (!Constants.ALL_CHAR.equals(terrainType))
+							messageMap.put(message, terrain.getValue());
+						else
+							messageMapAll.put(message, terrain.getValue());
 				}
 			});
 		});
@@ -206,7 +210,8 @@ public class QuestionDeductionLogic {
 	 * @param dieFaceTwo
 	 * @param messageMap
 	 */
-	public static void questionProxy(String dieFaceOne, String dieFaceTwo, SortedMap<String, Integer> messageMap) {
+	public static void questionProxy(String dieFaceOne, String dieFaceTwo, SortedMap<String, Integer> messageMap,
+			SortedMap<String, Integer> messageMapAll) {
 
 		String directionOne = String.valueOf(dieFaceOne.charAt(0)) + String.valueOf(dieFaceOne.charAt(1));
 		String directionTwo = String.valueOf(dieFaceTwo.charAt(0)) + String.valueOf(dieFaceTwo.charAt(1));
@@ -222,35 +227,35 @@ public class QuestionDeductionLogic {
 		terrains.add("F");
 
 		if (headTerrian.equals(tailTerrian) && !Constants.WILD_CHAR.equals(headTerrian)) {
-			generateQuestionMap(dieFaceOne, dieFaceTwo, tailTerrian, messageMap, "Q");
+			generateQuestionMap(dieFaceOne, dieFaceTwo, tailTerrian, messageMap, messageMapAll, "Q");
 			if (SetShovel && ComputerPlayer.getInstance().getRoundCount() > 10) {
 				terrains.remove(dieFaceOne.substring(2, 3));
 				dieFaceOne = dieFaceOne.substring(0, 2)
 						+ terrains.stream().skip(new Random().nextInt(terrains.size())).findFirst().orElse(null);
-				generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap, "S");
+				generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap, messageMapAll, "S");
 			}
 
 		} else if (!headTerrian.equals(tailTerrian)
 				&& !(Constants.WILD_CHAR.equals(headTerrian) || Constants.WILD_CHAR.equals(tailTerrian))) {
-			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap, "Q");
+			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap, messageMapAll, "Q");
 			if (SetShovel && ComputerPlayer.getInstance().getRoundCount() > 10) {
 				String temp = dieFaceTwo.substring(2, 3);
 				terrains.remove(temp);
 				String dieFaceTwo2 = dieFaceTwo.subSequence(0, 2) + headTerrian;
-				generateQuestionMap(dieFaceOne, dieFaceTwo2, headTerrian, messageMap, "S");
+				generateQuestionMap(dieFaceOne, dieFaceTwo2, headTerrian, messageMap, messageMapAll, "S");
 				terrains.add(temp);
 				temp = dieFaceOne.substring(2, 3);
 				terrains.remove(temp);
 				String dieFaceOne1 = dieFaceOne.substring(0, 2) + tailTerrian;
-				generateQuestionMap(dieFaceOne1, dieFaceTwo, tailTerrian, messageMap, "S");
+				generateQuestionMap(dieFaceOne1, dieFaceTwo, tailTerrian, messageMap, messageMapAll, "S");
 
 			}
 
 		} else if (!headTerrian.equals(tailTerrian)
 				&& (Constants.WILD_CHAR.equals(headTerrian) || Constants.WILD_CHAR.equals(tailTerrian))) {
 			String terrainType = !Constants.WILD_CHAR.equals(headTerrian) ? headTerrian : tailTerrian;
-			generateQuestionMap(dieFaceOne, dieFaceTwo, terrainType, messageMap, "Q");
-			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap, "Q");
+			generateQuestionMap(dieFaceOne, dieFaceTwo, terrainType, messageMap, messageMapAll, "Q");
+			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap, messageMapAll, "Q");
 			if (SetShovel && ComputerPlayer.getInstance().getRoundCount() > 10) {
 				terrains.remove(terrainType);
 				Iterator<String> terrainIterator = terrains.iterator();
@@ -263,13 +268,13 @@ public class QuestionDeductionLogic {
 					} else {
 						dieFaceTwo2 = dieFaceTwo2.substring(0, 2) + ty;
 					}
-					generateQuestionMap(dieFaceOne1, dieFaceTwo2, ty, messageMap, "Q");
+					generateQuestionMap(dieFaceOne1, dieFaceTwo2, ty, messageMap, messageMapAll, "Q");
 				}
 			}
 		} else {
-			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.MOUNTAINS_CHAR, messageMap, "Q");
-			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.BEACH_CHAR, messageMap, "Q");
-			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.FOREST_CHAR, messageMap, "Q");
+			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.MOUNTAINS_CHAR, messageMap, messageMapAll, "Q");
+			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.BEACH_CHAR, messageMap, messageMapAll, "Q");
+			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.FOREST_CHAR, messageMap, messageMapAll, "Q");
 		}
 	}
 
