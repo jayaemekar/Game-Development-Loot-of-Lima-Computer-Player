@@ -75,7 +75,8 @@ public class QuestionDeductionLogic {
 	 */
 	public static void createQuestion(List<String> messageDetailsList) {
 
-		if (ComputerPlayer.getInstance().getNotTreasureLoc().size() >= 20 && !SetPistol) {
+		if (ComputerPlayer.getInstance().getNotTreasureLoc().size() >= 20 && !SetPistol
+				&& ComputerPlayer.getInstance().getNotTreasureLoc().size() != 24) {
 			pistol();
 			SetPistol = true;
 			return;
