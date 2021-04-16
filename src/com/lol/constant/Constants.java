@@ -1,5 +1,10 @@
 package com.lol.constant;
 
+/**
+ * This class is used to store the all string constants used in program
+ * @author jayaemekar
+ *
+ */
 public class Constants {
 
 	public static final String MESSAAGE_01 = "01";
@@ -29,7 +34,10 @@ public class Constants {
 	public static final String FOREST_CHAR = "F";
 	public static final String WILD_CHAR = "W";
 	public static final String ALL_CHAR = "A";
-
+	public static final String Q_CHAR = "Q";
+	public static final String P_CHAR = "P";
+	public static final String S_CHAR = "S";
+	
 	public static final String NORTH = "North(N)";
 	public static final String NORTH_EAST = "North East(NE)";
 	public static final String NORTH_WEST = "North West(NW)";
