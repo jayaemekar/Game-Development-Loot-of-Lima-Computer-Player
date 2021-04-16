@@ -11,7 +11,14 @@ import com.lol.constant.Constants;
 import com.lol.helper.PlayerInformation;
 
 public class AnswerDeductionHelper {
-
+	/**
+	 * This method is used to get terrain status
+	 * 
+	 * @param map
+	 * @param areaTokenSet
+	 * @param playerName
+	 * @return
+	 */
 	public static Map<Integer, Set<String>> getTerrainStatus(Map<String, Map<String, Integer>> map,
 			Map<Integer, Set<String>> areaTokenSet, String playerName) {
 
@@ -34,6 +41,12 @@ public class AnswerDeductionHelper {
 		return areaTokenSet;
 	}
 
+	/**
+	 * This method is used to update terrain token map
+	 * 
+	 * @param tenTerrain
+	 * @param player
+	 */
 	public static void updateTerrainTokenMap(Set<String> tenTerrain, String player) {
 
 		List<String> PlayerList = PlayerInformation.getInstance().getPlayerNameList();
@@ -55,7 +68,10 @@ public class AnswerDeductionHelper {
 		checkTentativeTerrain();
 	}
 
-	static void checkTentativeTerrain() {
+	/**
+	 * This method is used to check tentative terrain
+	 */
+	protected static void checkTentativeTerrain() {
 
 		Map<String, Map<String, List<List<String>>>> TentativeToken = ComputerPlayer.getInstance().getTentativeToken();
 		Map<String, List<List<String>>> Map = new HashMap<>();
@@ -114,6 +130,9 @@ public class AnswerDeductionHelper {
 		}
 	}
 
+	/**
+	 * This method is used to check and update the map for ALL terrain answers
+	 */
 	public static void checkAllToken() {
 
 		Map<String, Map<String, List<List<String>>>> tentativetoken = createTentativeTokenMap();
@@ -124,6 +143,11 @@ public class AnswerDeductionHelper {
 
 	}
 
+	/**
+	 * This method is used to mark the tokens after processing
+	 * 
+	 * @param token
+	 */
 	private static void updateFinalSet(Map<String, List<List<String>>> token) {
 		HashSet<String> finalSet = new HashSet<>();
 		HashSet<String> sureSet = new HashSet<>();
@@ -155,9 +179,6 @@ public class AnswerDeductionHelper {
 				});
 				int count = finalSet.size() + sureSet.size();
 
-				System.out.println("finalSet.size() " + finalSet.size());
-				System.out.println("sureSet.size() " + sureSet.size());
-
 				if (Integer.toString(count).equals(value1.get(2))) {
 					finalSet.removeAll(ComputerPlayer.getInstance().getNotTreasureLoc());
 					finalSet.forEach(tres -> {
@@ -172,6 +193,12 @@ public class AnswerDeductionHelper {
 
 	}
 
+	/**
+	 * This method is to update the tentative Map
+	 * 
+	 * @param tentativetoken
+	 * @return
+	 */
 	private static Map<String, List<List<String>>> updateTentativeTokenMap(
 			Map<String, Map<String, List<List<String>>>> tentativetoken) {
 		Map<String, List<List<String>>> token = new HashMap<>();
