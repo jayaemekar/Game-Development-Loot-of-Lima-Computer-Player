@@ -35,7 +35,7 @@ public class GameProcessing {
 		roundNumber++;
 		System.out.println("______________________");
 		System.out.println("Player " + playerName + "'s turn");
-		System.out.println("______________________");
+		
 		String istreasureLocFound = Constants.NO;
 		if (!treasureGuessSent)
 			istreasureLocFound = AnswerDeductionLogic.checkIsTreasureLocFound();
@@ -59,7 +59,7 @@ public class GameProcessing {
 	 * @param messageDetailsList
 	 */
 	public void getQuestionInformation(String messageNumber, List<String> messageDetailsList) {
-		System.out.println("\nMessage [" + messageNumber + "] Question asked to player " + messageDetailsList.get(3)
+		System.out.println("Question asked to player " + messageDetailsList.get(3)
 				+ ", How many " + PlayerInformation.getInstance().getTerrianTokenInformation(messageDetailsList.get(2))
 				+ " terrains between " + messageDetailsList.get(0) + " and " + messageDetailsList.get(1));
 	}
@@ -99,7 +99,7 @@ public class GameProcessing {
 	 * @param messageDetailsList
 	 */
 	public void getWinnerPlayerGuessCorrect(String messageNumber, List<String> messageDetailsList) {
-		System.out.println(" Player " + messageDetailsList.get(0) + " guessed the correct treasure locations");
+		System.out.println("Player " + messageDetailsList.get(0) + " guessed the correct treasure locations");
 		if (messageDetailsList.get(0).equals(PlayerInformation.getInstance().getPlayerName()))
 			System.out.println("__________YOU ARE THE WINNER !!__________");
 		else
