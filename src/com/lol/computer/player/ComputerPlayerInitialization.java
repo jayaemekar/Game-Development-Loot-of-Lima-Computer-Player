@@ -45,8 +45,8 @@ public class ComputerPlayerInitialization {
 			ComputerPlayer.getInstance().add(terrainList, loc, count);
 			count++;
 		});
-		ComputerPlayer.getInstance().setTreasureLoc(new HashSet<>());
-		ComputerPlayer.getInstance().setAllPlayerTrrianMap(terrainMap);
+		ComputerPlayer.getInstance().setTreasureLoc(new HashSet<>()); //setting treasure location map
+		ComputerPlayer.getInstance().setAllPlayerTrrianMap(terrainMap); //setting all player token Map
 	}
 
 	/**
