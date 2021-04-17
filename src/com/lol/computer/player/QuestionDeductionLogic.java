@@ -32,21 +32,24 @@ public class QuestionDeductionLogic {
 	private static Boolean Barrel = false;
 
 	/**
-	 * This method is used to introduce the question deduction logic in computer
-	 * player
+	 * This method is used to generate pistol question intelligently
 	 * 
-	 * @param messageDetailsList
+	 * 
+	 * @param None
 	 */
 
 	private static void pistol() {
 
+		//Getting possible treasure tokens
 		HashSet<String> defaultMap = new HashSet<String>(ComputerPlayer.getInstance().getAllPlayerTrrianMap().keySet());
 		HashSet<String> nonTreasureLocation = new HashSet<String>(ComputerPlayer.getInstance().getNotTreasureLoc());
 		HashSet<String> players = new HashSet<String>(ComputerPlayer.getInstance().getPlayerObj().keySet());
 		defaultMap.removeAll(nonTreasureLocation);
 
+		//selecting one
 		int n = new Random().nextInt(defaultMap.size());
 
+		//generating quadrant for the token
 		String token = defaultMap.stream().skip(n).findFirst().orElse(null);
 		String[] directions = { "NN", "NW", "WW", "SW", "SS", "SE", "EE", "NE" };
 		int tokenNumber = Integer.parseInt(token.substring(0, 1)) - 1;
@@ -62,6 +65,8 @@ public class QuestionDeductionLogic {
 		String dieFaceOne = firstToken + tokenTerrain;
 		String dieFaceTwo = secondToken + tokenTerrain;
 		String player = players.stream().skip(new Random().nextInt(players.size())).findFirst().orElse(null);
+		
+		//generating message
 		String message = Constants.MESSAAGE_05 + ":" + dieFaceOne + "," + dieFaceTwo + "," + tokenTerrain + "," + player
 				+ "," + Constants.P_CHAR;
 		Utility.writeFile(PlayerInformation.getInstance().getFileWritePath(), message);
@@ -75,6 +80,7 @@ public class QuestionDeductionLogic {
 	 */
 	public static void createQuestion(List<String> messageDetailsList) {
 
+		//pistol condition
 		if (ComputerPlayer.getInstance().getNotTreasureLoc().size() >= 20 && !SetPistol
 				&& ComputerPlayer.getInstance().getNotTreasureLoc().size() != 24) {
 			pistol();
@@ -82,12 +88,14 @@ public class QuestionDeductionLogic {
 			return;
 		}
 
+		
 		SortedMap<String, Integer> messageMap = new TreeMap<>();
 
 		String dieFaceOne = messageDetailsList.get(0);
 		String dieFaceTwo = messageDetailsList.get(1);
 		String dieFaceThree = messageDetailsList.get(2);
 
+		//all possible combinations storage
 		SortedMap<String, Integer> messageMapAll = new TreeMap<>();
 		questionProxy(dieFaceOne, dieFaceTwo, messageMap, messageMapAll);
 		questionProxy(dieFaceOne, dieFaceThree, messageMap, messageMapAll);
@@ -96,11 +104,13 @@ public class QuestionDeductionLogic {
 		questionProxy(dieFaceThree, dieFaceTwo, messageMap, messageMapAll);
 		questionProxy(dieFaceThree, dieFaceOne, messageMap, messageMapAll);
 
+		//sorting
 		if (messageMap.isEmpty())
 			messageMap = messageMapAll;
 		Map<String, Integer> sortedMapByValue = messageMap.entrySet().stream().sorted(comparingByValue())
 				.collect(toMap(e -> e.getKey(), e -> e.getValue(), (e1, e2) -> e2, LinkedHashMap::new));
 
+		//main choice logic
 		if (!sortedMapByValue.isEmpty()) {
 			for (Entry<String, Integer> en : sortedMapByValue.entrySet()) {
 				if (en.getValue() != 0) {
@@ -137,7 +147,7 @@ public class QuestionDeductionLogic {
 	}
 
 	/**
-	 * This method is used to generate question Map
+	 * This method is used to generate question Map([message,empty places])
 	 * 
 	 * @param dieFaceOne
 	 * @param dieFaceTwo
@@ -221,7 +231,7 @@ public class QuestionDeductionLogic {
 	}
 
 	/**
-	 * Creating question based on the direction
+	 * Creating question parameters based on the direction, by comparing two dices and shovel combination
 	 * 
 	 * @param dieFaceOne
 	 * @param dieFaceTwo
@@ -236,6 +246,7 @@ public class QuestionDeductionLogic {
 		HashSet<String> terrains = new HashSet<String>(
 				Arrays.asList(Constants.MOUNTAINS_CHAR, Constants.BEACH_CHAR, Constants.FOREST_CHAR));
 
+		//die1 terrain equals die2
 		if (headTerrian.equals(tailTerrian) && !Constants.WILD_CHAR.equals(headTerrian)) {
 			generateQuestionMap(dieFaceOne, dieFaceTwo, tailTerrian, messageMap, messageMapAll, Constants.Q_CHAR);
 			if (SetShovel && ComputerPlayer.getInstance().getRoundCount() > 10) {
@@ -246,7 +257,8 @@ public class QuestionDeductionLogic {
 						Constants.S_CHAR);
 			}
 
-		} else if (!headTerrian.equals(tailTerrian)
+		}//die1 terrain not equals die2 and neither is wild 
+		else if (!headTerrian.equals(tailTerrian)
 				&& !(Constants.WILD_CHAR.equals(headTerrian) || Constants.WILD_CHAR.equals(tailTerrian))) {
 			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.ALL_CHAR, messageMap, messageMapAll,
 					Constants.Q_CHAR);
@@ -263,7 +275,8 @@ public class QuestionDeductionLogic {
 
 			}
 
-		} else if (!headTerrian.equals(tailTerrian)
+		}//one wild terrain in two dices 
+		else if (!headTerrian.equals(tailTerrian)
 				&& (Constants.WILD_CHAR.equals(headTerrian) || Constants.WILD_CHAR.equals(tailTerrian))) {
 			String terrainType = !Constants.WILD_CHAR.equals(headTerrian) ? headTerrian : tailTerrian;
 			generateQuestionMap(dieFaceOne, dieFaceTwo, terrainType, messageMap, messageMapAll, Constants.Q_CHAR);
@@ -284,7 +297,8 @@ public class QuestionDeductionLogic {
 					generateQuestionMap(dieFaceOne1, dieFaceTwo2, ty, messageMap, messageMapAll, "Q");
 				}
 			}
-		} else {
+		}//both dices having wild
+		else {
 			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.MOUNTAINS_CHAR, messageMap, messageMapAll,
 					Constants.Q_CHAR);
 			generateQuestionMap(dieFaceOne, dieFaceTwo, Constants.BEACH_CHAR, messageMap, messageMapAll,
