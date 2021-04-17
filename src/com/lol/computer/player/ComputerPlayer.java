@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * This is the Node class.
+ *
+ */
 class Node {
 	Map<String, Map<String, Integer>> terrainList;
 	String direction;
@@ -18,149 +22,44 @@ class Node {
 		this.number = number;
 	}
 }
-
+/**
+ * This is singleton class for Computer player
+ */
 public class ComputerPlayer {
 	private Node head = null;
 	private Node tail = null;
-	private Map<String, Boolean> playerTokenArray;
+
+	// Player token map
 	private Set<String> notTreasureLoc = new HashSet<>();;
 	private Set<String> treasureLoc = new HashSet<>();;
 	private Map<String, Map<String, Integer>> allPlayerTrrianMap = new HashMap<>();
-	private Map<String, Map<String, Integer>> deducedPlayerTokenMap;
-	private Set<String> deducedForestLoc = new HashSet<>();
-	private Set<String> deducedBeachLoc = new HashSet<>();
-	private Set<String> deducedMountainLoc = new HashSet<>();
-	
-	private Set<String> defaultMap = new HashSet<>();
-	private Node currentNode;
 	private Map<String, Integer> playerObj;
-	private static volatile ComputerPlayer computerPlayer = null;
-	private Map<String, List<List<String>>> allTentativeToken;
-	private Map<String, Map<String, List<List<String>>>> TentativeToken;
-	
-	private Map<Integer, Set<String>> NorthSet = new HashMap<>();
-	private Map<Integer, Set<String>> NorthEastSet = new HashMap<>();
-	private Map<Integer, Set<String>> EastSet = new HashMap<>();
-	private Map<Integer, Set<String>> SouthEastSet = new HashMap<>();
+	private Map<String, Map<String, List<List<String>>>> tentativeToken;
 
-	private Map<Integer, Set<String>> SouthSet = new HashMap<>();
-	private Map<Integer, Set<String>> SouthWestSet = new HashMap<>();
-	private Map<Integer, Set<String>> WestSet = new HashMap<>();
-	private Map<Integer, Set<String>> NorthWestSet = new HashMap<>();
-	
-	//special abilities
-	private Boolean ShovelFlag=true;
-	private Boolean PistolFlag=false;
-	private Boolean BarrelFlag=false;
-	
-	private Integer roundCount=0;
-	public Boolean getShovelFlagStatus() {
-		return ShovelFlag;
-	}
-	
-	public Boolean getPistolFlagStatus() {
-		return PistolFlag;
-	}
-	
-	public Boolean getBarrelFlagStatus() {
-		return BarrelFlag;
-	}
-	
-	public void setShovelFlag() {
-		ShovelFlag=false;
-	}
-	
-	public void setPistolFlag() {
-		PistolFlag=true;
-	}
-	
-	public void setBarrelFlag() {
-		 PistolFlag=true;
-	}
-	
-	
-	
-	
+	// special abilities
+	private Boolean ShovelFlag = true;
+	private Boolean PistolFlag = false;
+	private Boolean BarrelFlag = false;
+
+	private Integer roundCount = 0;
+
+	// Singleton Computer player class
+	private static volatile ComputerPlayer computerPlayer = null;
 
 	private ComputerPlayer() {
 		// private constructor
 	}
-	
+	//singleton object creation
 	public static ComputerPlayer getInstance() {
-        if (computerPlayer == null) {
-            synchronized (ComputerPlayer .class) {
-                if (computerPlayer == null) {
-                	computerPlayer = new ComputerPlayer();
-                }
-            }
-        }
-        return computerPlayer;
-    }
-	
-	public Map<Integer, Set<String>> getNorthSet() {
-		return NorthSet;
+		if (computerPlayer == null) {
+			synchronized (ComputerPlayer.class) {
+				if (computerPlayer == null) {
+					computerPlayer = new ComputerPlayer();
+				}
+			}
+		}
+		return computerPlayer;
 	}
-
-	public void setNorthSet(Map<Integer, Set<String>> northSet) {
-		NorthSet = northSet;
-	}
-
-	public Map<Integer, Set<String>> getNorthEastSet() {
-		return NorthEastSet;
-	}
-
-	public void setNorthEastSet(Map<Integer, Set<String>> northEastSet) {
-		NorthEastSet = northEastSet;
-	}
-
-	public Map<Integer, Set<String>> getEastSet() {
-		return EastSet;
-	}
-
-	public void setEastSet(Map<Integer, Set<String>> eastSet) {
-		EastSet = eastSet;
-	}
-
-	public Map<Integer, Set<String>> getSouthEastSet() {
-		return SouthEastSet;
-	}
-
-	public void setSouthEastSet(Map<Integer, Set<String>> southEastSet) {
-		SouthEastSet = southEastSet;
-	}
-
-	public Map<Integer, Set<String>> getSouthSet() {
-		return SouthSet;
-	}
-
-	public void setSouthSet(Map<Integer, Set<String>> southSet) {
-		SouthSet = southSet;
-	}
-
-	public Map<Integer, Set<String>> getSouthWestSet() {
-		return SouthWestSet;
-	}
-
-	public void setSouthWestSet(Map<Integer, Set<String>> southWestSet) {
-		SouthWestSet = southWestSet;
-	}
-
-	public Map<Integer, Set<String>> getWestSet() {
-		return WestSet;
-	}
-
-	public void setWestSet(Map<Integer, Set<String>> westSet) {
-		WestSet = westSet;
-	}
-
-	public Map<Integer, Set<String>> getNorthWestSet() {
-		return NorthWestSet;
-	}
-
-	public void setNorthWestSet(Map<Integer, Set<String>> northWestSet) {
-		NorthWestSet = northWestSet;
-	}
-
 
 	public Map<String, Integer> getPlayerObj() {
 		return playerObj;
@@ -171,14 +70,6 @@ public class ComputerPlayer {
 			playerObj.put("P" + i, -1);
 		this.playerObj = playerObj;
 		return playerObj;
-	}
-
-	public Map<String, Boolean> getPlayerTokenArray() {
-		return playerTokenArray;
-	}
-
-	public void setPlayerTokenArray(Map<String, Boolean> playerTokenArray) {
-		this.playerTokenArray = playerTokenArray;
 	}
 
 	public Set<String> getNotTreasureLoc() {
@@ -213,38 +104,6 @@ public class ComputerPlayer {
 		ComputerPlayer.computerPlayer = computerPlayer;
 	}
 
-	public Map<String, Map<String, Integer>> getDeducedPlayerTokenMap() {
-		return deducedPlayerTokenMap;
-	}
-
-	public void setDeducedPlayerTokenMap(Map<String, Map<String, Integer>> deducedPlayerTokenMap) {
-		this.deducedPlayerTokenMap = deducedPlayerTokenMap;
-	}
-
-	public Set<String> getDeducedForestLoc() {
-		return deducedForestLoc;
-	}
-
-	public void setDeducedForestLoc(Set<String> deducedForestLoc) {
-		this.deducedForestLoc = deducedForestLoc;
-	}
-
-	public Set<String> getDeducedBeachLoc() {
-		return deducedBeachLoc;
-	}
-
-	public void setDeducedBeachLoc(Set<String> deducedBeachLoc) {
-		this.deducedBeachLoc = deducedBeachLoc;
-	}
-
-	public Set<String> getDeducedMountainLoc() {
-		return deducedMountainLoc;
-	}
-
-	public void setDeducedMountainLoc(Set<String> deducedMountainLoc) {
-		this.deducedMountainLoc = deducedMountainLoc;
-	}
-
 	public Node getHead() {
 		return head;
 	}
@@ -261,18 +120,10 @@ public class ComputerPlayer {
 		this.tail = tail;
 	}
 
-	public Node getCurrentNode() {
-		return currentNode;
-	}
-
-	public void setCurrentNode(Node currentNode) {
-		this.currentNode = currentNode;
-	}
-
 	// This function will add the new node at the end of the list.
 	public void add(Map<String, Map<String, Integer>> terrainList, String direction, int number) {
 		// Create new node
-		
+
 		Node newNode = new Node(terrainList, direction, String.valueOf(number));
 		// Checks if the list is empty.
 		if (head == null) {
@@ -286,18 +137,13 @@ public class ComputerPlayer {
 		}
 	}
 
-	public Map<String, List<List<String>>> getAllTentativeToken() {
-		return allTentativeToken;
-	}
-
-	public void setAllTentativeToken(Map<String, List<List<String>>> allTentativeToken) {
-		this.allTentativeToken = allTentativeToken;
-	}
-
 	public void setPlayerObj(Map<String, Integer> playerObj) {
 		this.playerObj = playerObj;
 	}
 
+	/**
+	 * This function is used to display the linked list
+	 */
 	public void display() {
 		Node current = head;
 		if (head == null) {
@@ -317,6 +163,12 @@ public class ComputerPlayer {
 		}
 	}
 
+	/**
+	 * This is used to create the new node
+	 * 
+	 * @param direction
+	 * @return
+	 */
 	public Node createNode(String direction) {
 		Node current = head;
 		Node directionNode = null;
@@ -331,22 +183,11 @@ public class ComputerPlayer {
 	}
 
 	public Map<String, Map<String, List<List<String>>>> getTentativeToken() {
-		return TentativeToken;
+		return tentativeToken;
 	}
 
 	public void setTentativeToken(Map<String, Map<String, List<List<String>>>> tentativeToken) {
-		TentativeToken = tentativeToken;
-	}
-
-	public void addDefaultMap(String token) {
-		this.defaultMap.add(token);
-	}
-	public Set<String> getDefaultMap() {
-		return defaultMap;
-	}
-
-	public void setDefaultMap(Set<String> defaultMap) {
-		this.defaultMap = defaultMap;
+		this.tentativeToken = tentativeToken;
 	}
 
 	public Integer getRoundCount() {
@@ -355,6 +196,30 @@ public class ComputerPlayer {
 
 	public void setRoundCount(Integer roundCount) {
 		this.roundCount = roundCount;
+	}
+
+	public Boolean getShovelFlagStatus() {
+		return ShovelFlag;
+	}
+
+	public Boolean getPistolFlagStatus() {
+		return PistolFlag;
+	}
+
+	public Boolean getBarrelFlagStatus() {
+		return BarrelFlag;
+	}
+
+	public void setShovelFlag() {
+		ShovelFlag = false;
+	}
+
+	public void setPistolFlag() {
+		PistolFlag = true;
+	}
+
+	public void setBarrelFlag() {
+		PistolFlag = true;
 	}
 
 }
