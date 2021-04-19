@@ -61,9 +61,7 @@ public class ComputerPlayer {
 		return computerPlayer;
 	}
 
-	public Map<String, Integer> getPlayerObj() {
-		return playerObj;
-	}
+	
 
 	public Map<String, Integer> setPlayerObj(Map<String, Integer> playerObj, Integer playerNumber) {
 		for (int i = 1; i <= playerNumber; i++)
@@ -71,7 +69,13 @@ public class ComputerPlayer {
 		this.playerObj = playerObj;
 		return playerObj;
 	}
-
+	
+	//getters and setters for members in ComputerPlayer class
+	
+	public Map<String, Integer> getPlayerObj() {
+		return playerObj;
+	}
+	
 	public Set<String> getNotTreasureLoc() {
 		return notTreasureLoc;
 	}
@@ -119,69 +123,7 @@ public class ComputerPlayer {
 	public void setTail(Node tail) {
 		this.tail = tail;
 	}
-
-	// This function will add the new node at the end of the list.
-	public void add(Map<String, Map<String, Integer>> terrainList, String direction, int number) {
-		// Create new node
-
-		Node newNode = new Node(terrainList, direction, String.valueOf(number));
-		// Checks if the list is empty.
-		if (head == null) {
-			head = newNode;
-			tail = newNode;
-			newNode.next = head;
-		} else {
-			tail.next = newNode;
-			tail = newNode;
-			tail.next = head;
-		}
-	}
-
-	public void setPlayerObj(Map<String, Integer> playerObj) {
-		this.playerObj = playerObj;
-	}
-
-	/**
-	 * This function is used to display the linked list
-	 */
-	public void display() {
-		Node current = head;
-		if (head == null) {
-			System.out.println("List is empty");
-		} else {
-			System.out.println("Nodes of the circular linked list: ");
-			do {
-
-				System.out.print(" " + current.terrainList);
-				System.out.print(" " + current.direction);
-				System.out.print(" " + current.number);
-
-				System.out.print("\n");
-				current = current.next;
-			} while (current != head);
-			System.out.println();
-		}
-	}
-
-	/**
-	 * This is used to create the new node
-	 * 
-	 * @param direction
-	 * @return
-	 */
-	public Node createNode(String direction) {
-		Node current = head;
-		Node directionNode = null;
-		do {
-			if (current.direction != null && current.direction.equals(direction)) {
-				directionNode = current;
-				break;
-			}
-			current = current.next;
-		} while (current != head);
-		return directionNode;
-	}
-
+	
 	public Map<String, Map<String, List<List<String>>>> getTentativeToken() {
 		return tentativeToken;
 	}
@@ -222,4 +164,76 @@ public class ComputerPlayer {
 		BarrelFlag = true;
 	}
 
+	public void setPlayerObj(Map<String, Integer> playerObj) {
+		this.playerObj = playerObj;
+	}
+
+	
+	/**
+	 * This function will add the new node at the end of the list
+	 * @param terrainList
+	 * @param direction
+	 * @param number
+	 */
+	public void add(Map<String, Map<String, Integer>> terrainList, String direction, int number) {
+		// Create new node
+
+		Node newNode = new Node(terrainList, direction, String.valueOf(number));
+		// Checks if the list is empty.
+		if (head == null) {
+			head = newNode;
+			tail = newNode;
+			newNode.next = head;
+		} else {
+			tail.next = newNode;
+			tail = newNode;
+			tail.next = head;
+		}
+	}
+
+	
+
+	/**
+	 * This function is used to display the linked list
+	 */
+	public void display() {
+		Node current = head;
+		if (head == null) {
+			System.out.println("List is empty");
+		} else {
+			System.out.println("Nodes of the circular linked list: ");
+			do {
+
+				System.out.print(" " + current.terrainList);
+				System.out.print(" " + current.direction);
+				System.out.print(" " + current.number);
+
+				System.out.print("\n");
+				current = current.next;
+			} while (current != head);
+			System.out.println();
+		}
+	}
+
+	
+	/**
+	 * This is used to create the new node
+	 * 
+	 * @param direction
+	 * @return
+	 */
+	public Node createNode(String direction) {
+		Node current = head;
+		Node directionNode = null;
+		do {
+			if (current.direction != null && current.direction.equals(direction)) {
+				directionNode = current;
+				break;
+			}
+			current = current.next;
+		} while (current != head);
+		return directionNode;
+	}
+
+	
 }
